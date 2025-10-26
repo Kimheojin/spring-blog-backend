@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostTagRepository extends JpaRepository<PostTag, Long> {
+    boolean existsByTagId(Long tagId);
+
+    void deleteByPostIdAndTagId(Long postId, Long tagId);
 }

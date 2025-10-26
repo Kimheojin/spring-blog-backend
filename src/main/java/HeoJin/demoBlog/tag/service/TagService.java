@@ -3,7 +3,6 @@ package HeoJin.demoBlog.tag.service;
 
 import HeoJin.demoBlog.global.exception.CustomNotFound;
 import HeoJin.demoBlog.post.repository.PostRepository;
-import HeoJin.demoBlog.tag.dto.request.DeleteTagDtoRequest;
 import HeoJin.demoBlog.tag.dto.request.ListAddTagRequestDto;
 import HeoJin.demoBlog.tag.dto.request.ListDeleteTagRequest;
 import HeoJin.demoBlog.tag.dto.response.ListTagResponseDto;
@@ -30,22 +29,54 @@ public class TagService {
 
 
     @Transactional
-    public void addTag(ListAddTagRequestDto listAddTagRequestDto) {
+    public void addTagPost(ListAddTagRequestDto listAddTagRequestDto) {
+        // 해당 post 값
         Long postId = listAddTagRequestDto.postId();
+        // 검증
         if (!postRepository.existsById(postId)) {
             throw new CustomNotFound("해당 post가 존재하지 않습니다.");
         }
 
-        List<DeleteTagDtoRequest> deleteTagDtoRequests = listAddTagRequestDto.DtoList();
-
         listAddTagRequestDto.DtoList().forEach(
-                deleteTagDtoRequest -> addTag(deleteTagDtoRequest.getTagName(), postId)
+                addTagDtoRequest
+                        -> addTagPost(addTagDtoRequest.getTagName(), postId)
         );
 
     }
 
-    private void addTag(String tagName, Long postId){
+    // 태그 삭제 메소드
+    @Transactional
+    public void deleteTag(ListDeleteTagRequest listDeleteTagRequest) {
+
+        long postId = listDeleteTagRequest.postId();
+        // 검증
+        if(!postRepository.existsById(postId)) {
+            throw new CustomNotFound("해당 post 가 존재하지 않습니다,");
+        }
+
+        listDeleteTagRequest.DtoList().forEach(
+                deleteTagDtoRequest
+                        -> deleteTagPost(deleteTagDtoRequest.getTagName(), postId)
+        );
+
+    }
+
+
+
+    @Transactional(readOnly = true)
+    public ListTagResponseDto getTagList() {
+        List<Tag> allTags = tagRepository.findAll();
+
+        List<TagResponseDto> tagDtos = allTags.stream()
+                .map(TagResponseDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return new ListTagResponseDto(tagDtos);
+    }
+
+    private void addTagPost(String tagName, Long postId){
         Optional<Tag> byTagName = tagRepository.findByTagName(tagName);
+        // 기존 tag 존재하는 경우 (postTag 연결 테이블만 추가)
         if (byTagName.isPresent()) {
             PostTag postTag = PostTag.builder()
                     .tagId(byTagName.get().getId())
@@ -64,25 +95,22 @@ public class TagService {
                     .postId(postId)
                     .build();
             postTagRepository.save(postTag);
-
         }
     }
 
-    // 태그 삭제 메소드
-    @Transactional
-    public void deleteTag(ListDeleteTagRequest listDeleteTagRequest) {
-        long postId = listDeleteTagRequest.postId();
+    private void deleteTagPost(String tagName, Long postId) {
+        Optional<Tag> byTagName = tagRepository.findByTagName(tagName);
+        if(byTagName.isEmpty()){
+            throw new CustomNotFound("해당 Tag entity 가 존재하지 않습니다,");
 
-    }
+        } else {
+            Long tagId = byTagName.get().getId();
+            postTagRepository.deleteByPostIdAndTagId(postId, tagId);
 
-    @Transactional(readOnly = true)
-    public ListTagResponseDto getTagList() {
-        List<Tag> allTags = tagRepository.findAll();
+            if (!postTagRepository.existsByTagId(tagId)){
+                tagRepository.deleteById(tagId);
+            }
 
-        List<TagResponseDto> tagDtos = allTags.stream()
-                .map(TagResponseDto::fromEntity)
-                .collect(Collectors.toList());
-
-        return new ListTagResponseDto(tagDtos);
+        }
     }
 }

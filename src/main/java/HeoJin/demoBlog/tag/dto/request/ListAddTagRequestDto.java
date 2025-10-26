@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record ListAddTagRequestDto(
-        List<DeleteTagDtoRequest> DtoList,
+        List<AddTagDtoRequest> DtoList,
         @NotNull(message = "postId 값이 비어있습니다.")
         Long postId
 ) {

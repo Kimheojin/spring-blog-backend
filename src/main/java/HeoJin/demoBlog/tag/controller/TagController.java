@@ -23,7 +23,8 @@ public class TagController {
     public ResponseEntity<String> updateTag(
             ListAddTagRequestDto listAddTagRequestDto
     ){
-        tagService.addTag(listAddTagRequestDto);
+        tagService.addTagPost(listAddTagRequestDto);
+        // 반환 값 생각하기
         return ResponseEntity.ok("hello");
     }
 
