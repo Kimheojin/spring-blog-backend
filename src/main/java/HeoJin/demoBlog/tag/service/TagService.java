@@ -2,16 +2,21 @@ package HeoJin.demoBlog.tag.service;
 
 
 import HeoJin.demoBlog.global.exception.CustomNotFound;
+import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import HeoJin.demoBlog.tag.dto.request.ListAddTagRequestDto;
 import HeoJin.demoBlog.tag.dto.request.ListDeleteTagRequest;
 import HeoJin.demoBlog.tag.dto.response.ListTagResponseDto;
+import HeoJin.demoBlog.tag.dto.response.PageTagPostResponse;
 import HeoJin.demoBlog.tag.dto.response.TagResponseDto;
 import HeoJin.demoBlog.tag.entity.PostTag;
 import HeoJin.demoBlog.tag.entity.Tag;
 import HeoJin.demoBlog.tag.repository.PostTagRepository;
 import HeoJin.demoBlog.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,5 +112,18 @@ public class TagService {
             }
 
         }
+    }
+    @Transactional(readOnly = true)
+    public PageTagPostResponse reaTagPostList(Long tagId, int page, int pageSize) {
+
+
+        if(tagRepository.existsById(tagId)) {
+            throw new CustomNotFound("해당 tag 가 존재하지 않습니다.");
+        }
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Page<Post> postPage = postTagRepository.findPublishedPostWithTag(tagId, pageable);
+
+        return null;
     }
 }
