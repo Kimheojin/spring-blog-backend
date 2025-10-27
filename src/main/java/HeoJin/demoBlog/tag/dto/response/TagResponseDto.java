@@ -1,6 +1,5 @@
 package HeoJin.demoBlog.tag.dto.response;
 
-import HeoJin.demoBlog.tag.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,11 +12,6 @@ import lombok.NoArgsConstructor;
 public class TagResponseDto {
     private String tagName;
     private Long tagId;
+    private Long count;
 
-    public static TagResponseDto fromEntity(Tag tag) {
-        return TagResponseDto.builder()
-                .tagName(tag.getTagName())
-                .tagId(tag.getId())
-                .build();
-    }
 }

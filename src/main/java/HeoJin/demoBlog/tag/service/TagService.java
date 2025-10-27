@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -65,12 +64,8 @@ public class TagService {
 
     @Transactional(readOnly = true)
     public ListTagResponseDto getTagList() {
-        List<Tag> allTags = tagRepository.findAll();
 
-        List<TagResponseDto> tagDtos = allTags.stream()
-                .map(TagResponseDto::fromEntity)
-                .collect(Collectors.toList());
-
+        List<TagResponseDto> tagDtos = postTagRepository.getCountWithTagId();
         return new ListTagResponseDto(tagDtos);
     }
 
