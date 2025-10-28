@@ -55,10 +55,11 @@ public class TagController {
     @GetMapping("/tag/postlist")
     public ResponseEntity<PageTagPostResponse> getTagPostList(
             @RequestParam Long tagId,
+            @RequestParam String tagName,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int pageSize
     ){
-        PageTagPostResponse pageTagPostResponse = tagService.reaTagPostList(tagId, page, pageSize);
+        PageTagPostResponse pageTagPostResponse = tagService.reaTagPostList(tagName,tagId, page, pageSize);
 
         return ResponseEntity.ok(pageTagPostResponse);
     }

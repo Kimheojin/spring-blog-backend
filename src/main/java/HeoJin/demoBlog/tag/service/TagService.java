@@ -2,12 +2,12 @@ package HeoJin.demoBlog.tag.service;
 
 
 import HeoJin.demoBlog.global.exception.CustomNotFound;
-import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import HeoJin.demoBlog.tag.dto.request.ListAddTagRequestDto;
 import HeoJin.demoBlog.tag.dto.request.ListDeleteTagRequest;
 import HeoJin.demoBlog.tag.dto.response.ListTagResponseDto;
 import HeoJin.demoBlog.tag.dto.response.PageTagPostResponse;
+import HeoJin.demoBlog.tag.dto.response.PostTagResponseDto;
 import HeoJin.demoBlog.tag.dto.response.TagResponseDto;
 import HeoJin.demoBlog.tag.entity.PostTag;
 import HeoJin.demoBlog.tag.entity.Tag;
@@ -114,16 +114,16 @@ public class TagService {
         }
     }
     @Transactional(readOnly = true)
-    public PageTagPostResponse reaTagPostList(Long tagId, int page, int pageSize) {
-
-
-        if(tagRepository.existsById(tagId)) {
-            throw new CustomNotFound("해당 tag 가 존재하지 않습니다.");
-        }
+    public PageTagPostResponse reaTagPostList(String tagName,Long tagId, int page, int pageSize) {
+        // 검증
+        tagRepository.findById(tagId)
+                .filter(tag -> tagName.equals(tag.getTagName()))
+                .orElseThrow(() -> new CustomNotFound("해당 tag 가 존재하지 않습니다."));
+        // pageable 객체 생성
         Pageable pageable = PageRequest.of(page, pageSize);
 
-        Page<Post> postPage = postTagRepository.findPublishedPostWithTag(tagId, pageable);
+        Page<PostTagResponseDto> postPage = postTagRepository.findPublishedPostWithTag(tagId, pageable);
 
-        return null;
+        return PageTagPostResponse.fromPage(postPage);
     }
 }
