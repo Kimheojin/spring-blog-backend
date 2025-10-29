@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "post_tag")
 public class PostTag {
     // 연관관계 사용 안하고 싶은데
+    // 여기서 인덱스 걸어야 할듯
+    //
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_tag_id")
