@@ -9,7 +9,7 @@ import java.util.List;
 public interface PostMongoRepository {
     List<PostMongo> getAll();
     void insertAll(List<PostMongo> postMongoList);
-    void updateALl(List<PostMongo> postMongoList);
+    void updateAll(List<PostMongo> postMongoList);
     ListPostSearchResponseDto getUnifiedSearch(String term);
 
 }

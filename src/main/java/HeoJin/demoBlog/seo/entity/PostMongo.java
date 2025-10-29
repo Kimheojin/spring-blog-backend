@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 public class PostMongo {
+    // mongo document id
     @Id
     private String id;
     private Long postId;

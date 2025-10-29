@@ -51,30 +51,30 @@ public class SyncService {
     }
     
     private TriggerResponseDto compareData(Map<Long, PostMongo> postMysqlMap){
-        List<PostMongo> postMongoRepositoryAll = postMongoRepository.getAll();
+        Map<Long, PostMongo> postMongoMap = new HashMap<>();
+        postMongoRepository.getAll().forEach(p -> postMongoMap.put(p.getPostId(), p));
 
         List<PostMongo> postsToUpdate = new ArrayList<>();
         List<PostMongo> postsToInsert = new ArrayList<>();
 
 
-        for(PostMongo postFromMongo : postMongoRepositoryAll) {
-            // null 반환 가능
-            PostMongo existingPost = postMysqlMap.get(postFromMongo.getPostId());
+        for (PostMongo postFromMysql : postMysqlMap.values()) {
+            PostMongo postFromMongo = postMongoMap.get(postFromMysql.getPostId());
 
-            if(existingPost != null) {
-                // 기존에 존재하는 경우
-                postsToUpdate.add(postFromMongo.update(existingPost));
+            if (postFromMongo != null) {
+                postsToUpdate.add(postFromMongo.update(postFromMysql));
             } else {
-                // 새로운 데이터인 경우
-                postsToInsert.add(existingPost);
+                postsToInsert.add(postFromMysql);
             }
         }
+        if (!postsToInsert.isEmpty()) {
+            postMongoRepository.insertAll(postsToInsert);
+        }
+        if (!postsToUpdate.isEmpty()) {
+            postMongoRepository.updateAll(postsToUpdate);
+        }
 
-        postMongoRepository.insertAll(postsToInsert);
-        postMongoRepository.updateALl(postsToUpdate);
-
-
-        return  TriggerResponseDto.builder()
+        return TriggerResponseDto.builder()
                 .insertCount(postsToInsert.size())
                 .updateCount(postsToUpdate.size())
                 .build();

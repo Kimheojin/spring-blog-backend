@@ -20,6 +20,7 @@ public class SeoController {
     public ResponseEntity<ListPostSearchResponseDto> getUnifiedSearch (
             @RequestParam String term
     ){
+        // 근데 이거 mongo 는 페이징 처리 지원 안하지 않나..?
         ListPostSearchResponseDto result = seoService.getUnifiedSearch(term);
         return ResponseEntity.ok(result);
     }
