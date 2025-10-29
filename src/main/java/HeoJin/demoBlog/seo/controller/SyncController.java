@@ -17,7 +17,7 @@ public class SyncController {
 
 
     // 사용자가 직접 싱크 맞추는
-    @PostMapping("/api/seo/mongo-sync")
+    @PostMapping("/seo/mongo-sync")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<TriggerResponseDto> triggerSync() {
         TriggerResponseDto triggerResponseDto = syncService.triggerSync();
