@@ -47,7 +47,6 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
 	// aop 관련 라이브러리
-	// 이거 왜 io 에 안뜨냐
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	
 	// spring restdocs
@@ -66,8 +65,9 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
 
-	// 테스트만 h2
+	// 테스트만 h2 + mongo
 	testImplementation 'com.h2database:h2'
+	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
