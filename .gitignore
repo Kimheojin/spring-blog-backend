@@ -41,6 +41,7 @@ application-image.yml
 application-mysql.yml
 application-jwt.yml
 application-mongo.yml
+src/main/generated/
 
 filterTest.http
 ## 쿼리 dsl 생성 그건
