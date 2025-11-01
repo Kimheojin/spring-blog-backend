@@ -63,7 +63,7 @@ public class AuthService {
         // AccessToken을 쿠키에 저장 (SameSite=Lax 설정)
         ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
-                .secure(false) // HTTPS 관련 설정
+                .secure(true) // HTTPS 관련 설정
                 .path("/")
                 .maxAge(60 * 60 * 24) // 1일 (설정에 맞게 조정)
                 .sameSite("Lax")

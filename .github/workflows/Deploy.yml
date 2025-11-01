@@ -85,4 +85,4 @@ jobs:
           JWT_ACCESS_TOKEN_EXPIRATION: ${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
           JWT_REFRESH_TOKEN_EXPIRATION: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
         run: |
-#          docker compose up -d --build
+          docker compose up -d --build
