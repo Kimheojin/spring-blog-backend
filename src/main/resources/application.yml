@@ -32,18 +32,6 @@ logging:
 
 
 server:
-  servlet:
-    session:
-      cookie:
-        path: /
-        # 로컬 테스트 중에는 주석 처리 또는 변경
-
-        http-only: true
-#        secure: false
-        secure: true
-        same-site: lax
-        max-age: 1800
-
   port: 8080
 
 
