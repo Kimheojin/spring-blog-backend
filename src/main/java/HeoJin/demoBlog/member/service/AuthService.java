@@ -60,13 +60,13 @@ public class AuthService {
 
         String refreshToken = jwtTokenProvider.generateRefreshToken(member.getId());
 
-        // AccessToken을 쿠키에 저장 (SameSite=Lax 설정)
+        // AccessToken을 쿠키에 저장 (SameSite=None 설정)
         ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
                 .secure(true) // HTTPS 관련 설정
                 .path("/")
                 .maxAge(60 * 60 * 24) // 1일 (설정에 맞게 조정)
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
         response.addHeader("Set-Cookie", accessTokenCookie.toString());
 
@@ -114,13 +114,13 @@ public class AuthService {
         // SecurityContext 클리어
         SecurityContextHolder.clearContext();
 
-        // accessToken 쿠키 삭제 (SameSite=Lax 설정)
+        // accessToken 쿠키 삭제 (SameSite=None 설정)
         ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", "")
                 .path("/")
                 .maxAge(0)
                 .httpOnly(true)
-                .secure(false) // login과 설정 일치
-                .sameSite("Lax")
+                .secure(true) // login과 설정 일치
+                .sameSite("None")
                 .build();
         response.addHeader("Set-Cookie", accessTokenCookie.toString());
     }
