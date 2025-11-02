@@ -1,7 +1,9 @@
 package HeoJin.demoBlog.tag.repository;
 
+import HeoJin.demoBlog.post.dto.response.TagResponse;
 import HeoJin.demoBlog.post.entity.PostStatus;
 import HeoJin.demoBlog.post.entity.QPost;
+import HeoJin.demoBlog.tag.dto.data.PostIdWithTagDto;
 import HeoJin.demoBlog.tag.dto.response.PostTagResponseDto;
 import HeoJin.demoBlog.tag.dto.response.TagResponseDto;
 import HeoJin.demoBlog.tag.entity.QPostTag;
@@ -64,5 +66,37 @@ public class PostTagRepositoryCustomImpl implements PostTagRepositoryCustom {
 
 
         return new PageImpl<>(posts, pageable, total);
+    }
+
+    @Override
+    public List<PostIdWithTagDto> getTagListWithPostIdList(List<Long> postIds) {
+
+        List<PostIdWithTagDto> postIdWithTagDtos = jpaQueryFactory
+                .select(Projections.constructor(PostIdWithTagDto.class,
+                        postTag.postId,
+                        postTag.tagId,
+                        tag.tagName))
+                .from(postTag)
+                .join(tag).on(postTag.tagId.eq(tag.id))
+                .where(postTag.postId.in(postIds))
+                .fetch();
+        return postIdWithTagDtos;
+    }
+
+    @Override
+    public List<TagResponse> getTagListWithPostId(Long postId) {
+
+        List<TagResponse> tagResponseList = jpaQueryFactory
+                .select(Projections.constructor(TagResponse.class,
+                        tag.tagName,
+                        tag.id
+                        ))
+                .from(postTag)
+                .join(tag).on(postTag.tagId.eq(tag.id))
+                .where(postTag.postId.eq(postId))
+                .fetch();
+
+
+        return tagResponseList;
     }
 }
