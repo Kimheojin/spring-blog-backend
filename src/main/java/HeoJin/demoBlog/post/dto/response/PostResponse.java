@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -24,6 +25,8 @@ public class PostResponse {
     private String categoryName;
     // 상태 관련 추가(enum 타입)
     private PostStatus status;
+    // 태그 관련 필드
+    private List<TagResponse> tagList;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime regDate;
