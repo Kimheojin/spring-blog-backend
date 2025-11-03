@@ -57,5 +57,9 @@ public class Post {
         this.status = status;
     }
 
+    public void changeRegDate(LocalDateTime time){
+        this.regDate = time;
+    }
+
 
 }
