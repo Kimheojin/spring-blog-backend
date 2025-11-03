@@ -4,11 +4,13 @@ package HeoJin.demoBlog.tag.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @AllArgsConstructor
 @Builder
+@Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Table(name = "post_tag")
 public class PostTag {
