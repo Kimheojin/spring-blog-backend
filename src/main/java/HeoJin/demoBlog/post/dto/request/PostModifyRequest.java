@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Getter
 @NoArgsConstructor
@@ -25,4 +27,6 @@ public class PostModifyRequest {
     private String categoryName;
     @NotNull(message = "게시글 상태를 선택 해 주세요")
     private PostStatus postStatus;
+
+    private List<TagRequest> tagList;
 }

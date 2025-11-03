@@ -60,7 +60,8 @@ jobs:
 
       - name: Stop and remove existing container
         run: |
-          docker compose down blog || true  # V2 명령어
+          docker rm -f blog || true
+          docker compose down || true
 
       - name: Setup network
         run: |

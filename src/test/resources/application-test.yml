@@ -7,3 +7,20 @@ jwt:
   refreshtoken:
     expiration: 604800000  # 7일 (7 * 24 * 60 * 60 * 1000ms)
 
+
+## value 전용
+mongo:
+  collectionName: testCollection
+## 테스트용
+spring:
+  data:
+    mongodb:
+      database: test
+      port: 0
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 6.0.5
+

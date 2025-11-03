@@ -5,9 +5,12 @@ import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.global.exception.CustomNotFound;
 import HeoJin.demoBlog.category.repository.CategoryRepository;
 import HeoJin.demoBlog.post.dto.response.PagePostResponse;
+import HeoJin.demoBlog.post.dto.response.TagResponse;
 import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import HeoJin.demoBlog.post.dto.response.PostResponse;
+import HeoJin.demoBlog.tag.dto.data.PostIdWithTagDto;
+import HeoJin.demoBlog.tag.repository.PostTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,16 +28,36 @@ import java.util.stream.Collectors;
 public class PostReadService {
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
+    private final PostTagRepository postTagRepository;
 
     @Transactional(readOnly = true)
     public PagePostResponse readPagedPosts(int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Post> postPage = postRepository.findPublishedPostsWithFetch(pageable);
+        List<Long> postIds = postPage.getContent().stream()
+                .map(Post::getId)
+                .toList();
+        if(postIds.isEmpty()){
+            return PostMapper.toPagePostResponse(List.of(), postPage);
+        }
+
+        List<PostIdWithTagDto> tagListWithPostIds = postTagRepository.getTagListWithPostIdList(postIds);
+
+        Map<Long, List<PostIdWithTagDto>> tagsByPostId = tagListWithPostIds.stream()
+                .collect(Collectors.groupingBy(PostIdWithTagDto::getPostId));
+
+
 
         List<PostResponse> postResponses = postPage.getContent()
                 .stream()
-                .map(PostMapper::toPostResponse)
+                .map(post -> {
+                    List<PostIdWithTagDto> tags = tagsByPostId.getOrDefault(post.getId(), Collections.emptyList());
+                    List<TagResponse> tagResponses = tags.stream()
+                            .map(tag -> new TagResponse(tag.getTagName(), tag.getTagId()))
+                            .collect(Collectors.toList());
+                    return PostMapper.toPostResponse(post, tagResponses);
+                })
                 .collect(Collectors.toList());
 
         return PostMapper.toPagePostResponse(postResponses, postPage);
@@ -46,13 +71,29 @@ public class PostReadService {
                 .orElseThrow(() -> new CustomNotFound("해당 카테고리 이름"));
 
         Pageable pageable = PageRequest.of(page, size); // 프라이머리로
-        Page<Post> postPage = postRepository.findPublishedCategoryWithFetch(category.getCategoryName(), pageable);
+        Page<Post> postPage = postRepository
+                .findPublishedCategoryWithFetch(category.getCategoryName(), pageable);
+        List<Long> postIds = postPage.getContent().stream()
+                .map(Post::getId)
+                .toList();
+        if(postIds.isEmpty()){
+            return PostMapper.toPagePostResponse(List.of(), postPage);
+        }
+
+        List<PostIdWithTagDto> tagListWithPostIds = postTagRepository.getTagListWithPostIdList(postIds);
+        Map<Long, List<PostIdWithTagDto>> tagsByPostId = tagListWithPostIds.stream()
+                .collect(Collectors.groupingBy(PostIdWithTagDto::getPostId));
 
         List<PostResponse> postResponses = postPage.getContent()
                 .stream()
-                .map(PostMapper::toPostResponse)
+                .map(post -> {
+                    List<PostIdWithTagDto> tags = tagsByPostId.getOrDefault(post.getId(), Collections.emptyList());
+                    List<TagResponse> tagResponses = tags.stream()
+                            .map(tag -> new TagResponse(tag.getTagName(), tag.getTagId()))
+                            .collect(Collectors.toList());
+                    return PostMapper.toPostResponse(post, tagResponses);
+                })
                 .collect(Collectors.toList());
-
 
         return PostMapper.toPagePostResponse(postResponses, postPage);
     }
@@ -62,7 +103,9 @@ public class PostReadService {
         Post post = postRepository.findPublishedWithPostId(postId)
                 .orElseThrow(() -> new CustomNotFound("포스트"));
 
-        return PostMapper.toPostResponse(post);
+        List<TagResponse> tagListWithPostId = postTagRepository.getTagListWithPostId(post.getId());
+
+        return PostMapper.toPostResponse(post, tagListWithPostId);
     }
 
 

@@ -1,4 +1,4 @@
-package HeoJin.demoBlog.global.exception;
+package HeoJin.demoBlog.global.exception.common;
 
 
 import org.springframework.http.ResponseEntity;

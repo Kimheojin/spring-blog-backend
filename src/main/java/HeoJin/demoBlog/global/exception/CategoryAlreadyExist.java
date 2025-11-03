@@ -1,6 +1,7 @@
 package HeoJin.demoBlog.global.exception;
 
 
+import HeoJin.demoBlog.global.exception.common.CustomException;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class CategoryAlreadyExist extends CustomException {

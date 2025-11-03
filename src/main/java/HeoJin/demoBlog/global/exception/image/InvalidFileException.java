@@ -1,6 +1,6 @@
 package HeoJin.demoBlog.global.exception.image;
 
-import HeoJin.demoBlog.global.exception.CustomException;
+import HeoJin.demoBlog.global.exception.common.CustomException;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class InvalidFileException extends CustomException {

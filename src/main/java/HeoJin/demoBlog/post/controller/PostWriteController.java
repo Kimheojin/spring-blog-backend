@@ -4,6 +4,7 @@ package HeoJin.demoBlog.post.controller;
 import HeoJin.demoBlog.post.dto.request.PostDeleteRequest;
 import HeoJin.demoBlog.post.dto.request.PostModifyRequest;
 import HeoJin.demoBlog.post.dto.request.PostRequest;
+import HeoJin.demoBlog.post.dto.request.ScheduledPostRequest;
 import HeoJin.demoBlog.post.dto.response.MessageResponse;
 import HeoJin.demoBlog.post.dto.response.PostContractionResponse;
 import HeoJin.demoBlog.post.service.PostWriteService;
@@ -27,8 +28,6 @@ public class PostWriteController {
     @PostMapping("/posts")
     public ResponseEntity<PostContractionResponse> writePost(@AuthenticationPrincipal Long memberId,
                                                              @RequestBody @Valid  PostRequest postDto) {
-        
-        // 중복 관련 로직 추가하기
         return ResponseEntity.ok(postWriteService.writePost(memberId, postDto));
     }
 
@@ -50,8 +49,12 @@ public class PostWriteController {
         return ResponseEntity.ok(MessageResponse.of("게시글이 성골적으로 삭제 되었습니다."));
     }
 
+    // 예약 발행 게시글작성
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/scheduled-post")
+    public ResponseEntity<PostContractionResponse> schedulePost(@AuthenticationPrincipal Long memberId,
+                                                             @RequestBody @Valid ScheduledPostRequest postDto) {
+        return ResponseEntity.ok(postWriteService.schedulePost(memberId, postDto));
+    }
 
-    // 연관 포스트 조회
-
-    // 예약 발행
 }
