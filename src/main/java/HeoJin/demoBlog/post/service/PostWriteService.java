@@ -6,12 +6,10 @@ import HeoJin.demoBlog.category.repository.CategoryRepository;
 import HeoJin.demoBlog.global.exception.CustomNotFound;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.member.repository.MemberRepository;
-import HeoJin.demoBlog.post.dto.request.PostDeleteRequest;
-import HeoJin.demoBlog.post.dto.request.PostModifyRequest;
-import HeoJin.demoBlog.post.dto.request.PostRequest;
-import HeoJin.demoBlog.post.dto.request.TagRequest;
+import HeoJin.demoBlog.post.dto.request.*;
 import HeoJin.demoBlog.post.dto.response.PostContractionResponse;
 import HeoJin.demoBlog.post.entity.Post;
+import HeoJin.demoBlog.post.entity.PostStatus;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import HeoJin.demoBlog.tag.service.TagManager;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +39,10 @@ public class PostWriteService {
         // 카테고리 이미 존재 하는 지 안하는지 확인
         Category category = categoryRepository.findByCategoryName(postRequest.getCategoryName())
                 .orElseThrow(() -> new CustomNotFound("카테고리"));
+
+        if (postRequest.getPostStatus().equals("SCHEDULED")) {
+            throw new CustomNotFound("유효하지 않은 값입니다.");
+        }
 
         Post newpost = Post.builder()
                 .title(postRequest.getTitle())
@@ -88,6 +90,34 @@ public class PostWriteService {
         tagManager.deleteTagByPostId(post.getId());
         postRepository.delete(post);
 
+
+    }
+    @Transactional
+    public PostContractionResponse schedulePost(Long memberId, ScheduledPostRequest scheduledPostRequest){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomNotFound("회원"));
+
+        Category category = categoryRepository.findByCategoryName(scheduledPostRequest.getCategoryName())
+                .orElseThrow(() -> new CustomNotFound("카테고리"));
+
+
+        Post scheduledPost = Post.builder()
+                .title(scheduledPostRequest.getTitle())
+                .member(member)
+                .regDate(scheduledPostRequest.getRegDate()) // 현재 시간으로
+                .content(scheduledPostRequest.getContent())
+                .status(PostStatus.SCHEDULED)
+                .category(category)
+                .build();
+
+        postRepository.save(scheduledPost);
+
+        // 태그 관련
+        scheduledPostRequest.getTagList()
+                .forEach(tagRequest -> tagManager.addTagPost(tagRequest.getTagName(), scheduledPost.getId()));
+
+
+        return PostMapper.toPostContractionResponse(scheduledPost);
 
     }
 }
