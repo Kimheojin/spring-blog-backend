@@ -3,6 +3,7 @@ package HeoJin.demoBlog.post.service;
 import HeoJin.demoBlog.post.dto.response.PagePostResponse;
 import HeoJin.demoBlog.post.dto.response.PostContractionResponse;
 import HeoJin.demoBlog.post.dto.response.PostResponse;
+import HeoJin.demoBlog.post.dto.response.TagResponse;
 import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.entity.PostStatus;
 import org.springframework.data.domain.Page;
@@ -24,13 +25,14 @@ public class PostMapper {
                .build();
     }
 
-    public static PostResponse toPostResponse (Post post) {
+    public static PostResponse toPostResponse (Post post, List<TagResponse> tagResponseList) {
         return PostResponse.builder()
                 .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .memberName(post.getMember().getMemberName())
                 .categoryName(post.getCategory().getCategoryName())
+                .tagList(tagResponseList)
                 .status(PostStatus.valueOf(post.getStatus().name()))
                 .regDate(post.getRegDate())
                 .build();

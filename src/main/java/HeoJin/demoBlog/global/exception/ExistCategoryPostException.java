@@ -1,6 +1,7 @@
 package HeoJin.demoBlog.global.exception;
 
 
+import HeoJin.demoBlog.global.exception.common.CustomException;
 import org.springframework.http.HttpStatus;
 
 public class ExistCategoryPostException extends CustomException {
