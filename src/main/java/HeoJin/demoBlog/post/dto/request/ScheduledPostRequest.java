@@ -1,7 +1,7 @@
 package HeoJin.demoBlog.post.dto.request;
 
 
-import jakarta.validation.constraints.Future;
+import HeoJin.demoBlog.global.annotation.validataion.FutureWithMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -26,8 +26,9 @@ public class ScheduledPostRequest {
     private String content;
     @NotBlank(message = "카테고리 명을 입력해 주세요")
     private String categoryName;
-    
-    @Future(message = "예약발행 날짜는 현재 시간 이후로 설정해 주세요")
+
+
+    @FutureWithMin // custom annotation
     @NotNull(message = "예약발행 날짜를 다시 설정해 주세요")
     private LocalDateTime regDate;
 
