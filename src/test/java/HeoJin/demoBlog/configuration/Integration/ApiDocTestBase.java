@@ -24,7 +24,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 @ExtendWith(RestDocumentationExtension.class)
 @Transactional
 @Rollback
-public abstract class BaseController {
+public abstract class ApiDocTestBase {
     @Autowired
     protected MockMvc mockMvc;
 
