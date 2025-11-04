@@ -5,6 +5,7 @@ import HeoJin.demoBlog.member.entity.Role;
 import HeoJin.demoBlog.member.repository.MemberRepository;
 import HeoJin.demoBlog.member.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,12 +13,14 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 
+@Component
 @RequiredArgsConstructor
 public class DemoMockSecurityContext implements WithSecurityContextFactory<WithMockCustomUser> {
 
@@ -25,13 +28,22 @@ public class DemoMockSecurityContext implements WithSecurityContextFactory<WithM
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    @Value("${test.user.email}")
+    private String defaultEmail;
+    @Value("${test.user.password}")
+    private String defaultPassword;
+    @Value("${test.user.name}")
+    private String defaultMemberName;
+    @Value("${test.user.role}")
+    private String defaultRole;
+
 
     @Override
     public SecurityContext createSecurityContext(WithMockCustomUser annotation) {
-        String email = annotation.email();
-        String password = annotation.password();
-        String memberName = annotation.memberName();
-        String[] roles = annotation.roles();
+        String email = annotation.email().isEmpty() ? defaultEmail : annotation.email();
+        String password = annotation.password().isEmpty() ? defaultPassword : annotation.password();
+        String memberName = annotation.memberName().isEmpty() ? defaultMemberName : annotation.memberName();
+        String[] roles = annotation.roles().length == 0 || annotation.roles()[0].isEmpty() ? new String[]{defaultRole} : annotation.roles();
 
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();

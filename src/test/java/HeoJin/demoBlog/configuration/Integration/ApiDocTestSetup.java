@@ -13,6 +13,7 @@ import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.entity.PostStatus;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +37,18 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
 
     protected TestDataProvider testDataProvider = new TestDataProvider();
 
-    protected String TEST_EMAIL = "test@test.com";
-    protected String TEST_PASSWORD = "testPassword";
-    protected String TEST_MEMBERNAME = "testName";
-    protected String TEST_ROLENAME = "ADMIN";
+    @Value("${test.user.email}")
+    protected String TEST_EMAIL;
+    @Value("${test.user.password}")
+    protected String TEST_PASSWORD;
+    @Value("${test.user.name}")
+    protected String TEST_MEMBERNAME;
+    @Value("${test.user.role}")
+    protected String TEST_ROLENAME;
 
     // Member 관련
+
+    @Transactional
     protected Member createTestMember() {
         String email = TEST_EMAIL;
         String password = TEST_PASSWORD;
@@ -73,6 +80,8 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
     }
 
     // Category 관련
+
+    @Transactional
     protected void saveAllCategories() {
         String[] categories = testDataProvider.getCategoryDataSet();
         for (String categoryName : categories) {
@@ -146,6 +155,7 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
         return saveCommentWithStatus(content, email, password, post, parent, regDate, CommentStatus.ACTIVE);
     }
 
+    @Transactional
     protected void saveAllComments() {
         String[] comments = testDataProvider.getCommentDataSet();
         var posts = postRepository.findAll();

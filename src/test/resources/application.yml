@@ -21,3 +21,10 @@ spring:
 
 server:
   port: 9000
+
+test:
+  user:
+    email: "test@test.com"
+    password: "testPassword"
+    name: "testName"
+    role: "ADMIN"

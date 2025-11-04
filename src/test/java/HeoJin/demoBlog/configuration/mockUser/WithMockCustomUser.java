@@ -11,8 +11,8 @@ import java.lang.annotation.RetentionPolicy;
 public @interface WithMockCustomUser {
 
     // 커스텀 annotation
-    String email() default "test@test.com";
-    String password() default "testPassword";
-    String memberName() default "testName";
-    String[] roles() default {"ADMIN"};
+    String email() default "";
+    String password() default "";
+    String memberName() default "";
+    String[] roles() default {};
 }
