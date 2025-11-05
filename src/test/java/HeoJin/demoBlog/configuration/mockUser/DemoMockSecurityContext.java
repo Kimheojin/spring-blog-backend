@@ -1,9 +1,9 @@
 package HeoJin.demoBlog.configuration.mockUser;
 
+import HeoJin.demoBlog.configuration.InitRepository.TestInitRepository;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.member.entity.Role;
-import HeoJin.demoBlog.member.repository.MemberRepository;
-import HeoJin.demoBlog.member.repository.RoleRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,16 +17,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 
 @Component
 @RequiredArgsConstructor
 public class DemoMockSecurityContext implements WithSecurityContextFactory<WithMockCustomUser> {
 
-    private final MemberRepository memberRepository;
-    private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final TestInitRepository testInitRepository;
+    private final EntityManager em;
 
     @Value("${test.user.email}")
     private String defaultEmail;
@@ -39,21 +39,27 @@ public class DemoMockSecurityContext implements WithSecurityContextFactory<WithM
 
 
     @Override
+    @Transactional
     public SecurityContext createSecurityContext(WithMockCustomUser annotation) {
         String email = annotation.email().isEmpty() ? defaultEmail : annotation.email();
         String password = annotation.password().isEmpty() ? defaultPassword : annotation.password();
         String memberName = annotation.memberName().isEmpty() ? defaultMemberName : annotation.memberName();
-        String[] roles = annotation.roles().length == 0 || annotation.roles()[0].isEmpty() ? new String[]{defaultRole} : annotation.roles();
+        String role = annotation.roles().length == 0 || annotation.roles()[0].isEmpty() ? defaultRole : annotation.roles()[0];
 
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-        Member testMember = memberRepository.findByEmail(email)
-                .orElseGet(() -> createMember(email, password, memberName, roles));
+        Member testMember;
 
-        List<SimpleGrantedAuthority> authorities = testMember.getRoles().stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        Optional<Member> byEmail = testInitRepository.findByEmail(email);
+        if (byEmail.isEmpty()) {
+            testMember = createMember(email, password, memberName, role);
+        }else {
+            testMember = byEmail.get();
+        }
+
+
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(testMember.getRole().getRoleName()));
 
 
         Authentication auth = new UsernamePasswordAuthenticationToken(testMember.getId(), null, authorities);
@@ -65,17 +71,21 @@ public class DemoMockSecurityContext implements WithSecurityContextFactory<WithM
 
 
     @Transactional(readOnly = false)
-    protected Member createMember(String email, String password, String memberName, String[] roles){
+    protected Member createMember(String email, String password, String memberName, String role){
         // DB에 저장 후 반환
 
         // role
-        Role mockRole = roleRepository.findByRoleName(roles[0])
-                .orElseGet(() -> {
-                    Role newRole = Role.builder()
-                            .roleName(roles[0]).build();
-                    return roleRepository.save(newRole);
-                });
+        Role mockRole;
 
+        Optional<Role> byRoleName = testInitRepository.findByRoleName(role);
+        if (byRoleName.isEmpty()) {
+            Role newRole = Role.builder()
+                    .roleName(role).build();
+            em.persist(newRole);
+            mockRole = newRole;
+        }else {
+            mockRole = byRoleName.get();
+        }
         // member
         Member member = Member.builder()
                 .memberName(memberName)
@@ -83,7 +93,7 @@ public class DemoMockSecurityContext implements WithSecurityContextFactory<WithM
                 .password(passwordEncoder.encode(password))
                 .role(mockRole).build();
 
-        memberRepository.save(member);
+        em.persist(member);
 
         return member;
     }
