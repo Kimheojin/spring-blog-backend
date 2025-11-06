@@ -6,6 +6,7 @@ import HeoJin.demoBlog.tag.dto.request.ListDeleteTagRequest;
 import HeoJin.demoBlog.tag.dto.response.ListTagResponseDto;
 import HeoJin.demoBlog.tag.dto.response.PageTagPostResponse;
 import HeoJin.demoBlog.tag.service.TagService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +26,7 @@ public class TagController {
     @PostMapping("/tag/list")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> updateTag(
-            ListAddTagRequestDto listAddTagRequestDto
+            @Valid @RequestBody ListAddTagRequestDto listAddTagRequestDto
     ){
         tagService.addTagPost(listAddTagRequestDto);
         // 반환 값 생각하기
