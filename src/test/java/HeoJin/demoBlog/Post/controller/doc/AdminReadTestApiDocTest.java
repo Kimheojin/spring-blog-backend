@@ -1,11 +1,14 @@
 package HeoJin.demoBlog.Post.controller.doc;
 
-import HeoJin.demoBlog.configuration.Integration.SaveTestData;
+import HeoJin.demoBlog.category.repository.CategoryRepository;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
 import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import HeoJin.demoBlog.member.entity.Member;
+import HeoJin.demoBlog.post.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -21,15 +24,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-class AdminReadControllerTest extends SaveTestData {
+class AdminReadTestApiDocTest extends ApiDocTestSetup {
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     @BeforeEach
     void init() {
+
         Member member = createTestMember();
         saveAllCategories();
         saveAllPosts(member);
-
-
+        saveAllTag();
     }
 
     // get + /api/admin/statusPosts -> 포스트 상태 별 조회
@@ -67,6 +75,9 @@ class AdminReadControllerTest extends SaveTestData {
                         fieldWithPath("content[].memberName").description("작성자 이름"),
                         fieldWithPath("content[].content").description("내용"),
                         fieldWithPath("content[].categoryName").description("카테고리 이름"),
+                        fieldWithPath("content[].tagList").description("해당 포스트 태그 리스트"),
+                        fieldWithPath("content[].tagList[].tagName").description("해당 태그 이름"),
+                        fieldWithPath("content[].tagList[].tagId").description("해당 태그 ID"),
                         fieldWithPath("content[].status").description("enum + 상태 "),
                         fieldWithPath("content[].regDate").description("저장 날짜"),
                         fieldWithPath("pageNumber").description("페이지 넘버"),
@@ -102,6 +113,9 @@ class AdminReadControllerTest extends SaveTestData {
                         fieldWithPath("content[].memberName").description("작성자 이름"),
                         fieldWithPath("content[].content").description("내용"),
                         fieldWithPath("content[].categoryName").description("카테고리 이름"),
+                        fieldWithPath("content[].tagList").description("해당 포스트 태그 리스트"),
+                        fieldWithPath("content[].tagList[].tagName").description("해당 태그 이름"),
+                        fieldWithPath("content[].tagList[].tagId").description("해당 태그 ID"),
                         fieldWithPath("content[].status").description("enum + 상태 "),
                         fieldWithPath("content[].regDate").description("저장 날짜"),
                         fieldWithPath("pageNumber").description("페이지 넘버"),
@@ -142,6 +156,9 @@ class AdminReadControllerTest extends SaveTestData {
                         fieldWithPath("content[].memberName").description("작성자 이름"),
                         fieldWithPath("content[].content").description("내용"),
                         fieldWithPath("content[].categoryName").description("카테고리 이름"),
+                        fieldWithPath("content[].tagList").description("해당 포스트 태그 리스트"),
+                        fieldWithPath("content[].tagList[].tagName").description("해당 태그 이름"),
+                        fieldWithPath("content[].tagList[].tagId").description("해당 태그 ID"),
                         fieldWithPath("content[].status").description("enum + 상태 "),
                         fieldWithPath("content[].regDate").description("저장 날짜"),
                         fieldWithPath("pageNumber").description("페이지 넘버"),
@@ -182,6 +199,9 @@ class AdminReadControllerTest extends SaveTestData {
                         fieldWithPath("memberName").description("작성자 이름"),
                         fieldWithPath("content").description("내용"),
                         fieldWithPath("categoryName").description("카테고리 이름"),
+                        fieldWithPath("tagList").description("태그 리스트"),
+                        fieldWithPath("tagList[].tagName").description("해당 태그 이름"),
+                        fieldWithPath("tagList[].tagId").description("해당 태그 아이디"),
                         fieldWithPath("status").description("enum + 상태 "),
                         fieldWithPath("regDate").description("저장 날짜")
 
@@ -215,6 +235,9 @@ class AdminReadControllerTest extends SaveTestData {
                         fieldWithPath("content[].memberName").description("작성자 이름"),
                         fieldWithPath("content[].content").description("내용"),
                         fieldWithPath("content[].categoryName").description("카테고리 이름"),
+                        fieldWithPath("content[].tagList").description("해당 포스트 태그 리스트"),
+                        fieldWithPath("content[].tagList[].tagName").description("해당 태그 이름"),
+                        fieldWithPath("content[].tagList[].tagId").description("해당 태그 ID"),
                         fieldWithPath("content[].status").description("enum + 상태 "),
                         fieldWithPath("content[].regDate").description("저장 날짜"),
                         fieldWithPath("pageNumber").description("페이지 넘버"),

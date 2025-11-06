@@ -1,6 +1,7 @@
 package HeoJin.demoBlog.Post.controller.doc;
 
-import HeoJin.demoBlog.configuration.Integration.SaveTestData;
+import HeoJin.demoBlog.category.repository.CategoryRepository;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
 import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.post.dto.request.PostDeleteRequest;
@@ -9,9 +10,11 @@ import HeoJin.demoBlog.post.dto.request.PostRequest;
 import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.entity.PostStatus;
 import HeoJin.demoBlog.category.entity.Category;
+import HeoJin.demoBlog.post.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -22,7 +25,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PostWriteControllerTest extends SaveTestData {
+public class PostWriteTestApiDocTest extends ApiDocTestSetup {
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     @BeforeEach
     void init() {
