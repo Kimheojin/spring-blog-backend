@@ -4,12 +4,15 @@ import HeoJin.demoBlog.comment.dto.request.CommentDeleteRequest;
 import HeoJin.demoBlog.comment.dto.request.CommentModifyRequest;
 import HeoJin.demoBlog.comment.dto.request.CommentWriteRequest;
 import HeoJin.demoBlog.comment.entity.Comment;
-import HeoJin.demoBlog.configuration.Integration.SaveTestData;
+import HeoJin.demoBlog.comment.repository.CommentRepository;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.post.entity.Post;
+import HeoJin.demoBlog.post.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -25,7 +28,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-class CommentWriteControllerTest extends SaveTestData {
+class CommentWriteTestApiDocTest extends ApiDocTestSetup {
+
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
     @BeforeEach
     void init(){

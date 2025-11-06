@@ -5,6 +5,7 @@ import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.post.dto.response.PagePostResponse;
 import HeoJin.demoBlog.post.dto.response.PostContractionResponse;
 import HeoJin.demoBlog.post.dto.response.PostResponse;
+import HeoJin.demoBlog.post.dto.response.TagResponse;
 import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.entity.PostStatus;
 import HeoJin.demoBlog.post.service.PostMapper;
@@ -15,6 +16,7 @@ import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -80,8 +82,15 @@ public class PostMapperTest {
                 .regDate(LocalDateTime.now())
                 .build();
 
+        List<TagResponse> testResponseList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            TagResponse testTagResponse = TagResponse.builder()
+                    .tagId(0L)
+                    .tagName("test" + i).build();
+        }
+
         // when
-        PostResponse result = PostMapper.toPostResponse(post);
+        PostResponse result = PostMapper.toPostResponse(post, testResponseList);
 
         // then
         Assertions.assertEquals(post.getId(), result.getPostId());
@@ -115,8 +124,16 @@ public class PostMapperTest {
                 .regDate(LocalDateTime.now())
                 .build();
 
+
+        List<TagResponse> testResponseList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            TagResponse testTagResponse = TagResponse.builder()
+                    .tagId(0L)
+                    .tagName("test" + i).build();
+        }
+
         // when
-        PostResponse result = PostMapper.toPostResponse(post);
+        PostResponse result = PostMapper.toPostResponse(post, testResponseList);
 
         // then
         Assertions.assertEquals(PostStatus.DRAFT, result.getStatus());

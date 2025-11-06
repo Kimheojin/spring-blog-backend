@@ -1,11 +1,13 @@
 package HeoJin.demoBlog.Post.controller;
 
 
-import HeoJin.demoBlog.configuration.Integration.SaveTestData;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
 import HeoJin.demoBlog.member.entity.Member;
+import HeoJin.demoBlog.post.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 
@@ -14,7 +16,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
-public class PostReadControllerTest extends SaveTestData {
+public class PostReadTestApiDocTest extends ApiDocTestSetup {
+    @Autowired
+    private PostRepository postRepository;
 
 
     @BeforeEach
@@ -22,7 +26,7 @@ public class PostReadControllerTest extends SaveTestData {
         Member member = createTestMember();
         saveAllCategories();
         saveAllPosts(member);
-
+        saveAllTag();
     }
     @Test
     @DisplayName("get /api/posts/single -> 단일 포스트 조회 캐시 테스트")

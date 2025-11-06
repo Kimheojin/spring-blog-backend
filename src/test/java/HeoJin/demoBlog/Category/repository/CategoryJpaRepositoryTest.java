@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class CategoryJpaRepositoryTest {
 
 
-    // 귀찮구만
     @Autowired
     private TestEntityManager entityManager;
     @Autowired

@@ -1,6 +1,6 @@
 package HeoJin.demoBlog.member.controller.doc;
 
-import HeoJin.demoBlog.configuration.Integration.SaveTestData;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
 import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import HeoJin.demoBlog.member.dto.request.LoginDto;
 import HeoJin.demoBlog.member.entity.Member;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @SpringBootTest
-public class AuthControllerTest extends SaveTestData {
+public class AuthTestApiDocTest extends ApiDocTestSetup {
 
 
 

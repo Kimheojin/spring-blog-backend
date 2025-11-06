@@ -4,7 +4,7 @@ package HeoJin.demoBlog.category.controller.validation;
 import HeoJin.demoBlog.category.dto.request.AddCategoryRequest;
 import HeoJin.demoBlog.category.dto.request.DeleteCategoryRequest;
 import HeoJin.demoBlog.category.dto.request.ModifyCategoryNameRequest;
-import HeoJin.demoBlog.configuration.Integration.SaveTestData;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
 import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AdminCategoryValidationTest extends SaveTestData {
+public class AdminCategoryValidationTest extends ApiDocTestSetup {
 
     final String DEFAULTVALIDATIONMESSAGE = "입력값 검증에 실패했습니다.";
 

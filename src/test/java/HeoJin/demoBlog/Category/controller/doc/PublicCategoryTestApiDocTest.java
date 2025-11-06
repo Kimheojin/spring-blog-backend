@@ -1,6 +1,6 @@
 package HeoJin.demoBlog.category.controller.doc;
 
-import HeoJin.demoBlog.configuration.Integration.SaveTestData;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PublicCategoryControllerTest extends SaveTestData {
+public class PublicCategoryTestApiDocTest extends ApiDocTestSetup {
 
     @BeforeEach
     void Init() {

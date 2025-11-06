@@ -1,6 +1,6 @@
 package HeoJin.demoBlog.Post.controller.validation;
 
-import HeoJin.demoBlog.configuration.Integration.SaveTestData;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
 import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import HeoJin.demoBlog.post.dto.request.PostDeleteRequest;
 import HeoJin.demoBlog.post.dto.request.PostModifyRequest;
@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PostWriteValidationControllerTest extends SaveTestData {
+public class PostWriteValidationTestApiDocTest extends ApiDocTestSetup {
 
     final String DEFAULTVALIDATIONMESSAGE = "입력값 검증에 실패했습니다.";
 

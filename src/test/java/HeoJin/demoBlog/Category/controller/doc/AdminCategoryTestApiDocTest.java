@@ -5,11 +5,13 @@ import HeoJin.demoBlog.category.dto.request.AddCategoryRequest;
 import HeoJin.demoBlog.category.dto.request.DeleteCategoryRequest;
 import HeoJin.demoBlog.category.dto.request.ModifyCategoryNameRequest;
 import HeoJin.demoBlog.category.entity.Category;
-import HeoJin.demoBlog.configuration.Integration.SaveTestData;
+import HeoJin.demoBlog.category.repository.CategoryRepository;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
 import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -21,7 +23,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class AdminCategoryControllerTest extends SaveTestData {
+public class AdminCategoryTestApiDocTest extends ApiDocTestSetup {
+
+    @Autowired
+    public CategoryRepository categoryRepository;
 
     @BeforeEach
     public void init(){

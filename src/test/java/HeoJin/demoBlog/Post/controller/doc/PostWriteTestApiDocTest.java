@@ -1,5 +1,6 @@
 package HeoJin.demoBlog.Post.controller.doc;
 
+import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.category.repository.CategoryRepository;
 import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
 import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
@@ -7,9 +8,9 @@ import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.post.dto.request.PostDeleteRequest;
 import HeoJin.demoBlog.post.dto.request.PostModifyRequest;
 import HeoJin.demoBlog.post.dto.request.PostRequest;
+import HeoJin.demoBlog.post.dto.request.TagRequest;
 import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.entity.PostStatus;
-import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -37,6 +40,7 @@ public class PostWriteTestApiDocTest extends ApiDocTestSetup {
         Member member = createTestMember();
         saveAllCategories();
         saveAllPosts(member);
+        saveAllTag();
     }
 
     @Test
@@ -47,11 +51,16 @@ public class PostWriteTestApiDocTest extends ApiDocTestSetup {
         Category category = categoryRepository.findByCategoryName("Java1")
                 .orElseThrow(() -> new AssertionError("테스트 초기화 데이터 오류"));
 
+        TagRequest tagRequest = TagRequest.builder()
+                .tagName("hello")
+                .build();
+
         PostRequest request = PostRequest.builder()
                 .title("새로운 게시글 제목")
                 .content("새로운 게시글 내용입니다.")
                 .categoryName(category.getCategoryName())
                 .postStatus(PostStatus.PUBLISHED)
+                .tagList(List.of(tagRequest))
                 .build();
 
         // when + then
@@ -69,7 +78,9 @@ public class PostWriteTestApiDocTest extends ApiDocTestSetup {
                         fieldWithPath("title").description("게시글 제목"),
                         fieldWithPath("content").description("게시글 내용"),
                         fieldWithPath("categoryName").description("카테고리 ID"),
-                        fieldWithPath("postStatus").description("게시글 상태 (PUBLISHED, PRIVATE)")
+                        fieldWithPath("postStatus").description("게시글 상태 (PUBLISHED, PRIVATE)"),
+                        fieldWithPath("tagList").description("해당 게시물 태그 리스트"),
+                        fieldWithPath("tagList[].tagName").description("해당 게시물 태그 이름")
                 ),
                 responseFields(
                         fieldWithPath("title").description("제목"),
@@ -86,12 +97,21 @@ public class PostWriteTestApiDocTest extends ApiDocTestSetup {
         Category category = categoryRepository.findByCategoryName("Java2")
                 .orElseThrow(() -> new AssertionError("테스트 초기화 데이터 오류"));
 
+        TagRequest tagRequest1 = TagRequest.builder()
+                .tagName("tesst1")
+                .build();
+
+        TagRequest tagRequest2 = TagRequest.builder()
+                .tagName("tesst1")
+                .build();
+
         PostModifyRequest request = PostModifyRequest.builder()
                 .postId(existingPost.getId())
                 .title("수정된 게시글 제목")
                 .content("수정된 게시글 내용입니다.")
                 .categoryName(category.getCategoryName())
                 .postStatus(PostStatus.PRIVATE)
+                .tagList(List.of(tagRequest1, tagRequest2))
                 .build();
 
         // when + then
@@ -110,6 +130,8 @@ public class PostWriteTestApiDocTest extends ApiDocTestSetup {
                         fieldWithPath("title").description("수정할 게시글 제목"),
                         fieldWithPath("content").description("수정할 게시글 내용"),
                         fieldWithPath("categoryName").description("수정할 카테고리 ID"),
+                        fieldWithPath("tagList").description("수정할 태그 리스트"),
+                        fieldWithPath("tagList[].tagName").description("수정할 태그 이름"),
                         fieldWithPath("postStatus").description("수정할 게시글 상태 (PUBLISHED, PRIVATE)")
                 ),
                 responseFields(

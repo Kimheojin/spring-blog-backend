@@ -24,3 +24,7 @@ de:
       embedded:
         version: 6.0.5
 
+logging:
+  level:
+    de.flapdoodle.embed.mongo: WARN
+    org.springframework.data: WARN

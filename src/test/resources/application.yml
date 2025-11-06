@@ -28,10 +28,3 @@ test:
     password: "testPassword"
     name: "testName"
     role: "ADMIN"
-
-logging:
-  level:
-    de:
-      flapdoodle:
-        embed:
-          mongo: WARN

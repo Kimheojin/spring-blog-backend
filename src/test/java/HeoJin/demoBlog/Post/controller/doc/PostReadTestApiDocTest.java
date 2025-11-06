@@ -29,6 +29,7 @@ public class PostReadTestApiDocTest extends ApiDocTestSetup {
         Member member = createTestMember();
         saveAllCategories();
         saveAllPosts(member);
+        saveAllTag();
 
     }
 
@@ -55,6 +56,9 @@ public class PostReadTestApiDocTest extends ApiDocTestSetup {
                         fieldWithPath("content[].memberName").description("작성자 이름"),
                         fieldWithPath("content[].content").description("내용"),
                         fieldWithPath("content[].categoryName").description("카테고리 이름"),
+                        fieldWithPath("content[].tagList").description("해당 포스트 태그 리스트"),
+                        fieldWithPath("content[].tagList[].tagName").description("해당 태그 이름"),
+                        fieldWithPath("content[].tagList[].tagId").description("해당 태그 ID"),
                         fieldWithPath("content[].status").description("enum + 상태 "),
                         fieldWithPath("content[].regDate").description("저장 날짜"),
                         fieldWithPath("pageNumber").description("페이지 넘버"),
@@ -88,6 +92,9 @@ public class PostReadTestApiDocTest extends ApiDocTestSetup {
                         fieldWithPath("content[].memberName").description("작성자 이름"),
                         fieldWithPath("content[].content").description("내용"),
                         fieldWithPath("content[].categoryName").description("카테고리 이름"),
+                        fieldWithPath("content[].tagList").description("해당 포스트 태그 리스트"),
+                        fieldWithPath("content[].tagList[].tagName").description("해당 태그 이름"),
+                        fieldWithPath("content[].tagList[].tagId").description("해당 태그 ID"),
                         fieldWithPath("content[].status").description("enum + 상태 "),
                         fieldWithPath("content[].regDate").description("저장 날짜"),
                         fieldWithPath("pageNumber").description("페이지 넘버"),
@@ -124,6 +131,9 @@ public class PostReadTestApiDocTest extends ApiDocTestSetup {
                         fieldWithPath("memberName").description("작성자 이름"),
                         fieldWithPath("content").description("내용"),
                         fieldWithPath("categoryName").description("카테고리 이름"),
+                        fieldWithPath("tagList").description("해당 포스트 태그 리스트"),
+                        fieldWithPath("tagList[].tagName").description("해당 태그 이름"),
+                        fieldWithPath("tagList[].tagId").description("해당 태그 ID"),
                         fieldWithPath("status").description("enum + 상태 "),
                         fieldWithPath("regDate").description("저장 날짜")
 

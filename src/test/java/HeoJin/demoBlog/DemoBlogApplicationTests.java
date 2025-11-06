@@ -1,9 +1,9 @@
 package HeoJin.demoBlog;
 
-import HeoJin.demoBlog.configuration.Integration.SaveTestData;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
 import org.junit.jupiter.api.Test;
 
-class DemoBlogApplicationTests extends SaveTestData {
+class DemoBlogApplicationTests extends ApiDocTestSetup {
 
 	@Test
 	void contextLoads() {
