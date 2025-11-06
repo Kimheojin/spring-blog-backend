@@ -40,4 +40,8 @@ public class TestDataProvider {
                 "공유해주셔서 감사합니다!"
         };
     }
+
+    public String[] getTagNameDataSet() {
+        return new String[]{"Tag1", "Tag2", "Tag3", "Tag4", "Tag5", "Tag6", "Tag7", "Tag8", "Tag9", "Tag10"};
+    }
 }

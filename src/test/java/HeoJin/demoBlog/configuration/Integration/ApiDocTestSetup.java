@@ -1,37 +1,34 @@
 package HeoJin.demoBlog.configuration.Integration;
 
 import HeoJin.demoBlog.category.entity.Category;
-import HeoJin.demoBlog.category.repository.CategoryRepository;
 import HeoJin.demoBlog.comment.entity.Comment;
 import HeoJin.demoBlog.comment.entity.CommentStatus;
-import HeoJin.demoBlog.comment.repository.CommentRepository;
+import HeoJin.demoBlog.configuration.InitRepository.TestInitRepository;
+import HeoJin.demoBlog.global.exception.CustomNotFound;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.member.entity.Role;
-import HeoJin.demoBlog.member.repository.MemberRepository;
-import HeoJin.demoBlog.member.repository.RoleRepository;
 import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.entity.PostStatus;
-import HeoJin.demoBlog.post.repository.PostRepository;
+import HeoJin.demoBlog.tag.entity.Tag;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 
 public abstract class ApiDocTestSetup extends ApiDocTestBase {
 
     @Autowired
-    protected CategoryRepository categoryRepository;
+    private TestInitRepository testInitRepository;
     @Autowired
-    protected PostRepository postRepository;
-    @Autowired
-    protected CommentRepository commentRepository;
-    @Autowired
-    protected MemberRepository memberRepository;
-    @Autowired
-    protected RoleRepository roleRepository;
+    private EntityManager em;
     @Autowired
     protected BCryptPasswordEncoder passwordEncoder;
 
@@ -47,8 +44,6 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
     protected String TEST_ROLENAME;
 
     // Member 관련
-
-    @Transactional
     protected Member createTestMember() {
         String email = TEST_EMAIL;
         String password = TEST_PASSWORD;
@@ -56,15 +51,16 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
         String roleName = TEST_ROLENAME;
 
         // annotation과 동일 - 이미 존재하는지 확인 (중복 방지)
-        return memberRepository.findByEmail(email)
+        return testInitRepository.findByEmail(email)
                 .orElseGet(() -> {
                     // Role 생성 또는 조회
-                    Role role = roleRepository.findByRoleName(roleName)
+                    Role role = testInitRepository.findByRoleName(roleName)
                             .orElseGet(() -> {
                                 Role newRole = Role.builder()
                                         .roleName(roleName)
                                         .build();
-                                return roleRepository.save(newRole);
+                                em.persist(newRole);
+                                return newRole;
                             });
 
                     // Member 생성
@@ -75,13 +71,13 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
                             .role(role)
                             .build();
 
-                    return memberRepository.save(member);
+                    em.persist(member);
+
+                    return member;
                 });
     }
 
     // Category 관련
-
-    @Transactional
     protected void saveAllCategories() {
         String[] categories = testDataProvider.getCategoryDataSet();
         for (String categoryName : categories) {
@@ -91,17 +87,20 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
 
     protected void saveCategory(String categoryName) {
         // 이미 존재하는지 확인 (중복 방지)
-        categoryRepository.findByCategoryName(categoryName)
+        testInitRepository.findByCategoryName(categoryName)
                 .orElseGet(() -> {
                     Category category = Category.builder()
                             .categoryName(categoryName)
                             .build();
-                    return categoryRepository.save(category);
+
+                    em.persist(category);
+
+
+                    return category;
                 });
     }
 
     // Post관련
-    @Transactional
     protected void saveAllPosts(Member member) {
         String[][] posts = testDataProvider.getPostDataSet();
         String[] categories = testDataProvider.getCategoryDataSet();
@@ -113,8 +112,8 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
         PostStatus[] statusArray = {PostStatus.PUBLISHED, PostStatus.PRIVATE};
 
         for (int i = 0; i < posts.length; i++) {
-            Category category = categoryRepository.findByCategoryName(categories[i % categories.length])
-                    .orElseThrow(() -> new RuntimeException("카테고리를 찾을 수 없습니다"));
+            Category category = testInitRepository.findByCategoryName(categories[i % categories.length])
+                    .orElseThrow(() -> new CustomNotFound("카테고리를 찾을 수 없습니다"));
 
             // 4개 상태를 순환하며 균등하게 분배
             PostStatus status = statusArray[i % statusArray.length];
@@ -131,7 +130,8 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
                 .status(status)
                 .regDate(LocalDateTime.now().minusDays(16))
                 .build();
-        postRepository.save(post);
+
+        em.persist(post);
     }
 
     // Comment 관련
@@ -147,7 +147,9 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
                 .status(status)  // 전달받은 status 사용
                 .regDate(regDate)
                 .build();
-        return commentRepository.save(comment);
+
+        em.persist(comment);
+        return comment;
     }
 
     // 기존 메서드는 ACTIVE로 고정 (하위 호환성)
@@ -155,10 +157,9 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
         return saveCommentWithStatus(content, email, password, post, parent, regDate, CommentStatus.ACTIVE);
     }
 
-    @Transactional
     protected void saveAllComments() {
         String[] comments = testDataProvider.getCommentDataSet();
-        var posts = postRepository.findAll();
+        List<Post> posts = testInitRepository.findAllPost();
 
         if (posts.isEmpty()) {
             return;
@@ -195,6 +196,26 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
                     parentComment = comment;
                 }
                 commentIndex++;
+            }
+        }
+    }
+
+    protected void saveAllTag(){
+
+
+        List<Post> posts = testInitRepository.findAllPost();
+        String[] tagNameDataList = testDataProvider.getTagNameDataSet();
+        List<String> tagNameList = new ArrayList<>(Arrays.asList(tagNameDataList));
+
+        List<Tag> allTags = new ArrayList<>();
+        for (String tagName : tagNameList) {
+            allTags.add(testInitRepository.findOrCreateTag(tagName));
+        }
+        Collections.shuffle(allTags);
+        for(Post cmpPost : posts) {
+            for (int i = 0; i < 3 && i < allTags.size(); i++) {
+                Tag tag = allTags.get(i);
+                testInitRepository.createPostTagLink(cmpPost.getId(), tag.getId());
             }
         }
     }
