@@ -3,7 +3,8 @@ package HeoJin.demoBlog.tag.controller;
 
 import HeoJin.demoBlog.tag.dto.request.ListAddTagRequestDto;
 import HeoJin.demoBlog.tag.dto.request.ListDeleteTagRequest;
-import HeoJin.demoBlog.tag.dto.response.ListTagResponseDto;
+import HeoJin.demoBlog.tag.dto.response.ListTagDtoResponseDto;
+import HeoJin.demoBlog.tag.dto.response.ListTagResponse;
 import HeoJin.demoBlog.tag.dto.response.PageTagPostResponse;
 import HeoJin.demoBlog.tag.service.TagService;
 import jakarta.validation.Valid;
@@ -25,12 +26,12 @@ public class TagController {
     // 태그 추가 엔드포인트
     @PostMapping("/tag/list")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> updateTag(
+    public ResponseEntity<ListTagResponse> updateTag(
             @Valid @RequestBody ListAddTagRequestDto listAddTagRequestDto
     ){
-        tagService.addTagPost(listAddTagRequestDto);
+        ListTagResponse listTagResponse = tagService.addTagPost(listAddTagRequestDto);
         // 반환 값 생각하기
-        return ResponseEntity.ok("hello");
+        return ResponseEntity.ok(listTagResponse);
     }
 
     // 태그 삭제 엔드 포인트
@@ -45,10 +46,10 @@ public class TagController {
 
     // 태그 목록 반환
     @GetMapping("/tag/list")
-    public ResponseEntity<ListTagResponseDto> getTagList(
+    public ResponseEntity<ListTagDtoResponseDto> getTagList(
     ){
 
-        ListTagResponseDto tagList = tagService.getTagList();
+        ListTagDtoResponseDto tagList = tagService.getTagList();
         return ResponseEntity.ok(tagList);
     }
 

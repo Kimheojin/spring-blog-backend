@@ -2,7 +2,7 @@ package HeoJin.demoBlog.tag.dto.response;
 
 import java.util.List;
 
-public record ListTagResponseDto(
+public record ListTagDtoResponseDto(
         List<TagResponseDto> tagResponseDtoList
 ) {
 }

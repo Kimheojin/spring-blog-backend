@@ -5,10 +5,7 @@ import HeoJin.demoBlog.global.exception.CustomNotFound;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import HeoJin.demoBlog.tag.dto.request.ListAddTagRequestDto;
 import HeoJin.demoBlog.tag.dto.request.ListDeleteTagRequest;
-import HeoJin.demoBlog.tag.dto.response.ListTagResponseDto;
-import HeoJin.demoBlog.tag.dto.response.PageTagPostResponse;
-import HeoJin.demoBlog.tag.dto.response.PostTagResponseDto;
-import HeoJin.demoBlog.tag.dto.response.TagResponseDto;
+import HeoJin.demoBlog.tag.dto.response.*;
 import HeoJin.demoBlog.tag.repository.PostTagRepository;
 import HeoJin.demoBlog.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +28,7 @@ public class TagService {
 
 
     @Transactional
-    public void addTagPost(ListAddTagRequestDto listAddTagRequestDto) {
+    public ListTagResponse addTagPost(ListAddTagRequestDto listAddTagRequestDto) {
         // 해당 post 값
         Long postId = listAddTagRequestDto.postId();
         // 검증
@@ -44,6 +41,7 @@ public class TagService {
                         -> tagManager.addTagPost(addTagDtoRequest.getTagName(), postId)
         );
 
+      return new ListTagResponse(postTagRepository.getTagListWithPostId(postId));
     }
 
     // 태그 삭제 메소드
@@ -66,10 +64,10 @@ public class TagService {
 
 
     @Transactional
-    public ListTagResponseDto getTagList() {
+    public ListTagDtoResponseDto getTagList() {
 
         List<TagResponseDto> tagDtos = postTagRepository.getCountWithTagId();
-        return new ListTagResponseDto(tagDtos);
+        return new ListTagDtoResponseDto(tagDtos);
     }
 
 
