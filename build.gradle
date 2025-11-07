@@ -123,6 +123,6 @@ bootJar {
 	}
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
 }
