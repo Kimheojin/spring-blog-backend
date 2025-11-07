@@ -84,7 +84,7 @@ public class TagManager {
             tagRepository.deleteAllByIdIn(dangleTagIds);
         }
     }
-
+    @Transactional
     public void modifyTagList(List<TagRequest> tagList, Long postId) {
         // 기존 태그
         Set<String> oldTagNames = postTagRepository.getTagListWithPostId(postId)

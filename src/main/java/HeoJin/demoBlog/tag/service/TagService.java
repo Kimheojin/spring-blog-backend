@@ -46,7 +46,7 @@ public class TagService {
 
     // 태그 삭제 메소드
     @Transactional
-    public void deleteTag(ListDeleteTagRequest listDeleteTagRequest) {
+    public ListTagResponse deleteTag(ListDeleteTagRequest listDeleteTagRequest) {
 
         long postId = listDeleteTagRequest.postId();
         // 검증
@@ -58,6 +58,8 @@ public class TagService {
                 deleteTagDtoRequest
                         -> tagManager.deleteTagPost(deleteTagDtoRequest.getTagName(), postId)
         );
+
+        return new ListTagResponse(postTagRepository.getTagListWithPostId(postId));
 
     }
 
