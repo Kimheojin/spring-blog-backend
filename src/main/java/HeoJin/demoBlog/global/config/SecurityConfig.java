@@ -56,7 +56,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login", "/api/auth/logout",
                                 "/api/categories", "/api/categories/stats",
                                 "/api/posts/*/comments", "/api/posts/comments", "/api/comments",
-                                "/api/posts", "/api/posts/single", "/api/posts/category").permitAll()
+                                "/api/posts", "/api/posts/single", "/api/posts/category",
+                                "/api/tag/list", "/api/tag/postlist").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 // 이거 filter 단위라 controllerAdvice에 안잡힘
