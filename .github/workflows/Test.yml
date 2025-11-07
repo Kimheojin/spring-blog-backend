@@ -33,7 +33,7 @@ jobs:
         run: ./gradlew compileJava
 
       - name: Test with Gradle
-        run: ./gradlew test --stacktrace
+        run: ./gradlew test
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
