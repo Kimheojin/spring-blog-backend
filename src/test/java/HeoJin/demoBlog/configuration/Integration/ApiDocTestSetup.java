@@ -213,7 +213,7 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
         }
         Collections.shuffle(allTags);
         for(Post cmpPost : posts) {
-            for (int i = 0; i < 3 && i < allTags.size(); i++) {
+            for (int i = 0; i < 8 && i < allTags.size(); i++) {
                 Tag tag = allTags.get(i);
                 testInitRepository.createPostTagLink(cmpPost.getId(), tag.getId());
             }

@@ -2,10 +2,7 @@ package HeoJin.demoBlog.tag.service;
 
 
 import HeoJin.demoBlog.global.exception.CustomNotFound;
-import HeoJin.demoBlog.post.repository.PostRepository;
-import HeoJin.demoBlog.tag.dto.request.ListAddTagRequestDto;
-import HeoJin.demoBlog.tag.dto.request.ListDeleteTagRequest;
-import HeoJin.demoBlog.tag.dto.response.ListTagResponseDto;
+import HeoJin.demoBlog.tag.dto.response.ListTagDtoResponseDto;
 import HeoJin.demoBlog.tag.dto.response.PageTagPostResponse;
 import HeoJin.demoBlog.tag.dto.response.PostTagResponseDto;
 import HeoJin.demoBlog.tag.dto.response.TagResponseDto;
@@ -24,52 +21,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TagService {
 
-    private final PostRepository postRepository;
     private final PostTagRepository postTagRepository;
     private final TagRepository tagRepository;
-    private final TagManager tagManager;
 
 
-    @Transactional
-    public void addTagPost(ListAddTagRequestDto listAddTagRequestDto) {
-        // 해당 post 값
-        Long postId = listAddTagRequestDto.postId();
-        // 검증
-        if (!postRepository.existsById(postId)) {
-            throw new CustomNotFound("해당 post가 존재하지 않습니다.");
-        }
-
-        listAddTagRequestDto.DtoList().forEach(
-                addTagDtoRequest
-                        -> tagManager.addTagPost(addTagDtoRequest.getTagName(), postId)
-        );
-
-    }
-
-    // 태그 삭제 메소드
-    @Transactional
-    public void deleteTag(ListDeleteTagRequest listDeleteTagRequest) {
-
-        long postId = listDeleteTagRequest.postId();
-        // 검증
-        if(!postRepository.existsById(postId)) {
-            throw new CustomNotFound("해당 post 가 존재하지 않습니다,");
-        }
-
-        listDeleteTagRequest.DtoList().forEach(
-                deleteTagDtoRequest
-                        -> tagManager.deleteTagPost(deleteTagDtoRequest.getTagName(), postId)
-        );
-
-    }
-
-
-
-    @Transactional
-    public ListTagResponseDto getTagList() {
+    @Transactional(readOnly = true)
+    public ListTagDtoResponseDto getTagList() {
 
         List<TagResponseDto> tagDtos = postTagRepository.getCountWithTagId();
-        return new ListTagResponseDto(tagDtos);
+        return new ListTagDtoResponseDto(tagDtos);
     }
 
 

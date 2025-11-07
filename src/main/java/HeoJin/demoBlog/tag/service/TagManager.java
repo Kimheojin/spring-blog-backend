@@ -9,7 +9,6 @@ import HeoJin.demoBlog.tag.repository.PostTagRepository;
 import HeoJin.demoBlog.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -64,7 +63,6 @@ public class TagManager {
         }
     }
 
-    @Transactional
     public void deleteTagByPostId(Long postId){
         List<PostTag> postTags = postTagRepository.findAllByPostId(postId);
         if (postTags.isEmpty()) {
@@ -84,7 +82,6 @@ public class TagManager {
             tagRepository.deleteAllByIdIn(dangleTagIds);
         }
     }
-
     public void modifyTagList(List<TagRequest> tagList, Long postId) {
         // 기존 태그
         Set<String> oldTagNames = postTagRepository.getTagListWithPostId(postId)
