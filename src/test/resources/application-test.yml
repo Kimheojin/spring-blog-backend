@@ -12,17 +12,17 @@ jwt:
 mongo:
   collectionName: testCollection
 ## 테스트용
-spring:
-  data:
-    mongodb:
-      database: test
-      port: 0
-
-de:
-  flapdoodle:
-    mongodb:
-      embedded:
-        version: 6.0.5
+#spring:
+#  data:
+#    mongodb:
+#      database: test
+#      port: 0
+#
+#de:
+#  flapdoodle:
+#    mongodb:
+#      embedded:
+#        version: 6.0.5
 
 logging:
   level:
