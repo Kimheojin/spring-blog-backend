@@ -67,7 +67,7 @@ dependencies {
 
 	// 테스트만 h2 + mongo
 	testImplementation 'com.h2database:h2'
-	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring3x:4.12.3'
+	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring3x:4.12.7'
 
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
