@@ -1,6 +1,8 @@
 package HeoJin.demoBlog.member.repository;
 
 
+import HeoJin.demoBlog.configuration.InitRepository.TestInitRepository;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.configuration.dataJpaTest.SaveDataJpaTest;
 import HeoJin.demoBlog.global.config.QuerydslConfig;
 import HeoJin.demoBlog.member.entity.Member;
@@ -18,7 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Optional;
 
 @DataJpaTest
-@Import(QuerydslConfig.class)
+@Import({QuerydslConfig.class, DataInitComponent.class, TestInitRepository.class, BCryptPasswordEncoder.class})
 public class MemberRepositoryTest extends SaveDataJpaTest {
 
     @Autowired
@@ -26,6 +28,9 @@ public class MemberRepositoryTest extends SaveDataJpaTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private DataInitComponent dataInitComponent;
 
     @BeforeEach
     void setUp(){
@@ -38,7 +43,7 @@ public class MemberRepositoryTest extends SaveDataJpaTest {
     @DisplayName("findByEmail -> 정상 작동 테스트")
     void test1() {
         // given
-        Member testMember = createTestMember();
+        Member testMember = dataInitComponent.createTestMember();
         String testMemberEmail = testMember.getEmail();
         entityManager.persistAndFlush(testMember);
         entityManager.clear();

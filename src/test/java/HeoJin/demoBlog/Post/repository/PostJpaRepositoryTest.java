@@ -2,6 +2,8 @@ package HeoJin.demoBlog.Post.repository;
 
 import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.category.repository.CategoryRepository;
+import HeoJin.demoBlog.configuration.InitRepository.TestInitRepository;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.configuration.dataJpaTest.SaveDataJpaTest;
 import HeoJin.demoBlog.global.config.QuerydslConfig;
 import HeoJin.demoBlog.member.entity.Member;
@@ -26,12 +28,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Optional;
 
 @DataJpaTest
-@Import(QuerydslConfig.class)
+@Import({QuerydslConfig.class, DataInitComponent.class, TestInitRepository.class, BCryptPasswordEncoder.class})
 public class PostJpaRepositoryTest extends SaveDataJpaTest{
 
     @Autowired
     private TestEntityManager entityManager;
-
+    @Autowired
+    private DataInitComponent dataInitComponent;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -48,8 +51,8 @@ public class PostJpaRepositoryTest extends SaveDataJpaTest{
     @DisplayName("findById -> 정상 작동 // postId 로 조회")
     void test1() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
 
         Category testCategory = categoryRepository.findAll().get(0);
         Post post1 = createPost(testMember, testCategory, PostStatus.PUBLISHED, "1번");
@@ -67,8 +70,8 @@ public class PostJpaRepositoryTest extends SaveDataJpaTest{
     @DisplayName("findById -> 존재하지 않는 id로 조회")
     void test2() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
 
         Category testCategory = categoryRepository.findAll().get(0);
         Post post1 = createPost(testMember, testCategory, PostStatus.PUBLISHED, "1번");
@@ -85,8 +88,8 @@ public class PostJpaRepositoryTest extends SaveDataJpaTest{
     @DisplayName("findById -> null ID로 조회 시 예외 발생")
     void test3() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
 
         Long testId = null;
 
@@ -104,8 +107,8 @@ public class PostJpaRepositoryTest extends SaveDataJpaTest{
     @DisplayName("findById -> 다양한 상태 조회 확인")
     void test4() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
 
         Category testCategory = categoryRepository.findAll().get(0);
         Post post1 = createPost(testMember, testCategory, PostStatus.PUBLISHED, "1번");
@@ -140,8 +143,8 @@ public class PostJpaRepositoryTest extends SaveDataJpaTest{
     @DisplayName("existsByCategoryId -> 정상 동작 확인")
     void test5() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
 
         Category testCategory = categoryRepository.findAll().get(0);
         Category testCategory2 = categoryRepository.findAll().get(1);
@@ -177,8 +180,8 @@ public class PostJpaRepositoryTest extends SaveDataJpaTest{
     @DisplayName("findAll -> 정상 동작 테스트")
     void test7() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
 
         Category testCategory = categoryRepository.findAll().get(0);
         Post testPost1 = createPost(testMember,testCategory, PostStatus.PUBLISHED, "1번");
@@ -219,8 +222,8 @@ public class PostJpaRepositoryTest extends SaveDataJpaTest{
     @DisplayName("findAll -> 페이징 경계 테스트")
     void test9() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
         Category testCategory = categoryRepository.findAll().get(0);
 
         // 7개 데이터 생성

@@ -3,6 +3,8 @@ package HeoJin.demoBlog.category.repository;
 
 import HeoJin.demoBlog.category.dto.data.CategoryWithCountDto;
 import HeoJin.demoBlog.category.entity.Category;
+import HeoJin.demoBlog.configuration.InitRepository.TestInitRepository;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.configuration.dataJpaTest.SaveDataJpaTest;
 import HeoJin.demoBlog.global.config.QuerydslConfig;
 import HeoJin.demoBlog.member.entity.Member;
@@ -24,15 +26,15 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(QuerydslConfig.class)
+@Import({QuerydslConfig.class, DataInitComponent.class, TestInitRepository.class, BCryptPasswordEncoder.class})
 public class CategoryQuerydslRepositoryTest extends SaveDataJpaTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
-
-
     @Autowired
     private TestEntityManager entityManager;
+    @Autowired
+    private DataInitComponent dataInitComponent;
 
     @BeforeEach
     void setUp(){
@@ -45,8 +47,8 @@ public class CategoryQuerydslRepositoryTest extends SaveDataJpaTest {
     @DisplayName("findAllCategoriesWithCount -> 정상 작동 테스트")
     void test1(){
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
 
         Category testCategory1 = categoryRepository.findAll().get(0);
         Category testCategory2 = categoryRepository.findAll().get(1);
@@ -96,8 +98,8 @@ public class CategoryQuerydslRepositoryTest extends SaveDataJpaTest {
     @DisplayName("findAllCategoriesWithCount -> PRIVATE 상태 post는 카운트에서 제외되는지 확인")
     void test2(){
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
         Category testCategory = categoryRepository.findAll().get(0);
 
         // PRIVATE 상태의 포스트 생성
@@ -125,8 +127,8 @@ public class CategoryQuerydslRepositoryTest extends SaveDataJpaTest {
     @DisplayName("findAllCategoriesWithCount -> PUBLISHED 상태 post는 카운트에 포함되는지 확인")
     void test3(){
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
         Category testCategory = categoryRepository.findAll().get(0);
 
         // PUBLISHED 상태의 포스트 생성
@@ -152,8 +154,8 @@ public class CategoryQuerydslRepositoryTest extends SaveDataJpaTest {
     @DisplayName("findAllCategoriesWithCount -> 여러 상태의 post가 섞여있을 때 PUBLIC만 카운트되는지 확인")
     void test4(){
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
         Category testCategory = categoryRepository.findAll().get(0);
 
         // PRIVATE 포스트 2개 생성
