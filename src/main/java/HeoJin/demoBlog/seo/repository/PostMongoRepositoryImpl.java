@@ -84,11 +84,15 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
 
         // 페이징 처리 해야하나
         // 검색은 검색만 해야 하는 거
-        //
-
-
 
         return null;
+    }
+
+    @Override
+    public void deleteAll(List<PostMongo> postMongoList) {
+        postMongoList.forEach(
+                postMongo ->  mongoTemplate.remove(postMongo)
+        );
     }
 
 

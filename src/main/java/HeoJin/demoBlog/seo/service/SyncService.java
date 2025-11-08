@@ -24,28 +24,26 @@ public class SyncService {
     private final PostRepository postRepository;
     public TriggerResponseDto triggerSync() {
 
-        try {
-            List<Post> allPost = postRepository.findAll();
-            if (allPost.isEmpty()) {
-                throw new CustomNotFound("post 가 존재하지 않습니다.");
-            }
-            Map<Long, PostMongo> postMysqlMap = new HashMap<>();
-            for (Post post : allPost) {
-                PostMongo postMongo = PostMongo.builder()
-                        .postId(post.getId())
-                        .content(post.getContent())
-                        .title(post.getTitle())
-                        .syncedDate(LocalDateTime.now())
-                        .build();
-                postMysqlMap.put(postMongo.getPostId(), postMongo);
 
-            }
-            TriggerResponseDto triggerResponseDto = compareData(postMysqlMap);
-            return triggerResponseDto;
-
-        }catch (Exception e){
-            return null;
+        List<Post> allPost = postRepository.findAll();
+        if (allPost.isEmpty()) {
+            throw new CustomNotFound("post 가 존재하지 않습니다.");
         }
+        Map<Long, PostMongo> postMysqlMap = new HashMap<>();
+        for (Post post : allPost) {
+            PostMongo postMongo = PostMongo.builder()
+                    .postId(post.getId())
+                    .content(post.getContent())
+                    .title(post.getTitle())
+                    .syncedDate(LocalDateTime.now())
+                    .build();
+            postMysqlMap.put(postMongo.getPostId(), postMongo);
+
+        }
+        TriggerResponseDto triggerResponseDto = compareData(postMysqlMap);
+        return triggerResponseDto;
+
+
 
 
     }
@@ -67,16 +65,26 @@ public class SyncService {
                 postsToInsert.add(postFromMysql);
             }
         }
+
+        // Mongo 에는 있지만, Mysql 에는 없는 데이터
+        List<PostMongo> postsToDelete = postMongoMap.values().stream()
+                .filter(mongoPost -> !postMysqlMap.containsKey(mongoPost.getPostId()))
+                .toList();
+
         if (!postsToInsert.isEmpty()) {
             postMongoRepository.insertAll(postsToInsert);
         }
         if (!postsToUpdate.isEmpty()) {
             postMongoRepository.updateAll(postsToUpdate);
         }
+        if (!postsToDelete.isEmpty()) {
+            postMongoRepository.deleteAll(postsToDelete);
+        }
 
         return TriggerResponseDto.builder()
                 .insertCount(postsToInsert.size())
                 .updateCount(postsToUpdate.size())
+                .deleteCount(postsToDelete.size())
                 .build();
 
     }

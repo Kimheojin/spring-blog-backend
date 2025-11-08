@@ -17,7 +17,6 @@ public class SyncController {
 
     private final SyncService syncService;
 
-
     // 사용자가 직접 싱크 맞추는
     @PostMapping("/seo/mongo-sync")
     @PreAuthorize("hasAuthority('ADMIN')")

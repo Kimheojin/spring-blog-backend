@@ -14,4 +14,5 @@ public class TriggerResponseDto {
 
     private int updateCount;
     private int insertCount;
+    private int deleteCount;
 }

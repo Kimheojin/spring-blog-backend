@@ -11,5 +11,6 @@ public interface PostMongoRepository {
     void insertAll(List<PostMongo> postMongoList);
     void updateAll(List<PostMongo> postMongoList);
     ListPostSearchResponseDto getUnifiedSearch(String term);
+    void deleteAll(List<PostMongo> postMongoList);
 
 }
