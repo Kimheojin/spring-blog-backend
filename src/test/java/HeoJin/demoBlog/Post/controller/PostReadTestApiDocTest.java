@@ -1,7 +1,8 @@
 package HeoJin.demoBlog.Post.controller;
 
 
-import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,23 +11,25 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PostReadTestApiDocTest extends ApiDocTestSetup {
+public class PostReadTestApiDocTest extends ApiDocTestBase {
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private DataInitComponent dataInitComponent;
 
 
     @BeforeEach
     void init() {
-        Member member = createTestMember();
-        saveAllCategories();
-        saveAllPosts(member);
-        saveAllTag();
+        Member member = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
+        dataInitComponent.saveAllPosts(member);
+        dataInitComponent.saveAllTag();
     }
     @Test
     @DisplayName("get /api/posts/single -> 단일 포스트 조회 캐시 테스트")

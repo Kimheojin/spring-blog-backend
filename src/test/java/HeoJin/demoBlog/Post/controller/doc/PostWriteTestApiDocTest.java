@@ -2,7 +2,8 @@ package HeoJin.demoBlog.Post.controller.doc;
 
 import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.category.repository.CategoryRepository;
-import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.post.dto.request.PostDeleteRequest;
@@ -28,19 +29,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PostWriteTestApiDocTest extends ApiDocTestSetup {
+public class PostWriteTestApiDocTest extends ApiDocTestBase {
 
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private DataInitComponent dataInitComponent;
 
     @BeforeEach
     void init() {
-        Member member = createTestMember();
-        saveAllCategories();
-        saveAllPosts(member);
-        saveAllTag();
+        Member member = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
+        dataInitComponent.saveAllPosts(member);
+        dataInitComponent.saveAllTag();
     }
 
     @Test

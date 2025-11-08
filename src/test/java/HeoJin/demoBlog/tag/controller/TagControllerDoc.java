@@ -1,6 +1,7 @@
 package HeoJin.demoBlog.tag.controller;
 
-import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.tag.entity.Tag;
 import HeoJin.demoBlog.tag.repository.TagRepository;
@@ -22,17 +23,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class TagControllerDoc extends ApiDocTestSetup {
+public class TagControllerDoc extends ApiDocTestBase {
 
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private DataInitComponent dataInitComponent;
 
     @BeforeEach
     void init(){
-        Member member = createTestMember();
-        saveAllCategories();
-        saveAllPosts(member);
-        saveAllTag();
+        Member member = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
+        dataInitComponent.saveAllPosts(member);
+        dataInitComponent.saveAllTag();
     }
 
     @Test

@@ -1,13 +1,14 @@
 package HeoJin.demoBlog.member.controller.doc;
 
-import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import HeoJin.demoBlog.member.dto.request.LoginDto;
 import HeoJin.demoBlog.member.entity.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,15 +26,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@SpringBootTest
-public class AuthTestApiDocTest extends ApiDocTestSetup {
-
+public class AuthTestApiDocTest extends ApiDocTestBase {
+    @Autowired
+    private DataInitComponent dataInitComponent;
 
 
     @BeforeEach
     void init(){
         // role 까지만 생성
-        Member member =createTestMember();
+        Member member = dataInitComponent.createTestMember();
     }
 
     @Test
@@ -77,8 +78,8 @@ public class AuthTestApiDocTest extends ApiDocTestSetup {
         // given
 
         LoginDto loginDto = LoginDto.builder()
-                .email(TEST_EMAIL)
-                .password(TEST_PASSWORD).build();
+                .email(dataInitComponent.TEST_EMAIL)
+                .password(dataInitComponent.TEST_PASSWORD).build();
 
         // when + then
         ResultActions testMock = mockMvc.perform(post("/api/auth/login")

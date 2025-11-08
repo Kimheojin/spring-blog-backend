@@ -3,7 +3,8 @@ package HeoJin.demoBlog.comment.controller.doc;
 import HeoJin.demoBlog.comment.dto.request.CommentAdminDeleteRequest;
 import HeoJin.demoBlog.comment.entity.Comment;
 import HeoJin.demoBlog.comment.repository.CommentRepository;
-import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.post.entity.Post;
@@ -25,7 +26,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class AdminCommentTestApiDocTest extends ApiDocTestSetup {
+class AdminCommentTestApiDocTest extends ApiDocTestBase {
 
     @Autowired
     private PostRepository postRepository;
@@ -33,12 +34,15 @@ class AdminCommentTestApiDocTest extends ApiDocTestSetup {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private DataInitComponent dataInitComponent;
+
     @BeforeEach
     void init() {
-        Member member = createTestMember();
-        saveAllCategories();
-        saveAllPosts(member);
-        saveAllComments();
+        Member member = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
+        dataInitComponent.saveAllPosts(member);
+        dataInitComponent.saveAllComments();
     }
 
     @Test

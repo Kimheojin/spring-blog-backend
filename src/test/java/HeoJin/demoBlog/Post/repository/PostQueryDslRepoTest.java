@@ -3,6 +3,8 @@ package HeoJin.demoBlog.Post.repository;
 
 import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.category.repository.CategoryRepository;
+import HeoJin.demoBlog.configuration.InitRepository.TestInitRepository;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.configuration.dataJpaTest.SaveDataJpaTest;
 import HeoJin.demoBlog.global.config.QuerydslConfig;
 import HeoJin.demoBlog.member.entity.Member;
@@ -24,11 +26,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @DataJpaTest
-@Import(QuerydslConfig.class)
+@Import({QuerydslConfig.class, DataInitComponent.class, TestInitRepository.class, BCryptPasswordEncoder.class})
 public class PostQueryDslRepoTest extends SaveDataJpaTest {
 
     @Autowired
     private TestEntityManager entityManager;
+
+    @Autowired
+    private DataInitComponent dataInitComponent;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -47,8 +52,8 @@ public class PostQueryDslRepoTest extends SaveDataJpaTest {
     @DisplayName("findPublishedPostWithFetch -> 정상 작동")
     void test1() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
 
         Category testCategory = categoryRepository.findAll().get(0);
         Pageable pageable = PageRequest.of(0, 5);
@@ -102,8 +107,8 @@ public class PostQueryDslRepoTest extends SaveDataJpaTest {
     @DisplayName("findPublishedPostWithFetch -> 페이징 처리 확인")
     void test3() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
         Category testCategory = categoryRepository.findAll().get(0);
 
         // 10개의 PUBLISHED 포스트 생성
@@ -137,8 +142,8 @@ public class PostQueryDslRepoTest extends SaveDataJpaTest {
     @DisplayName("findPublishedCategoryWithFetch -> 카테고리로 조회")
     void test4() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
         Category testCategory = categoryRepository.findAll().get(0);
         Category testCategory2 = categoryRepository.findAll().get(1);
 
@@ -189,8 +194,8 @@ public class PostQueryDslRepoTest extends SaveDataJpaTest {
     @DisplayName("findPostsWithFilters -> 정상 작동 테스트")
     void test6() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
         Category testCategory = categoryRepository.findAll().get(0);
 
         Post post1 = createPost(testMember, testCategory, PostStatus.PRIVATE, "2번");
@@ -239,8 +244,8 @@ public class PostQueryDslRepoTest extends SaveDataJpaTest {
     @DisplayName("findPostsWithFilters -> 필터 조건에 맞는 데이터가 없는 경우")
     void test7() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
         Category testCategory = categoryRepository.findAll().get(0);
 
         // PUBLISHED 포스트만 생성
@@ -265,8 +270,8 @@ public class PostQueryDslRepoTest extends SaveDataJpaTest {
     @DisplayName("findPostsWithFilters -> 다른 카테고리 필터링 테스트")
     void test8() {
         // given
-        Member testMember = createTestMember();
-        saveAllCategories();
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
         Category testCategory1 = categoryRepository.findAll().get(0);
         Category testCategory2 = categoryRepository.findAll().get(1);
 
