@@ -6,7 +6,12 @@ import HeoJin.demoBlog.member.entity.QMember;
 import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.entity.PostStatus;
 import HeoJin.demoBlog.post.entity.QPost;
+import HeoJin.demoBlog.seo.dto.data.PostForMongoDto;
+import HeoJin.demoBlog.tag.entity.QPostTag;
+import HeoJin.demoBlog.tag.entity.QTag;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +32,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private static final QPost post = QPost.post;
     private static final QMember member = QMember.member;
     private static final QCategory category = QCategory.category;
+    private static final QPostTag postTag = QPostTag.postTag;
+    private static final QTag tag = QTag.tag;
 
     @Override
     public Page<Post> findPublishedPostsWithFetch(Pageable pageable) {
@@ -131,6 +138,26 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         long total = totalCount != null ? totalCount : 0L;
 
         return new PageImpl<>(posts, pageable, total);
+    }
+
+    @Override
+    public List<PostForMongoDto> findPostsForMongo() {
+        return QFactory
+                .select(Projections.constructor(PostForMongoDto.class,
+                        post.id,
+                        post.title,
+                        post.content,
+                        Expressions.list(tag.tagName)))
+                .from(post)
+                .leftJoin(postTag).on(post.id.eq(postTag.postId))
+                .leftJoin(tag).on(postTag.tagId.eq(tag.id))
+                .where(post.status.eq(PostStatus.PUBLISHED))
+                .groupBy(
+                        post.id,
+                        post.title,
+                        post.content
+                )
+                .fetch();
     }
 
 

@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Document
 @NoArgsConstructor
@@ -23,6 +24,7 @@ public class PostMongo {
     private String title;
     private String content;
     private LocalDateTime syncedDate;
+    private List<String> tagList;
 
 
     public PostMongo update(PostMongo postMysql) {
