@@ -1,6 +1,7 @@
 package HeoJin.demoBlog.Post.controller.doc;
 
-import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,24 +13,25 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PostReadTestApiDocTest extends ApiDocTestSetup {
+public class PostReadTestApiDocTest extends ApiDocTestBase {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private DataInitComponent dataInitComponent;
 
     @BeforeEach
     void init() {
-        Member member = createTestMember();
-        saveAllCategories();
-        saveAllPosts(member);
-        saveAllTag();
+        Member member = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
+        dataInitComponent.saveAllPosts(member);
+        dataInitComponent.saveAllTag();
 
     }
 

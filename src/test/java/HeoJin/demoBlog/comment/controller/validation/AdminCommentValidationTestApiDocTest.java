@@ -1,7 +1,7 @@
 package HeoJin.demoBlog.comment.controller.validation;
 
 import HeoJin.demoBlog.comment.dto.request.CommentAdminDeleteRequest;
-import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AdminCommentValidationTestApiDocTest extends ApiDocTestSetup {
+public class AdminCommentValidationTestApiDocTest extends ApiDocTestBase {
 
     final String DEFAULTVALIDATIONMESSAGE = "입력값 검증에 실패했습니다.";
 

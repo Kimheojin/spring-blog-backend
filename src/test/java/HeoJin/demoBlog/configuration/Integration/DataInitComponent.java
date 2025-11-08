@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -22,8 +23,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-
-public abstract class ApiDocTestSetup extends ApiDocTestBase {
+@Component
+public class DataInitComponent {
 
     @Autowired
     private TestInitRepository testInitRepository;
@@ -35,16 +36,16 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
     protected TestDataProvider testDataProvider = new TestDataProvider();
 
     @Value("${test.user.email}")
-    protected String TEST_EMAIL;
+    public String TEST_EMAIL;
     @Value("${test.user.password}")
-    protected String TEST_PASSWORD;
+    public String TEST_PASSWORD;
     @Value("${test.user.name}")
     protected String TEST_MEMBERNAME;
     @Value("${test.user.role}")
     protected String TEST_ROLENAME;
 
     // Member 관련
-    protected Member createTestMember() {
+    public Member createTestMember() {
         String email = TEST_EMAIL;
         String password = TEST_PASSWORD;
         String memberName = TEST_MEMBERNAME;
@@ -78,7 +79,7 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
     }
 
     // Category 관련
-    protected void saveAllCategories() {
+    public void saveAllCategories() {
         String[] categories = testDataProvider.getCategoryDataSet();
         for (String categoryName : categories) {
             saveCategory(categoryName);
@@ -101,7 +102,7 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
     }
 
     // Post관련
-    protected void saveAllPosts(Member member) {
+    public void saveAllPosts(Member member) {
         String[][] posts = testDataProvider.getPostDataSet();
         String[] categories = testDataProvider.getCategoryDataSet();
 
@@ -157,7 +158,7 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
         return saveCommentWithStatus(content, email, password, post, parent, regDate, CommentStatus.ACTIVE);
     }
 
-    protected void saveAllComments() {
+    public void saveAllComments() {
         String[] comments = testDataProvider.getCommentDataSet();
         List<Post> posts = testInitRepository.findAllPost();
 
@@ -200,9 +201,7 @@ public abstract class ApiDocTestSetup extends ApiDocTestBase {
         }
     }
 
-    protected void saveAllTag(){
-
-
+    public void saveAllTag(){
         List<Post> posts = testInitRepository.findAllPost();
         String[] tagNameDataList = testDataProvider.getTagNameDataSet();
         List<String> tagNameList = new ArrayList<>(Arrays.asList(tagNameDataList));

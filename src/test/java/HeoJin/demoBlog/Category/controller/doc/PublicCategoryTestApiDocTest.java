@@ -1,9 +1,11 @@
 package HeoJin.demoBlog.category.controller.doc;
 
-import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -15,13 +17,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PublicCategoryTestApiDocTest extends ApiDocTestSetup {
+public class PublicCategoryTestApiDocTest extends ApiDocTestBase {
 
+
+    @Autowired
+    public DataInitComponent dataInitComponent;
     @BeforeEach
     void Init() {
 
-        createTestMember();
-        saveAllCategories();
+        dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
 
     }
     @Test

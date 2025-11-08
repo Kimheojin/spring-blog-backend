@@ -6,7 +6,8 @@ import HeoJin.demoBlog.category.dto.request.DeleteCategoryRequest;
 import HeoJin.demoBlog.category.dto.request.ModifyCategoryNameRequest;
 import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.category.repository.CategoryRepository;
-import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,15 +24,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class AdminCategoryTestApiDocTest extends ApiDocTestSetup {
+public class AdminCategoryTestApiDocTest extends ApiDocTestBase {
 
     @Autowired
     public CategoryRepository categoryRepository;
+    @Autowired
+    public DataInitComponent dataInitComponent;
 
     @BeforeEach
     public void init(){
-        createTestMember();
-        saveAllCategories();
+        dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
     }
 
     // Post + /api/admin/categories -> 카테고리 추가

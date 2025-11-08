@@ -1,6 +1,7 @@
 package HeoJin.demoBlog.comment.controller.doc;
 
-import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.repository.PostRepository;
@@ -11,25 +12,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class CommentReadTestApiDocTest extends ApiDocTestSetup {
+class CommentReadTestApiDocTest extends ApiDocTestBase {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private DataInitComponent dataInitComponent;
+
     @BeforeEach
     void init(){
-        Member member = createTestMember();
-        saveAllCategories();
-        saveAllPosts(member);
-        saveAllComments();
+        Member member = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
+        dataInitComponent.saveAllPosts(member);
+        dataInitComponent.saveAllComments();
     }
 
     @Test

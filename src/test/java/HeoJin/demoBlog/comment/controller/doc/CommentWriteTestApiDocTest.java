@@ -5,7 +5,8 @@ import HeoJin.demoBlog.comment.dto.request.CommentModifyRequest;
 import HeoJin.demoBlog.comment.dto.request.CommentWriteRequest;
 import HeoJin.demoBlog.comment.entity.Comment;
 import HeoJin.demoBlog.comment.repository.CommentRepository;
-import HeoJin.demoBlog.configuration.Integration.ApiDocTestSetup;
+import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.repository.PostRepository;
@@ -18,7 +19,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -28,19 +28,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-class CommentWriteTestApiDocTest extends ApiDocTestSetup {
+class CommentWriteTestApiDocTest extends ApiDocTestBase {
 
     @Autowired
     private PostRepository postRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private DataInitComponent dataInitComponent;
 
     @BeforeEach
     void init(){
-        Member member = createTestMember();
-        saveAllCategories();
-        saveAllPosts(member);
-        saveAllComments();
+        Member member = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
+        dataInitComponent.saveAllPosts(member);
+        dataInitComponent.saveAllComments();
     }
 
     // 댓글 + 대댓글 작성
