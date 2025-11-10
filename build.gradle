@@ -54,9 +54,9 @@ dependencies {
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc:3.0.0'
 
 	// 테스트용
-//	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.h2database:h2'
 	// 운영은 mysql
-	runtimeOnly 'com.mysql:mysql-connector-j'
+//	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	// mongo 관련 의존성 추가
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'

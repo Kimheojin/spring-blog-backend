@@ -1,21 +1,22 @@
 spring:
   profiles:
-    active: jwt, image, local, mongo
+    active: local
+#    active: deploy
 ---
-spring:
-
 # aop 관련 설정
+spring:
   aop:
     auto: true
     proxy-target-class: true
-
   jpa:
-    hibernate:
-      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+  logging:
+    level:
+      HeoJin.demoBlog: DEBUG
+      root: INFO
 
 #decorator:
 #  datasource:
@@ -30,22 +31,7 @@ logging:
     HeoJin.demoBlog: DEBUG
     root: INFO
 
-
 server:
   port: 8080
 
 
-## git hub Secrets 활용
-cloudinary:
-  cloud-name: ${CLOUDINARY_CLOUD_NAME:default-cloud-name}
-  api-key: ${CLOUDINARY_API_KEY:default-api-key}
-  api-secret: ${CLOUDINARY_API_SECRET:default-api-secret}
-
-
-
-jwt:
-  secret: ${JWT_SECRET}
-  accesstoken:
-    expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
-  refreshtoken:
-    expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
