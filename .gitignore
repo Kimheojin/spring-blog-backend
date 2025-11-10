@@ -40,6 +40,7 @@ out/
 application-image.yml
 application-mysql.yml
 application-jwt.yml
+application-local.yml
 application-mongo.yml
 src/main/generated/
 
