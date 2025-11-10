@@ -37,11 +37,9 @@ out/
 .vscode/
 
 ### custom list ###
-application-image.yml
-application-mysql.yml
-application-jwt.yml
 application-local.yml
-application-mongo.yml
+application-deploy.yml
+
 src/main/generated/
 
 filterTest.http
