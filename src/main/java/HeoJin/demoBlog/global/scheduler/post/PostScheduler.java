@@ -18,6 +18,7 @@ public class PostScheduler {
     private final PostRepository postRepository;
 
     // 매일 새벽 5시
+    // 예약 발행 관련
     @Scheduled(cron = "0 0 5 * * ?")
     public void runTask5AM(){
         List<Post> byStatus = postRepository.findByStatus(PostStatus.SCHEDULED);
