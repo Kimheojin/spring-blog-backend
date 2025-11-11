@@ -58,6 +58,24 @@ jobs:
             echo "JWT_REFRESH_TOKEN_EXPIRATION is not set"
           fi
 
+          if [ -n "${{ secrets.MONGO_URI }}" ]; then
+            echo "MONGO_URI is set"
+          else
+            echo "MONGO_URI is not set"
+          fi
+
+          if [ -n "${{ secrets.MONGO_DATABASE }}" ]; then
+            echo "MONGO_DATABASE is set"
+          else
+            echo "MONGO_DATABASE is not set"
+          fi
+
+          if [ -n "${{ secrets.MONGO_COLLECTION_NAME }}" ]; then
+            echo "MONGO_COLLECTION_NAME is set"
+          else
+            echo "MONGO_COLLECTION_NAME is not set"
+          fi
+
       - name: Stop and remove existing container
         run: |
           docker rm -f blog || true
@@ -85,5 +103,8 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           JWT_ACCESS_TOKEN_EXPIRATION: ${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
           JWT_REFRESH_TOKEN_EXPIRATION: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
+          MONGO_COLLECTION_NAME: ${{ secrets.MONGO_COLLECTION_NAME }}
         run: |
           docker compose up -d --build
