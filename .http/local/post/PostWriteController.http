@@ -1,0 +1,46 @@
+### 게시글 작성
+POST http://localhost:8080/api/admin/posts
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "새 게시글 제목",
+  "content": "새 게시글 내용",
+  "categoryName": "카테고리",
+  "status": "PUBLISHED"
+}
+
+### 게시글 수정
+PUT http://localhost:8080/api/admin/posts
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "postId": 1,
+  "title": "수정된 게시글 제목",
+  "content": "수정된 게시글 내용",
+  "categoryName": "수정된 카테고리",
+  "status": "PUBLISHED"
+}
+
+### 게시글 삭제
+DELETE http://localhost:8080/api/admin/posts
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "postId": 1
+}
+
+### 예약 발행 게시글 작성
+POST http://localhost:8080/api/admin/scheduled-post
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "예약 게시글 제목",
+  "content": "예약 게시글 내용",
+  "categoryName": "카테고리",
+  "status": "SCHEDULED",
+  "publishTime": "2024-12-31T23:59:59"
+}

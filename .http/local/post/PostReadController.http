@@ -1,0 +1,8 @@
+### 모든 게시물 조회 (PUBLISHED)
+GET http://localhost:8080/api/posts?page=0&size=5
+
+### 카테고리별 게시물 조회 (PUBLISHED)
+GET http://localhost:8080/api/posts/category?categoryName=카테고리&page=0&size=5
+
+### 단일 게시물 조회 (PUBLISHED)
+GET http://localhost:8080/api/posts/single?postId=1

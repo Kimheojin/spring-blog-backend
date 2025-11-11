@@ -1,0 +1,27 @@
+### 카테고리 추가
+POST http://localhost:8080/api/admin/categories
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "categoryName": "새로운 카테고리"
+}
+
+### 카테고리 이름 변경
+PUT http://localhost:8080/api/admin/categories
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "beforeCategoryName": "기존 카테고리명",
+  "afterCategoryName": "새로운 카테고리명"
+}
+
+### 카테고리 삭제
+DELETE http://localhost:8080/api/admin/categories
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "categoryName": "삭제할 카테고리명"
+}

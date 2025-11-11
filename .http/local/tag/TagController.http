@@ -1,0 +1,5 @@
+### 태그 목록 조회
+GET http://localhost:8080/api/tag/list
+
+### 태그별 게시물 목록 조회
+GET http://localhost:8080/api/tag/postlist?tagId=1&tagName=태그명&page=0&pageSize=15

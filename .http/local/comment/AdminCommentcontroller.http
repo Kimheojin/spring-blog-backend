@@ -1,0 +1,17 @@
+### 모든 댓글 조회 (관리자)
+GET http://localhost:8080/api/admin/comments
+Authorization: Bearer {{accessToken}}
+
+### 특정 게시물의 모든 댓글 조회 (관리자)
+GET http://localhost:8080/api/admin/posts/1/comments
+Authorization: Bearer {{accessToken}}
+
+### 댓글/대댓글 완전 삭제 (관리자)
+DELETE http://localhost:8080/api/admin/comments
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "commentId": 1,
+  "postId": 1
+}

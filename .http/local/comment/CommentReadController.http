@@ -1,0 +1,2 @@
+### 특정 게시물의 댓글 조회
+GET http://localhost:8080/api/posts/1/comments

@@ -1,0 +1,7 @@
+### 모든 게시물 조회 (관리자)
+GET http://localhost:8080/api/admin/posts?categoryName=카테고리&postStatus=PUBLISHED&page=0&size=5
+
+
+### 단일 게시물 조회 (관리자)
+GET http://localhost:8080/api/admin/posts/single?postId=1
+

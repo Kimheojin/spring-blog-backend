@@ -1,0 +1,31 @@
+### 댓글/대댓글 작성
+POST http://localhost:8080/api/posts/comments
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "postId": 1,
+  "content": "새로운 댓글 내용입니다.",
+  "parentId": null
+}
+
+### 댓글/대댓글 삭제
+POST http://localhost:8080/api/comments
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "commentId": 1,
+  "postId": 1
+}
+
+### 댓글 수정
+PUT http://localhost:8080/api/comments
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "commentId": 1,
+  "content": "수정된 댓글 내용입니다.",
+  "postId": 1
+}
