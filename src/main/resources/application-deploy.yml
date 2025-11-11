@@ -26,3 +26,12 @@ spring:
       uri:  ${MONGO_URI}
       database: ${MONGO_DATABASE}
       auto-index-creation: true
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.springframework.data.mongodb: WARN
+    org.mongodb.driver: WARN
+
+mongo:
+  collectionName: ${MONGO_COLLECTION_NAME}
