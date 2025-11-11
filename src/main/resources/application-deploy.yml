@@ -1,0 +1,28 @@
+## mysql은 docker 명령어 타고 바로 들어감
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+
+## git hub Secrets 활용
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME:default-cloud-name}
+  api-key: ${CLOUDINARY_API_KEY:default-api-key}
+  api-secret: ${CLOUDINARY_API_SECRET:default-api-secret}
+
+---
+jwt:
+  secret: ${JWT_SECRET}
+  accesstoken:
+    expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+  refreshtoken:
+    expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+---
+spring:
+  data:
+    mongodb:
+      uri:  ${MONGO_URI}
+      database: ${MONGO_DATABASE}
+      auto-index-creation: true
