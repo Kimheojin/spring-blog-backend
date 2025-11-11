@@ -41,6 +41,6 @@ application-local.yml
 
 src/main/generated/
 
-filterTest.http
+.http/deploy/
 ## 쿼리 dsl 생성 그건
 #src/main/generated/
