@@ -18,12 +18,6 @@ spring:
       HeoJin.demoBlog: DEBUG
       root: INFO
 
-#decorator:
-#  datasource:
-#    p6spy:
-#      enable-logging: true
-#      multiline: true
-#      logging: slf4j
 
 ## AOP 관련 설정
 logging:
