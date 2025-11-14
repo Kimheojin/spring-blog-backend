@@ -1,27 +1,30 @@
 ### 카테고리 추가
+# @cookie-jar=./cookies.json
 POST http://localhost:8080/api/admin/categories
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
-  "categoryName": "새로운 카테고리"
+  "categoryName": "카테고리",
+  "priority": 1
 }
 
 ### 카테고리 이름 변경
+# @cookie-jar=./cookies.json
 PUT http://localhost:8080/api/admin/categories
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
-  "beforeCategoryName": "기존 카테고리명",
-  "afterCategoryName": "새로운 카테고리명"
+  "categoryId": 1,
+  "categoryName": "변경된 카테고리명",
+  "priority": 2
 }
 
 ### 카테고리 삭제
+# @cookie-jar=./cookies.json
 DELETE http://localhost:8080/api/admin/categories
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
-  "categoryName": "삭제할 카테고리명"
+  "categoryId": 1,
+  "categoryName": "변경된 카테고리명"
 }

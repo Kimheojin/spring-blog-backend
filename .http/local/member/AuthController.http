@@ -1,16 +1,17 @@
 ### 로그인
+# @cookie-jar=./cookies.json
 POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "user",
-  "password": "password"
+  "email": "hurjin1109@naver.com",
+  "password": "1234"
 }
 
 ### 로그아웃
+# @cookie-jar=./cookies.json
 POST http://localhost:8080/api/auth/logout
-Authorization: Bearer {{accessToken}}
 
 ### 인증 상태 확인
+# @cookie-jar=./cookies.json
 GET http://localhost:8080/api/auth/status
-Authorization: Bearer {{accessToken}}

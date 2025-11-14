@@ -42,5 +42,6 @@ application-local.yml
 src/main/generated/
 
 .http/deploy/
+agent.md
 ## 쿼리 dsl 생성 그건
 #src/main/generated/

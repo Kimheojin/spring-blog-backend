@@ -1,32 +1,45 @@
 ### 게시글 작성
+# @cookie-jar=./cookies.json
 POST http://localhost:8080/api/admin/posts
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
   "title": "새 게시글 제목",
   "content": "새 게시글 내용",
   "categoryName": "카테고리",
-  "status": "PUBLISHED"
+  "postStatus": "PUBLISHED",
+  "tagList": [
+    {
+      "tagName": "태그1"
+    },
+    {
+      "tagName": "태그2"
+    }
+  ]
 }
 
 ### 게시글 수정
+# @cookie-jar=./cookies.json
 PUT http://localhost:8080/api/admin/posts
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
   "postId": 1,
   "title": "수정된 게시글 제목",
   "content": "수정된 게시글 내용",
   "categoryName": "수정된 카테고리",
-  "status": "PUBLISHED"
+  "postStatus": "PUBLISHED",
+  "tagList": [
+    {
+      "tagName": "태그1"
+    }
+  ]
 }
 
 ### 게시글 삭제
+# @cookie-jar=./cookies.json
 DELETE http://localhost:8080/api/admin/posts
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
   "postId": 1
@@ -35,12 +48,15 @@ Authorization: Bearer {{accessToken}}
 ### 예약 발행 게시글 작성
 POST http://localhost:8080/api/admin/scheduled-post
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
   "title": "예약 게시글 제목",
   "content": "예약 게시글 내용",
   "categoryName": "카테고리",
-  "status": "SCHEDULED",
-  "publishTime": "2024-12-31T23:59:59"
+  "regDate": "2024-12-31T23:59:59",
+  "tagList": [
+    {
+      "tagName": "태그1"
+    }
+  ]
 }

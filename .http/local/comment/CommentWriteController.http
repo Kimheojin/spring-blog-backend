@@ -1,31 +1,37 @@
 ### 댓글/대댓글 작성
 POST http://localhost:8080/api/posts/comments
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
   "postId": 1,
-  "content": "새로운 댓글 내용입니다.",
-  "parentId": null
+  "parentId": null,
+  "email": "user@example.com",
+  "password": "plain-text-password",
+  "content": "새로운 댓글 내용입니다."
 }
 
 ### 댓글/대댓글 삭제
 POST http://localhost:8080/api/comments
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
+  "postId": 1,
   "commentId": 1,
-  "postId": 1
+  "parentId": null,
+  "email": "user@example.com",
+  "password": "plain-text-password",
+  "content": "삭제 사유를 남겨 주세요."
 }
 
 ### 댓글 수정
 PUT http://localhost:8080/api/comments
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
+  "postId": 1,
   "commentId": 1,
-  "content": "수정된 댓글 내용입니다.",
-  "postId": 1
+  "parentId": null,
+  "password": "plain-text-password",
+  "email": "user@example.com",
+  "content": "수정된 댓글 내용입니다."
 }

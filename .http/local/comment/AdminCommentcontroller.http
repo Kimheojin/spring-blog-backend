@@ -1,17 +1,20 @@
 ### 모든 댓글 조회 (관리자)
+# @cookie-jar=./cookies.json
 GET http://localhost:8080/api/admin/comments
-Authorization: Bearer {{accessToken}}
 
 ### 특정 게시물의 모든 댓글 조회 (관리자)
+# @cookie-jar=./cookies.json
 GET http://localhost:8080/api/admin/posts/1/comments
-Authorization: Bearer {{accessToken}}
 
 ### 댓글/대댓글 완전 삭제 (관리자)
+# @cookie-jar=./cookies.json
 DELETE http://localhost:8080/api/admin/comments
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
+  "postId": 1,
   "commentId": 1,
-  "postId": 1
+  "parentId": null,
+  "email": "admin@example.com",
+  "content": "관리자 삭제 사유"
 }

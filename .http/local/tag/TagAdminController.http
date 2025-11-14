@@ -1,19 +1,31 @@
 ### 태그 추가
 POST http://localhost:8080/api/admin/tag/list
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
   "postId": 1,
-  "tagName": ["새로운 태그1", "새로운 태그2"]
+  "DtoList": [
+    {
+      "tagName": "새로운 태그1"
+    },
+    {
+      "tagName": "새로운 태그2"
+    }
+  ]
 }
 
 ### 태그 삭제
 DELETE http://localhost:8080/api/admin/tag/list
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
   "postId": 1,
-  "tagName": ["삭제할 태그1", "삭제할 태그2"]
+  "DtoList": [
+    {
+      "tagName": "삭제할 태그1"
+    },
+    {
+      "tagName": "삭제할 태그2"
+    }
+  ]
 }
