@@ -43,7 +43,7 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
     @Override
     public void updateAll(List<PostMongo> postMongoList) {
         postMongoList.forEach(
-                postMongo -> mongoTemplate.save(postMongoList)
+                postMongo -> mongoTemplate.save(postMongo)
         );
 
     }
