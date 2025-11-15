@@ -4,6 +4,7 @@ package HeoJin.demoBlog.seo.service;
 import HeoJin.demoBlog.global.exception.CustomNotFound;
 import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.repository.PostRepository;
+import HeoJin.demoBlog.seo.dto.data.PostForMongoDto;
 import HeoJin.demoBlog.seo.dto.response.TriggerResponseDto;
 import HeoJin.demoBlog.seo.entity.PostMongo;
 import HeoJin.demoBlog.seo.repository.PostMongoRepository;
@@ -25,16 +26,17 @@ public class SyncService {
     public TriggerResponseDto triggerSync() {
 
 
-        List<Post> allPost = postRepository.findAll();
+        List<PostForMongoDto> allPost = postRepository.findPostsForMongo();
         if (allPost.isEmpty()) {
             throw new CustomNotFound("post 가 존재하지 않습니다.");
         }
+
         Map<Long, PostMongo> postMysqlMap = new HashMap<>();
-        for (Post post : allPost) {
+        for (PostForMongoDto postForMongoDto : allPost) {
             PostMongo postMongo = PostMongo.builder()
-                    .postId(post.getId())
-                    .content(post.getContent())
-                    .title(post.getTitle())
+                    .postId(postForMongoDto.getPostId())
+                    .content(postForMongoDto.getContent())
+                    .title(postForMongoDto.getTitle())
                     .syncedDate(LocalDateTime.now())
                     .build();
             postMysqlMap.put(postMongo.getPostId(), postMongo);
@@ -42,8 +44,6 @@ public class SyncService {
         }
         TriggerResponseDto triggerResponseDto = compareData(postMysqlMap);
         return triggerResponseDto;
-
-
 
 
     }
