@@ -8,6 +8,7 @@ import HeoJin.demoBlog.seo.dto.data.PostForMongoDto;
 import HeoJin.demoBlog.seo.dto.response.TriggerResponseDto;
 import HeoJin.demoBlog.seo.entity.PostMongo;
 import HeoJin.demoBlog.seo.repository.PostMongoRepository;
+import HeoJin.demoBlog.tag.repository.PostTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,13 @@ public class SyncService {
 
     private final PostMongoRepository postMongoRepository;
     private final PostRepository postRepository;
+    private final PostTagRepository postTagRepository;
     public TriggerResponseDto triggerSync() {
-
-
-        List<PostForMongoDto> allPost = postRepository.findPostsForMongo();
+        // 기존 post 리스트
+        List<PostForMongoDto> allPost
+                = postRepository.findPostsForMongo();
+        Map<Long, List<String>> allTagListWithPostPublishedId
+                = postTagRepository.findAllTagListWithPostPublishedId();
         if (allPost.isEmpty()) {
             throw new CustomNotFound("post 가 존재하지 않습니다.");
         }
@@ -38,6 +42,7 @@ public class SyncService {
                     .content(postForMongoDto.getContent())
                     .title(postForMongoDto.getTitle())
                     .syncedDate(LocalDateTime.now())
+                    .tagList(allTagListWithPostPublishedId.get(postForMongoDto.getPostId()))
                     .build();
             postMysqlMap.put(postMongo.getPostId(), postMongo);
 
