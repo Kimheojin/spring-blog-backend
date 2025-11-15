@@ -19,6 +19,8 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
+    // mysql 적용 완
+    @Column(unique = true)
     private String title;
 
     @Lob
