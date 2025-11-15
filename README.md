@@ -29,5 +29,9 @@ Spring Boot 백엔드 REST API 서버 코드
 
 ### 기타
 - **Spring AOP**, **Cloudinary SDK**
+### 동기화 관련 해시 사용하고 싶은데
+
+
+1. 변경사항 -> mongo 저장 형식에 markdown 형식 제거한(plain text 관련 필드를 추가) -> 이 필드는 atlas search index 사용하는 필드 2. sync 관련 -> hash 사용해서 같으면, 그대로 두고, 다르면 업데이트 하는 식으로 구현 -> 고정크기 사용하기 ->
 
 

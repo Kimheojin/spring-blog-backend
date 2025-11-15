@@ -23,6 +23,7 @@ public class PostMongo {
     private Long postId;
     private String title;
     private String content;
+    private String plainContent;
     private LocalDateTime syncedDate;
     private List<String> tagList;
 
