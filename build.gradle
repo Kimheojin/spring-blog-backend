@@ -48,6 +48,9 @@ dependencies {
 
 	// aop 관련 라이브러리
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+	// 마크다운 파서 관련
+	implementation 'org.commonmark:commonmark:0.27.0'
 	
 	// spring restdocs
 	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor:3.0.0'

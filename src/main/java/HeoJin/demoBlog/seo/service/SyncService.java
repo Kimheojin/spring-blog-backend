@@ -39,7 +39,7 @@ public class SyncService {
         for (PostForMongoDto postForMongoDto : allPost) {
             PostMongo postMongo = PostMongo.builder()
                     .postId(postForMongoDto.getPostId())
-                    .content(postForMongoDto.getContent())
+                    .plainContent(postForMongoDto.getContent())
                     .title(postForMongoDto.getTitle())
                     .syncedDate(LocalDateTime.now())
                     .tagList(allTagListWithPostPublishedId.get(postForMongoDto.getPostId()))
@@ -93,4 +93,5 @@ public class SyncService {
                 .build();
 
     }
+
 }
