@@ -198,7 +198,7 @@ public class PostQueryDslRepoTest extends SaveDataJpaTest {
         dataInitComponent.saveAllCategories();
         Category testCategory = categoryRepository.findAll().get(0);
 
-        Post post1 = createPost(testMember, testCategory, PostStatus.PRIVATE, "2번");
+        Post post1 = createPost(testMember, testCategory, PostStatus.PRIVATE, "4번");
         Post post2 = createPost(testMember, testCategory, PostStatus.PRIVATE, "1번");
         Post post3 = createPost(testMember, testCategory, PostStatus.PRIVATE, "3번");
         Post post4 = createPost(testMember, testCategory, PostStatus.DRAFT, "2번");
