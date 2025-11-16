@@ -39,9 +39,10 @@ public class SyncService {
         for (PostForMongoDto postForMongoDto : allPost) {
             PostMongo postMongo = PostMongo.builder()
                     .postId(postForMongoDto.getPostId())
-                    .plainContent(postForMongoDto.getContent())
+                    .plainContent(SyncManager.toPlainText(postForMongoDto.getContent()))
                     .title(postForMongoDto.getTitle())
                     .syncedDate(LocalDateTime.now())
+                    .contentHash(SyncManager.makeHashCodeToContent(postForMongoDto.getContent())) // 원본 데이터 해시로 넣기
                     .tagList(allTagListWithPostPublishedId.get(postForMongoDto.getPostId()))
                     .build();
             postMysqlMap.put(postMongo.getPostId(), postMongo);
