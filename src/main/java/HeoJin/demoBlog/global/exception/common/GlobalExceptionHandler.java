@@ -1,6 +1,7 @@
 package HeoJin.demoBlog.global.exception.common;
 
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -57,4 +58,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicatePAra(DataIntegrityViolationException e){
+        ErrorResponse response = ErrorResponse.builder()
+                .message("중복된 값입니다.")
+                .statusCode(409)
+                .build();
+
+        String detailMessage = e.getMostSpecificCause() != null
+                ? e.getMostSpecificCause().getMessage()
+                : e.getMessage();
+        response.addValidation("constraint", detailMessage);
+
+        return ResponseEntity.status(409).body(response);
+    }
 }

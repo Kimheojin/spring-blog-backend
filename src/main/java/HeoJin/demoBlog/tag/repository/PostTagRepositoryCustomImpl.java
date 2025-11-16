@@ -8,6 +8,7 @@ import HeoJin.demoBlog.tag.dto.response.PostTagResponseDto;
 import HeoJin.demoBlog.tag.dto.response.TagResponseDto;
 import HeoJin.demoBlog.tag.entity.QPostTag;
 import HeoJin.demoBlog.tag.entity.QTag;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
@@ -99,4 +103,33 @@ public class PostTagRepositoryCustomImpl implements PostTagRepositoryCustom {
 
         return tagResponseList;
     }
+
+    @Override
+    public Map<Long, List<String>> findAllTagListWithPostPublishedId() {
+
+        List<Tuple> tupleList = jpaQueryFactory
+                .select(post.id, tag.tagName)
+                .from(post)
+                .where(post.status.eq(PostStatus.PUBLISHED))
+                .leftJoin(postTag).on(post.id.eq(postTag.postId))
+                .leftJoin(tag).on(postTag.tagId.eq(tag.id))
+                .fetch();
+
+        Map<Long, List<String>> result = new HashMap<>();
+
+        tupleList.forEach(t -> {
+            Long postId = t.get(post.id);
+            String tagName = t.get(tag.tagName);
+            if(tagName == null){
+                // computIfAbsent -> 기존 postId 없으면, ArrayList 초기화 후 실행
+                result.computeIfAbsent(postId, k -> new ArrayList<>());
+            }else{
+                result.computeIfAbsent(postId, k -> new ArrayList<>())
+                        .add(tagName);
+            }
+        });
+
+        return result;
+    }
+
 }

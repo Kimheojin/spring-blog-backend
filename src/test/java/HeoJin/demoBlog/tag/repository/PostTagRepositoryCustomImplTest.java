@@ -49,7 +49,7 @@ class PostTagRepositoryCustomImplTest {
 
         post1 = Post.builder().title("post1").content("content1").regDate(LocalDateTime.now())
                 .status(PostStatus.PUBLISHED).build();
-        post2 = Post.builder().title("post1").content("content1").regDate(LocalDateTime.now())
+        post2 = Post.builder().title("post2").content("content1").regDate(LocalDateTime.now())
                 .status(PostStatus.PUBLISHED).build();
         em.persist(post1);
         em.persist(post2);

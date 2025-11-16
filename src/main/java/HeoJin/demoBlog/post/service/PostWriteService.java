@@ -4,6 +4,7 @@ package HeoJin.demoBlog.post.service;
 import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.category.repository.CategoryRepository;
 import HeoJin.demoBlog.global.exception.CustomNotFound;
+import HeoJin.demoBlog.global.exception.common.CustomException;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.member.repository.MemberRepository;
 import HeoJin.demoBlog.post.dto.request.*;
@@ -13,6 +14,7 @@ import HeoJin.demoBlog.post.entity.PostStatus;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import HeoJin.demoBlog.tag.service.TagManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,7 @@ public class PostWriteService {
 
     @Transactional
     public PostContractionResponse writePost(Long memberId, PostRequest postRequest) {
+        // 제목 중복의 경우 Gelobal 처리
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomNotFound("회원"));
 
@@ -54,6 +57,7 @@ public class PostWriteService {
                 .build();
 
         postRepository.save(newpost);
+
 
         // 태그 관련
 

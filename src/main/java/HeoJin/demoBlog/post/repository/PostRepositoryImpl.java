@@ -146,17 +146,9 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .select(Projections.constructor(PostForMongoDto.class,
                         post.id,
                         post.title,
-                        post.content,
-                        Expressions.list(tag.tagName)))
+                        post.content))
                 .from(post)
-                .leftJoin(postTag).on(post.id.eq(postTag.postId))
-                .leftJoin(tag).on(postTag.tagId.eq(tag.id))
                 .where(post.status.eq(PostStatus.PUBLISHED))
-                .groupBy(
-                        post.id,
-                        post.title,
-                        post.content
-                )
                 .fetch();
     }
 
