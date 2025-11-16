@@ -22,15 +22,18 @@ public class PostMongo {
     private String id;
     private Long postId;
     private String title;
-    private String content;
     private String plainContent;
     private LocalDateTime syncedDate;
     private List<String> tagList;
+    // 해당 데이터 해시값
+    private String contentHash;
 
 
     public PostMongo update(PostMongo postMysql) {
-        this.content = postMysql.getContent();
         this.title = postMysql.getTitle();
+        this.plainContent = postMysql.getPlainContent();
+        this.tagList = postMysql.getTagList();
+        this.contentHash = postMysql.getContentHash();
         this.syncedDate = LocalDateTime.now();
 
         return this;
