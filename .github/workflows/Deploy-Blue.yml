@@ -1,0 +1,101 @@
+name: Deploy-Blue.yml
+#on:
+#  push:
+#    branches:
+#      - deploy/blue
+#  pull_request:
+#    branches:
+#      - deploy/blue
+jobs:
+  build:
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Validate secrets
+        run: |
+          if [ -z "${{ secrets.DB_NAME }}" ] || [ -z "${{ secrets.DB_USERNAME }}" ] || [ -z "${{ secrets.DB_PASSWORD }}" ]; then
+            echo "Required database secrets are missing"
+            exit 1
+          fi
+          echo "Database secrets are configured"
+          
+          if [ -n "${{ secrets.CLOUDINARY_CLOUD_NAME }}" ]; then
+            echo "CLOUDINARY_CLOUD_NAME is set"
+          else
+            echo "CLOUDINARY_CLOUD_NAME is not set"
+          fi
+          
+          if [ -n "${{ secrets.CLOUDINARY_API_KEY }}" ]; then
+            echo "CLOUDINARY_API_KEY is set"
+          else
+            echo "CLOUDINARY_API_KEY is not set"
+          fi
+          
+          if [ -n "${{ secrets.CLOUDINARY_API_SECRET }}" ]; then
+            echo "CLOUDINARY_API_SECRET is set"
+          else
+            echo "CLOUDINARY_API_SECRET is not set"
+          fi
+          
+          if [ -n "${{ secrets.JWT_SECRET }}" ]; then
+            echo "JWT_SECRET is set"
+          else
+            echo "JWT_SECRET is not set"
+          fi
+          
+          if [ -n "${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}" ]; then
+            echo "JWT_ACCESS_TOKEN_EXPIRATION is set"
+          else
+            echo "JWT_ACCESS_TOKEN_EXPIRATION is not set"
+          fi
+          
+          if [ -n "${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}" ]; then
+            echo "JWT_REFRESH_TOKEN_EXPIRATION is set"
+          else
+            echo "JWT_REFRESH_TOKEN_EXPIRATION is not set"
+          fi
+          
+          if [ -n "${{ secrets.MONGO_URI }}" ]; then
+            echo "MONGO_URI is set"
+          else
+            echo "MONGO_URI is not set"
+          fi
+          
+          if [ -n "${{ secrets.MONGO_DATABASE }}" ]; then
+            echo "MONGO_DATABASE is set"
+          else
+            echo "MONGO_DATABASE is not set"
+          fi
+          
+          if [ -n "${{ secrets.MONGO_COLLECTION_NAME }}" ]; then
+            echo "MONGO_COLLECTION_NAME is set"
+          else
+            echo "MONGO_COLLECTION_NAME is not set"
+          fi
+      - name: Setup network
+        run: |
+          docker network inspect blog-network >/dev/null 2>&1 || docker network create blog-network
+          docker network inspect my-network >/dev/null 2>&1 || docker network create my-network
+          if ! docker network inspect blog-network | grep -q "mysql-container"; then
+            docker network connect blog-network mysql-container || echo "Failed to connect mysql-container to network"
+          fi
+          if ! docker network inspect my-network | grep -q "nginx"; then
+            docker network connect my-network nginx || echo "Failed to connect nginx to network"
+          fi
+      - name: Deploy with Docker Compose
+        env:
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_ACCESS_TOKEN_EXPIRATION: ${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
+          JWT_REFRESH_TOKEN_EXPIRATION: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          MONGO_DATABASE: ${{ secrets.MONGO_DATABASE }}
+          MONGO_COLLECTION_NAME: ${{ secrets.MONGO_COLLECTION_NAME }}
+        run: |
+          docker compose --project-name blog-blue up -d --build
+      
