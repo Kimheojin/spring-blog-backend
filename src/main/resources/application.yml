@@ -27,5 +27,17 @@ logging:
 
 server:
   port: 8080
+---
+# 명시적으로 추가
+# 둘다 디폴트값
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+      base-path: /api
+  endpoint:
+    health:
+      show-details: never
 
 

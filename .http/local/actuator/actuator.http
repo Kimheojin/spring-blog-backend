@@ -1,0 +1,3 @@
+### Actuator Health Check
+GET http://localhost:8080/api/health
+Accept: application/json
