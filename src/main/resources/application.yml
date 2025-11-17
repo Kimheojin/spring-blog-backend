@@ -26,7 +26,7 @@ logging:
     root: INFO
 
 server:
-  port: 8080
+  port: 9002
 ---
 # 명시적으로 추가
 # 둘다 디폴트값

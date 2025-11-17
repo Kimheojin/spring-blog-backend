@@ -5,7 +5,7 @@ services:
     image: blog:latest
     container_name: blog
     ports:
-      - "9000:9000"
+      - "9002:9002"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
