@@ -2,8 +2,8 @@
 services:
   blog:
     build: .
-    image: blog:latest
-    container_name: blog
+    image: blog-blue:latest
+    container_name: blog-blue
     ports:
       - "9001:9001"
     environment:
