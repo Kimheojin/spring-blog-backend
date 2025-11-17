@@ -33,5 +33,9 @@ public class Member {
     public List<String> getRoles() {
         return List.of(this.role.getRoleName());
     }
+    // 비밀번호 업데이트 관련
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
 
 }
