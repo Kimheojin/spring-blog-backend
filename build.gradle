@@ -85,6 +85,9 @@ dependencies {
 
 // cloudinary 관련 sdk
 	implementation 'com.cloudinary:cloudinary-http44:1.34.0'
+
+	// actuator 관련 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 // QueryDSL QClass 생성 설정

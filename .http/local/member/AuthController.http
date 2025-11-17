@@ -4,8 +4,8 @@ POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "hurjin1109@naver.com",
-  "password": "1234"
+  "email": "",
+  "password": ""
 }
 
 ### 로그아웃
