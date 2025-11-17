@@ -2,7 +2,7 @@
 services:
   blog:
     build: .
-    image: blog:latest
+    image: blog-green:latest
     container_name: blog-green
     ports:
       - "9002:9002"
