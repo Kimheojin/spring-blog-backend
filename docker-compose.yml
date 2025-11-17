@@ -3,7 +3,7 @@ services:
   blog:
     build: .
     image: blog:latest
-    container_name: blog
+    container_name: blog-green
     ports:
       - "9002:9002"
     environment:
