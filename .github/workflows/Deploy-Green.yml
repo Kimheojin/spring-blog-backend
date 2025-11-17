@@ -1,11 +1,11 @@
 name: Deploy-Green.yml
-#on:
-#  push:
-#    branches:
-#      - deploy/green
-#  pull_request:
-#    branches:
-#      - deploy/green
+on:
+  push:
+    branches:
+      - deploy/green
+  pull_request:
+    branches:
+      - deploy/green
 jobs:
   build:
     runs-on: [self-hosted, Linux, X64]
