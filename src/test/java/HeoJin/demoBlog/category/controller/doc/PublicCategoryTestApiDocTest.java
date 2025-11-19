@@ -63,7 +63,7 @@ public class PublicCategoryTestApiDocTest extends ApiDocTestBase {
                 .andDo(print());
 
         // docs
-        testMock.andDo(document("get -/api/categories/stats",
+        testMock.andDo(document("get-/api/categories/stats",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 responseFields(
