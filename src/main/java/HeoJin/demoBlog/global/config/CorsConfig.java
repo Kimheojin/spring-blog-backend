@@ -19,7 +19,7 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:1000", "https://heojin.vercel.app"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://heojin.vercel.app"));
         configuration.setAllowedHeaders(List.of("*")); // 고정값
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 

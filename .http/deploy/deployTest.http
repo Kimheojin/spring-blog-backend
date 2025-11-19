@@ -1,0 +1,16 @@
+### health 체크용
+# @cookie-jar=./cookies.json
+POST https://서버주소/api/admin/seo/mongo-sync
+
+### 로그인
+# @cookie-jar=./cookies.json
+POST https://서머주소/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "",
+  "password": ""
+}
+
+
+
