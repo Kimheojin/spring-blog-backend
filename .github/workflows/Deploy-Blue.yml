@@ -1,11 +1,11 @@
 name: Deploy-Blue.yml
-#on:
-#  push:
-#    branches:
-#      - deploy/blue
-#  pull_request:
-#    branches:
-#      - deploy/blue
+on:
+  push:
+    branches:
+      - deploy/blue
+  pull_request:
+    branches:
+      - deploy/blue
 jobs:
   build:
     runs-on: [self-hosted, Linux, X64]
