@@ -45,3 +45,7 @@ src/main/generated/
 agent.md
 ## 쿼리 dsl 생성 그건
 #src/main/generated/
+
+# Gradle caches
+.gradle/
+.gradle-home/
