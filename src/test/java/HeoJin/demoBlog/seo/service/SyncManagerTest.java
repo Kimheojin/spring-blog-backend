@@ -35,4 +35,16 @@ class SyncManagerTest {
         Assertions.assertThat(hash1).isNotEqualTo(hash3);
     }
 
+    @Test
+    @DisplayName("순수 context 관련 테스트")
+    void test3(){
+        // given
+        String s1 = TestConstants.LONG_STRING;
+        // when
+        String toPlainTest = SyncManager.toPlainText(s1);
+        // then
+        Assertions.assertThat(toPlainTest).isNotEqualTo(s1);
+        Assertions.assertThat(toPlainTest).doesNotContain("![]", "```");
+    }
+
 }

@@ -12,5 +12,7 @@ public interface PostMongoRepository {
     void updateAll(List<PostMongo> postMongoList);
     ListPostSearchResponseDto getUnifiedSearch(String term);
     void deleteAll(List<PostMongo> postMongoList);
+    // 데이터 수
+    Long getDataCount();
 
 }
