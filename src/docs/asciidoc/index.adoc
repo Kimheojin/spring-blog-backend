@@ -142,3 +142,13 @@ include::api-doc-template.adoc[]
 === 로그인
 :operation: post-/api/auth/login
 include::api-doc-template.adoc[]
+
+== sync API
+
+=== 동기화 요청 + 결과 반환
+:operation: post-/api/admin/seo/mongo-sync
+include::api-doc-template.adoc[]
+
+=== Mongo 상태 조회 문서화
+:operation: get-/api/admin/seo/mongo/seo-data
+include::api-doc-template.adoc[]

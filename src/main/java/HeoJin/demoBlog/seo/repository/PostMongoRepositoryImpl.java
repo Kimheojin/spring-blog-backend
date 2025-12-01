@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
     @Override
     public void updateAll(List<PostMongo> postMongoList) {
         postMongoList.forEach(
-                postMongo -> mongoTemplate.save(postMongo)
+                postMongo -> mongoTemplate.save(postMongo, collectionName)
         );
 
     }
@@ -91,8 +92,15 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
     @Override
     public void deleteAll(List<PostMongo> postMongoList) {
         postMongoList.forEach(
-                postMongo ->  mongoTemplate.remove(postMongo)
+                postMongo ->  mongoTemplate.remove(postMongo, collectionName)
         );
+    }
+
+    @Override
+    public Long getDataCount() {
+        Query query = new Query();
+        long count = mongoTemplate.count(query, collectionName);
+        return count;
     }
 
 

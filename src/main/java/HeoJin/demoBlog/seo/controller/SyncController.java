@@ -1,11 +1,13 @@
 package HeoJin.demoBlog.seo.controller;
 
 
+import HeoJin.demoBlog.seo.dto.response.MongoStatusResponseDto;
 import HeoJin.demoBlog.seo.dto.response.TriggerResponseDto;
 import HeoJin.demoBlog.seo.service.SyncService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +26,13 @@ public class SyncController {
         TriggerResponseDto triggerResponseDto = syncService.triggerSync();
 
         return ResponseEntity.ok(triggerResponseDto);
+    }
+
+    @GetMapping("/seo/mongo/seo-data")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<MongoStatusResponseDto> getMongoStatus() {
+        MongoStatusResponseDto mongoStatus = syncService.getMongoStatus();
+        return ResponseEntity.ok(mongoStatus);
     }
 
 
