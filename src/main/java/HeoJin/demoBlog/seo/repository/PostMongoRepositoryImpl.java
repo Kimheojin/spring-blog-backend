@@ -51,22 +51,28 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
 
     @Override
     public ListPostSearchResponseDto getUnifiedSearch(String term) {
+        // 총 개수 조회
 
         Aggregation postCount = Aggregation.newAggregation(
                 Aggregation.stage(Document.parse("""
                         {
                             "$searchMeta" : {
-                                "index": "post_search_kr",
+                                "index": "title_plainContent_kr",
                                 "text": {
                                     "query": "%s",
-                                    "path": ???
+                                    "path": ["title", "plainContent"],
+                                    "fuzzy": {
+                                        "maxEdits": 1
+                                    }
                                 },
                                 "count": {
                                     "type": "total"
                                 }
+                              }
+                        
                             }
                         }
-                        """.formatted(term)))
+                        """.formatted(term))) // String term -> 검색어
         );
 
         AggregationResults<Document> countResults = mongoTemplate.aggregate(
@@ -76,18 +82,60 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
         );
 
         int totalCount = 0;
-        if(!countResults.getMappedResults().isEmpty()) {
+        if (!countResults.getMappedResults().isEmpty()) {
             Document countDoc = countResults.getMappedResults().get(0);
             totalCount = countDoc.get("count", Document.class)
                     .getLong("total")
                     .intValue();
         }
-
-        // 페이징 처리 해야하나
-        // 검색은 검색만 해야 하는 거
+        // 실제 검색 결과
+        Aggregation postSearch = Aggregation.newAggregation(
+                Aggregation.stage(Document.parse("""
+                        {
+                            "$search" : {
+                                "index": "title_plainContent_kr",
+                                "text": {
+                                    "query": "%s",
+                                    "path": ["title", "plainContent"],
+                                    "fuzzy": {
+                                        "maxEdits": 1
+                                    }
+                                }
+                            }
+                        }
+                        """.formatted(term))),
+                Aggregation.stage(Document.parse("""
+                        {
+                            "$project": {
+                                "_id": 0,
+                                "postID" : 1,
+                                "title" : 1,
+                                "plainContent": 1,
+                                "score": { "$meta": "searchScore" }
+                            }
+                        }
+                        """)),
+                Aggregation.stage(Document.parse("""
+                        {
+                            "$sort": { "score": -1 }
+                       
+                        }
+                        """)),
+                Aggregation.limit(10)
+                );
+        AggregationResults<Document> searchResults = mongoTemplate.aggregate(
+                postSearch,
+                collectionName,
+                Document.class
+                );
+        List<Document> documents = searchResults.getMappedResults();
 
         return null;
     }
+
+
+
+
 
     @Override
     public void deleteAll(List<PostMongo> postMongoList) {
