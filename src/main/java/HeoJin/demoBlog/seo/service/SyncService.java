@@ -4,6 +4,7 @@ package HeoJin.demoBlog.seo.service;
 import HeoJin.demoBlog.global.exception.CustomNotFound;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import HeoJin.demoBlog.seo.dto.data.PostForMongoDto;
+import HeoJin.demoBlog.seo.dto.response.MongoStatusResponseDto;
 import HeoJin.demoBlog.seo.dto.response.TriggerResponseDto;
 import HeoJin.demoBlog.seo.entity.PostMongo;
 import HeoJin.demoBlog.seo.repository.PostMongoRepository;
@@ -136,4 +137,11 @@ public class SyncService {
         return !mongoTags.equals(mysqlTags);
     }
 
+    public MongoStatusResponseDto getMongoStatus() {
+        Long dataCount = postMongoRepository.getDataCount();
+        return MongoStatusResponseDto.builder()
+                .seoDataCount(dataCount)
+                .build();
+
+    }
 }
