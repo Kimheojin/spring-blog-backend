@@ -39,3 +39,8 @@ Spring Boot 백엔드 REST API 서버 코드
 5. hash 값 redis 저장??
 
 
+### 단독 테스트
+./gradlew test --tests "*SyncControllerDocTest" --info > test-log.txt
+ -> 이런식으로 하기
+
+
