@@ -24,8 +24,6 @@ public class SyncServiceTest {
     private SyncService syncService;
 
     @Mock
-    private PostMongoRepository postMongoRepository;
-    @Mock
     private PostRepository postRepository;
     @Mock
     private PostTagRepository postTagRepository;
