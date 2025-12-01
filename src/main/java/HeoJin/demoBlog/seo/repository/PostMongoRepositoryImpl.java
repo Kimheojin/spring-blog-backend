@@ -2,6 +2,7 @@ package HeoJin.demoBlog.seo.repository;
 
 
 import HeoJin.demoBlog.seo.dto.response.ListPostSearchResponseDto;
+import HeoJin.demoBlog.seo.dto.response.PostSearchResponseDto;
 import HeoJin.demoBlog.seo.entity.PostMongo;
 import lombok.RequiredArgsConstructor;
 import org.bson.Document;
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @Primary
@@ -68,8 +70,6 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
                                 "count": {
                                     "type": "total"
                                 }
-                              }
-                        
                             }
                         }
                         """.formatted(term))) // String term -> 검색어
@@ -81,12 +81,11 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
                 Document.class
         );
 
-        int totalCount = 0;
+        Long totalCount = 0L;
         if (!countResults.getMappedResults().isEmpty()) {
             Document countDoc = countResults.getMappedResults().get(0);
             totalCount = countDoc.get("count", Document.class)
-                    .getLong("total")
-                    .intValue();
+                    .getLong("total");
         }
         // 실제 검색 결과
         Aggregation postSearch = Aggregation.newAggregation(
@@ -108,7 +107,7 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
                         {
                             "$project": {
                                 "_id": 0,
-                                "postID" : 1,
+                                "postId" : 1,
                                 "title" : 1,
                                 "plainContent": 1,
                                 "score": { "$meta": "searchScore" }
@@ -121,7 +120,8 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
                        
                         }
                         """)),
-                Aggregation.limit(10)
+                Aggregation.limit(20)
+                // score 큰게 일치율 높은거
                 );
         AggregationResults<Document> searchResults = mongoTemplate.aggregate(
                 postSearch,
@@ -129,11 +129,15 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
                 Document.class
                 );
         List<Document> documents = searchResults.getMappedResults();
+        List<PostSearchResponseDto> postSearchResponseDtoList = documents.stream()
+                .map(document -> PostSearchResponseDto.builder()
+                        .postId(document.getLong("postId"))
+                        .resultTitle(document.getString("title"))
+                        .build())
+                .collect(Collectors.toList());
 
-        return null;
+        return new ListPostSearchResponseDto(postSearchResponseDtoList, totalCount);
     }
-
-
 
 
 
