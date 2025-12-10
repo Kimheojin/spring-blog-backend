@@ -46,33 +46,53 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
     @Override
     public void updateAll(List<PostMongo> postMongoList) {
         postMongoList.forEach(
-                postMongo -> mongoTemplate.save(postMongo, collectionName)
+                postMongo -> mongoTemplate.save(postMongo)
         );
 
     }
 
     @Override
     public ListPostSearchResponseDto getUnifiedSearch(String term) {
-        // 총 개수 조회
-
+        //총 개수 조회
         Aggregation postCount = Aggregation.newAggregation(
                 Aggregation.stage(Document.parse("""
-                        {
-                            "$searchMeta" : {
-                                "index": "title_plainContent_kr",
-                                "text": {
-                                    "query": "%s",
-                                    "path": ["title", "plainContent"],
-                                    "fuzzy": {
-                                        "maxEdits": 1
-                                    }
+                    {
+                      "$searchMeta": {
+                        "index": "title_plainContent_kr",
+                        "compound": {
+                          "should": [
+                            {
+                              "text": {
+                                "query": "%s",
+                                "path": "title",
+                                "fuzzy": {
+                                  "maxEdits": 1,
+                                  "prefixLength": 2
                                 },
-                                "count": {
-                                    "type": "total"
+                                "score": {
+                                  "boost": { "value": 3 }
                                 }
+                              }
+                            },
+                            {
+                              "text": {
+                                "query": "%s",
+                                "path": "plainContent",
+                                "fuzzy": {
+                                  "maxEdits": 1,
+                                  "prefixLength": 2
+                                }
+                              }
                             }
+                          ],
+                          "minimumShouldMatch": 1
+                        },
+                        "count": {
+                          "type": "total"
                         }
-                        """.formatted(term))) // String term -> 검색어
+                      }
+                    }
+                    """.formatted(term, term)))
         );
 
         AggregationResults<Document> countResults = mongoTemplate.aggregate(
@@ -84,50 +104,71 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
         Long totalCount = 0L;
         if (!countResults.getMappedResults().isEmpty()) {
             Document countDoc = countResults.getMappedResults().get(0);
-            totalCount = countDoc.get("count", Document.class)
-                    .getLong("total");
+            totalCount = countDoc.get("count", Document.class).getLong("total");
         }
-        // 실제 검색 결과
+
+        // 실제 검색 결과 조회
         Aggregation postSearch = Aggregation.newAggregation(
                 Aggregation.stage(Document.parse("""
-                        {
-                            "$search" : {
-                                "index": "title_plainContent_kr",
-                                "text": {
-                                    "query": "%s",
-                                    "path": ["title", "plainContent"],
-                                    "fuzzy": {
-                                        "maxEdits": 1
-                                    }
+                    {
+                      "$search": {
+                        "index": "title_plainContent_kr",
+                        "compound": {
+                          "should": [
+                            {
+                              "text": {
+                                "query": "%s",
+                                "path": "title",
+                                "fuzzy": {
+                                  "maxEdits": 1,
+                                  "prefixLength": 2
+                                },
+                                "score": {
+                                  "boost": { "value": 3 }
                                 }
+                              }
+                            },
+                            {
+                              "text": {
+                                "query": "%s",
+                                "path": "plainContent",
+                                "fuzzy": {
+                                  "maxEdits": 1,
+                                  "prefixLength": 2
+                                }
+                              }
                             }
+                          ],
+                          "minimumShouldMatch": 1
                         }
-                        """.formatted(term))),
+                      }
+                    }
+                    """.formatted(term, term))),
                 Aggregation.stage(Document.parse("""
-                        {
-                            "$project": {
-                                "_id": 0,
-                                "postId" : 1,
-                                "title" : 1,
-                                "plainContent": 1,
-                                "score": { "$meta": "searchScore" }
-                            }
-                        }
-                        """)),
+                    {
+                      "$project": {
+                        "_id": 0,
+                        "postId": 1,
+                        "title": 1,
+                        "plainContent": 1,
+                        "score": { "$meta": "searchScore" }
+                      }
+                    }
+                    """)),
                 Aggregation.stage(Document.parse("""
-                        {
-                            "$sort": { "score": -1 }
-                       
-                        }
-                        """)),
+                    {
+                      "$sort": { "score": -1 }
+                    }
+                    """)),
                 Aggregation.limit(20)
-                // score 큰게 일치율 높은거
-                );
+        );
+
         AggregationResults<Document> searchResults = mongoTemplate.aggregate(
                 postSearch,
                 collectionName,
                 Document.class
-                );
+        );
+
         List<Document> documents = searchResults.getMappedResults();
         List<PostSearchResponseDto> postSearchResponseDtoList = documents.stream()
                 .map(document -> PostSearchResponseDto.builder()
@@ -144,14 +185,14 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
     @Override
     public void deleteAll(List<PostMongo> postMongoList) {
         postMongoList.forEach(
-                postMongo ->  mongoTemplate.remove(postMongo, collectionName)
+                mongoTemplate::remove
         );
     }
 
     @Override
     public Long getDataCount() {
         Query query = new Query();
-        long count = mongoTemplate.count(query, collectionName);
+        long count = mongoTemplate.count(query, PostMongo.class);
         return count;
     }
 
