@@ -43,4 +43,10 @@ Spring Boot 백엔드 REST API 서버 코드
 ./gradlew test --tests "*SyncControllerDocTest" --info > test-log.txt
  -> 이런식으로 하기
 
+mongo atlas Search 기능만 넣으면 될듯
+
+## 인덱스 명
+
+title_plainContent_kr
+
 

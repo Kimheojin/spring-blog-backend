@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 public class PostSearchResponseDto {
-    private String resultTerm;
+    private String resultTitle;
+    private Long postId;
 }
