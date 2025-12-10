@@ -155,14 +155,6 @@ public class PostMongoRepositoryImpl implements PostMongoRepository{
                       }
                     }
                     """)),
-                // score threshold (필요하면 숫자 조정)
-                Aggregation.stage(Document.parse("""
-                    {
-                      "$match": {
-                        "score": { "$gte": 5 }
-                      }
-                    }
-                    """)),
                 Aggregation.stage(Document.parse("""
                     {
                       "$sort": { "score": -1 }
