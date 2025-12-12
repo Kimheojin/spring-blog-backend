@@ -4,20 +4,18 @@ import HeoJin.demoBlog.global.exception.common.CustomException;
 
 public class NotFoundException extends CustomException {
 
-    private final int statusCode;
+    private static final int STATUS_CODE = 404;
 
-    public NotFoundException(String message, int status){
+    public NotFoundException(String message){
         super(message);
-        this.statusCode = status;
     }
 
-    public NotFoundException(String message, Throwable cause, int status){
+    public NotFoundException(String message, Throwable cause){
         super(message, cause);
-        this.statusCode = status;
     }
 
     @Override
     public int getStatusCode(){
-        return statusCode;
+        return STATUS_CODE;
     }
 }
