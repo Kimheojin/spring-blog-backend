@@ -1,7 +1,7 @@
 package HeoJin.demoBlog.tag.service;
 
 
-import HeoJin.demoBlog.global.exception.CustomNotFound;
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 import HeoJin.demoBlog.tag.dto.response.ListTagDtoResponseDto;
 import HeoJin.demoBlog.tag.dto.response.PageTagPostResponse;
 import HeoJin.demoBlog.tag.dto.response.PostTagResponseDto;
@@ -39,7 +39,7 @@ public class TagService {
         // 검증
         tagRepository.findById(tagId)
                 .filter(tag -> tagName.equals(tag.getTagName()))
-                .orElseThrow(() -> new CustomNotFound("해당 tag 가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 tag 가 존재하지 않습니다."));
         // pageable 객체 생성
         Pageable pageable = PageRequest.of(page, pageSize);
 

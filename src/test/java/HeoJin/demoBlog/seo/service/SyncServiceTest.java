@@ -1,9 +1,8 @@
 package HeoJin.demoBlog.seo.service;
 
 
-import HeoJin.demoBlog.global.exception.CustomNotFound;
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 import HeoJin.demoBlog.post.repository.PostRepository;
-import HeoJin.demoBlog.seo.repository.PostMongoRepository;
 import HeoJin.demoBlog.tag.repository.PostTagRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,6 +38,6 @@ public class SyncServiceTest {
         // when
 
         // then
-        assertThrows(CustomNotFound.class, () -> syncService.triggerSync());
+        assertThrows(NotFoundException.class, () -> syncService.triggerSync());
     }
 }

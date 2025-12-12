@@ -2,7 +2,7 @@ package HeoJin.demoBlog.post.service;
 
 
 import HeoJin.demoBlog.category.entity.Category;
-import HeoJin.demoBlog.global.exception.CustomNotFound;
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 import HeoJin.demoBlog.category.repository.CategoryRepository;
 import HeoJin.demoBlog.post.dto.response.PagePostResponse;
 import HeoJin.demoBlog.post.dto.response.TagResponse;
@@ -68,7 +68,7 @@ public class PostReadService {
     public PagePostResponse readPagingCategoryPosts(String categoryName,
                                                     int page, int size){
         Category category = categoryRepository.findByCategoryName(categoryName)
-                .orElseThrow(() -> new CustomNotFound("해당 카테고리 이름"));
+                .orElseThrow(() -> new NotFoundException("해당 카테고리 이름"));
 
         Pageable pageable = PageRequest.of(page, size); // 프라이머리로
         Page<Post> postPage = postRepository
@@ -101,7 +101,7 @@ public class PostReadService {
     @Transactional(readOnly = true)
     public PostResponse getSinglePost(Long postId) {
         Post post = postRepository.findPublishedWithPostId(postId)
-                .orElseThrow(() -> new CustomNotFound("포스트"));
+                .orElseThrow(() -> new NotFoundException("포스트"));
 
         List<TagResponse> tagListWithPostId = postTagRepository.getTagListWithPostId(post.getId());
 

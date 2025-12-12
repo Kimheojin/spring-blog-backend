@@ -1,6 +1,6 @@
 package HeoJin.demoBlog.tag.service;
 
-import HeoJin.demoBlog.global.exception.CustomNotFound;
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 import HeoJin.demoBlog.post.dto.request.TagRequest;
 import HeoJin.demoBlog.post.dto.response.TagResponse;
 import HeoJin.demoBlog.tag.entity.PostTag;
@@ -50,7 +50,7 @@ public class TagManager {
     public void deleteTagPost(String tagName, Long postId) {
         Optional<Tag> byTagName = tagRepository.findByTagName(tagName);
         if(byTagName.isEmpty()){
-            throw new CustomNotFound("해당 Tag entity 가 존재하지 않습니다,");
+            throw new NotFoundException("해당 Tag entity 가 존재하지 않습니다,");
 
         } else {
             Long tagId = byTagName.get().getId();

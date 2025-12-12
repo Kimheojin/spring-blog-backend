@@ -11,7 +11,6 @@ import HeoJin.demoBlog.tag.entity.QPostTag;
 import HeoJin.demoBlog.tag.entity.QTag;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -1,7 +1,7 @@
 package HeoJin.demoBlog.member.service;
 
 
-import HeoJin.demoBlog.global.exception.CustomNotFound;
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 import HeoJin.demoBlog.member.dto.request.PasswordUpdateDto;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.member.repository.MemberRepository;
@@ -28,7 +28,7 @@ public class AccountService {
         // memberId
         Optional<Member> targetMember = memberRepository.findById(Long.parseLong(auth.getName()));
         if(targetMember.isEmpty()){
-            throw new CustomNotFound("해당 회원이 DB에 존재하지 않습니다.");
+            throw new NotFoundException("해당 회원이 DB에 존재하지 않습니다.");
         }
         Member member = targetMember.get();
         member.updatePassword(passwordEncoder.encode(passwordUpdateDto.getNewPassword()));

@@ -3,8 +3,7 @@ package HeoJin.demoBlog.post.service;
 
 import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.category.repository.CategoryRepository;
-import HeoJin.demoBlog.global.exception.CustomNotFound;
-import HeoJin.demoBlog.global.exception.common.CustomException;
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.member.repository.MemberRepository;
 import HeoJin.demoBlog.post.dto.request.*;
@@ -14,7 +13,6 @@ import HeoJin.demoBlog.post.entity.PostStatus;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import HeoJin.demoBlog.tag.service.TagManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,15 +34,15 @@ public class PostWriteService {
     public PostContractionResponse writePost(Long memberId, PostRequest postRequest) {
         // 제목 중복의 경우 Gelobal 처리
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomNotFound("회원"));
+                .orElseThrow(() -> new NotFoundException("회원"));
 
 
         // 카테고리 이미 존재 하는 지 안하는지 확인
         Category category = categoryRepository.findByCategoryName(postRequest.getCategoryName())
-                .orElseThrow(() -> new CustomNotFound("카테고리"));
+                .orElseThrow(() -> new NotFoundException("카테고리"));
 
         if (postRequest.getPostStatus().equals("SCHEDULED")) {
-            throw new CustomNotFound("유효하지 않은 값입니다.");
+            throw new NotFoundException("유효하지 않은 값입니다.");
         }
 
         Post newpost = Post.builder()
@@ -74,7 +72,7 @@ public class PostWriteService {
     public PostContractionResponse updatePost(PostModifyRequest postModifyRequest) {
         // 변경감지로
         Post post = postRepository.findById(postModifyRequest.getPostId())
-                .orElseThrow(() -> new CustomNotFound("해당 Post가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 Post가 존재하지 않습니다."));
 
         post.updatePost(postModifyRequest.getTitle(),
                 postModifyRequest.getContent(),
@@ -90,7 +88,7 @@ public class PostWriteService {
     @Transactional
     public void deletePost(PostDeleteRequest postDeleteRequest) {
         Post post = postRepository.findById(postDeleteRequest.getPostId())
-                .orElseThrow(() -> new CustomNotFound("해당 Post가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 Post가 존재하지 않습니다."));
         tagManager.deleteTagByPostId(post.getId());
         postRepository.delete(post);
 
@@ -99,10 +97,10 @@ public class PostWriteService {
     @Transactional
     public PostContractionResponse schedulePost(Long memberId, ScheduledPostRequest scheduledPostRequest){
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomNotFound("회원"));
+                .orElseThrow(() -> new NotFoundException("회원"));
 
         Category category = categoryRepository.findByCategoryName(scheduledPostRequest.getCategoryName())
-                .orElseThrow(() -> new CustomNotFound("카테고리"));
+                .orElseThrow(() -> new NotFoundException("카테고리"));
 
 
         Post scheduledPost = Post.builder()

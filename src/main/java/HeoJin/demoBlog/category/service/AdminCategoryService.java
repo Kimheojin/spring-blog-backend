@@ -7,9 +7,11 @@ import HeoJin.demoBlog.category.dto.request.ModifyCategoryNameRequest;
 import HeoJin.demoBlog.category.dto.response.CategoryResponse;
 import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.category.repository.CategoryRepository;
-import HeoJin.demoBlog.global.exception.CategoryAlreadyExist;
-import HeoJin.demoBlog.global.exception.CustomNotFound;
-import HeoJin.demoBlog.global.exception.ExistCategoryPostException;
+
+import HeoJin.demoBlog.global.exception.refactor.BusinessErrorCode;
+import HeoJin.demoBlog.global.exception.refactor.BusinessException;
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
+
 import HeoJin.demoBlog.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,9 +35,10 @@ public class AdminCategoryService {
 
 
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CustomNotFound("카테고리"));
+                .orElseThrow(() -> new NotFoundException("일치하는 카테고리가 존재하지 않습니다."));
         if(postRepository.existsByCategoryId(categoryId)){
-            throw new ExistCategoryPostException();
+            throw new BusinessException(BusinessErrorCode.DUPLICATE_RESOURCE,
+                    "해당 카테고리에 post가 존재합니다.");
         }
         
         // DataIntegrityViolationException -> 무결성 제약 위반시, Spring entity 단에서 발생
@@ -51,7 +54,8 @@ public class AdminCategoryService {
     @Transactional
     public List<CategoryResponse> addCategoryAndGetAll(AddCategoryRequest addCategoryRequest) {
         if(categoryRepository.findByCategoryName(addCategoryRequest.getCategoryName()).isPresent()){
-            throw new CategoryAlreadyExist();
+            throw new BusinessException(BusinessErrorCode.DUPLICATE_RESOURCE,
+                    "이미 해당 이름의 카테고리가 존재합니다.");
         }
 
         // 정상 로직은 들여쓰기 없이 깔끔하게
@@ -69,7 +73,7 @@ public class AdminCategoryService {
     @Transactional
     public List<CategoryResponse> updateCategoryAndGetAll(ModifyCategoryNameRequest modifyCategoryNameRequest) {
         Category category = categoryRepository.findById(modifyCategoryNameRequest.getCategoryId())
-                .orElseThrow(() -> new CustomNotFound("해당 카테고리가 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 카테고리가 존재하지 않습니다."));
 
         // 변경 감지
         category.updateCategoryName(modifyCategoryNameRequest.getCategoryName());
