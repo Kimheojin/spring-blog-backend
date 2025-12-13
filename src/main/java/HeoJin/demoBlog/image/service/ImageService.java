@@ -1,8 +1,9 @@
 package HeoJin.demoBlog.image.service;
 
-import HeoJin.demoBlog.global.exception.image.CloudinaryCustomRuntimeException;
+import HeoJin.demoBlog.global.exception.refactor.ExternalServiceException;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class ImageService {
             return imageUrl;
 
         } catch (Exception e) {
-            throw new CloudinaryCustomRuntimeException("이미지 업로드 실패", e);
+            throw new ExternalServiceException(extractStatusCode(e), "이미지 업로드 실패", e);
         }
     }
 
@@ -75,7 +76,7 @@ public class ImageService {
             return imageList;
 
         } catch (Exception e) {
-            throw new CloudinaryCustomRuntimeException("이미지 리스트 조회 실패", e);
+            throw new ExternalServiceException(extractStatusCode(e), "이미지 리스트 조회 실패", e);
         }
     }
 
@@ -89,7 +90,60 @@ public class ImageService {
             return "ok".equals(resultStatus) || "not found".equals(resultStatus);
 
         } catch (Exception e) {
-            throw new CloudinaryCustomRuntimeException("이미지 삭제 실패", e);
+            throw new ExternalServiceException(extractStatusCode(e), "이미지 삭제 실패", e);
         }
+    }
+
+    private int extractStatusCode(Exception e) {
+        if (e == null || e.getMessage() == null) {
+            return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; // 500
+        }
+
+        String message = e.getMessage().toLowerCase();
+
+        // 400 Bad Request 관련
+        if (message.contains("bad request") ||
+                message.contains("invalid") ||
+                message.contains("file size") ||
+                message.contains("unsupported format") ||
+                message.contains("malformed")) {
+            return HttpServletResponse.SC_BAD_REQUEST; // 400
+        }
+
+        // 401 Authorization required 관련
+        if (message.contains("unauthorized") ||
+                message.contains("authentication") ||
+                message.contains("invalid api key") ||
+                message.contains("api key")) {
+            return HttpServletResponse.SC_UNAUTHORIZED; // 401
+        }
+
+        // 403 Not allowed 관련
+        if (message.contains("forbidden") ||
+                message.contains("not allowed") ||
+                message.contains("permission denied")) {
+            return HttpServletResponse.SC_FORBIDDEN; // 403
+        }
+
+        // 404 Not found 관련
+        if (message.contains("not found") ||
+                message.contains("resource not found")) {
+            return HttpServletResponse.SC_NOT_FOUND; // 404
+        }
+
+        // 409 Already exists 관련
+        if (message.contains("already exists") ||
+                message.contains("conflict")) {
+            return HttpServletResponse.SC_CONFLICT; // 409
+        }
+
+        // 420 Rate limited 관련 (Cloudinary 특별 코드)
+        if (message.contains("rate limit") ||
+                message.contains("too many requests")) {
+            return 420; // Rate limited
+        }
+
+        // 기본값: 500 Internal Server Error
+        return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; // 500
     }
 }
