@@ -27,7 +27,7 @@ public class AdminTagService {
         Long postId = listAddTagRequestDto.postId();
         // 검증
         if (!postRepository.existsById(postId)) {
-            throw new NotFoundException("해당 post가 존재하지 않습니다.");
+            throw new NotFoundException("해당 포스트를 찾을 수 없습니다.");
         }
 
         listAddTagRequestDto.DtoList().forEach(
@@ -45,7 +45,7 @@ public class AdminTagService {
         long postId = listDeleteTagRequest.postId();
         // 검증
         if(!postRepository.existsById(postId)) {
-            throw new NotFoundException("해당 post 가 존재하지 않습니다,");
+            throw new NotFoundException("해당 포스트를 찾을 수 없습니다.");
         }
 
         listDeleteTagRequest.DtoList().forEach(

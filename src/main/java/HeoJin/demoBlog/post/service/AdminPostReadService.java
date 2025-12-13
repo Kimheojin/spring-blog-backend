@@ -32,7 +32,7 @@ public class AdminPostReadService {
     public PostResponse getAdminSinglePost(Long postId) {
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException("포스트"));
+                .orElseThrow(() -> new NotFoundException("해당 포스트를 찾을 수 없습니다."));
 
         List<TagResponse> tagListWithPostId = postTagRepository.getTagListWithPostId(post.getId());
 

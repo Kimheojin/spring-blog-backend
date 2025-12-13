@@ -3,6 +3,8 @@ package HeoJin.demoBlog.post.service;
 
 import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.category.repository.CategoryRepository;
+import HeoJin.demoBlog.global.exception.refactor.BusinessErrorCode;
+import HeoJin.demoBlog.global.exception.refactor.BusinessException;
 import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.member.repository.MemberRepository;
@@ -34,15 +36,15 @@ public class PostWriteService {
     public PostContractionResponse writePost(Long memberId, PostRequest postRequest) {
         // 제목 중복의 경우 Gelobal 처리
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException("회원"));
+                .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
 
 
         // 카테고리 이미 존재 하는 지 안하는지 확인
         Category category = categoryRepository.findByCategoryName(postRequest.getCategoryName())
-                .orElseThrow(() -> new NotFoundException("카테고리"));
+                .orElseThrow(() -> new NotFoundException("해당 카테고리를 찾을 수 없습니다."));
 
         if (postRequest.getPostStatus().equals("SCHEDULED")) {
-            throw new NotFoundException("유효하지 않은 값입니다.");
+            throw new BusinessException(BusinessErrorCode.INVALID_REQUEST, "예약 발행은 별도 API를 사용해야 합니다.");
         }
 
         Post newpost = Post.builder()
@@ -97,10 +99,10 @@ public class PostWriteService {
     @Transactional
     public PostContractionResponse schedulePost(Long memberId, ScheduledPostRequest scheduledPostRequest){
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException("회원"));
+                .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
 
         Category category = categoryRepository.findByCategoryName(scheduledPostRequest.getCategoryName())
-                .orElseThrow(() -> new NotFoundException("카테고리"));
+                .orElseThrow(() -> new NotFoundException("해당 카테고리를 찾을 수 없습니다."));
 
 
         Post scheduledPost = Post.builder()

@@ -32,6 +32,11 @@ public class CommentWriteService {
         if(commentWriteRequest.getParentId() != null){
             parenComment = commentRepository.findById(commentWriteRequest.getParentId())
                     .orElseThrow(() -> new NotFoundException("부모 댓글이 존재하지 않습니다."));
+
+            if (!parenComment.getPost().getId().equals(post.getId())) {
+                throw new BusinessException(BusinessErrorCode.INVALID_REQUEST,
+                        "부모 댓글과 같은 게시글이어야 합니다.");
+            }
         }
 
         commentRepository.save(CommentMapper.toComment(commentWriteRequest,
@@ -76,8 +81,9 @@ public class CommentWriteService {
     // 공통 검증 로직
     protected Comment validateCommentAccess(Long postId, Long commentId, String email, String password) {
 
-        postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException("해당 포스트가 존재하지 않습니다."));
+        if (!postRepository.existsById(postId)) {
+            throw new NotFoundException("해당 포스트가 존재하지 않습니다.");
+        }
 
 
         Comment comment = commentRepository.findById(commentId)

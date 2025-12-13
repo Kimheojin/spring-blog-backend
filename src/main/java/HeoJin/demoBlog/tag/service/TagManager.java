@@ -50,7 +50,7 @@ public class TagManager {
     public void deleteTagPost(String tagName, Long postId) {
         Optional<Tag> byTagName = tagRepository.findByTagName(tagName);
         if(byTagName.isEmpty()){
-            throw new NotFoundException("해당 Tag entity 가 존재하지 않습니다,");
+            throw new NotFoundException("해당 태그를 찾을 수 없습니다.");
 
         } else {
             Long tagId = byTagName.get().getId();

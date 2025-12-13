@@ -68,7 +68,7 @@ public class PostReadService {
     public PagePostResponse readPagingCategoryPosts(String categoryName,
                                                     int page, int size){
         Category category = categoryRepository.findByCategoryName(categoryName)
-                .orElseThrow(() -> new NotFoundException("해당 카테고리 이름"));
+                .orElseThrow(() -> new NotFoundException("해당 이름의 카테고리를 찾을 수 없습니다."));
 
         Pageable pageable = PageRequest.of(page, size); // 프라이머리로
         Page<Post> postPage = postRepository
@@ -101,7 +101,7 @@ public class PostReadService {
     @Transactional(readOnly = true)
     public PostResponse getSinglePost(Long postId) {
         Post post = postRepository.findPublishedWithPostId(postId)
-                .orElseThrow(() -> new NotFoundException("포스트"));
+                .orElseThrow(() -> new NotFoundException("해당 포스트를 찾을 수 없습니다."));
 
         List<TagResponse> tagListWithPostId = postTagRepository.getTagListWithPostId(post.getId());
 
