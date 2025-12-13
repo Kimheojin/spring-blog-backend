@@ -20,6 +20,9 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
 
     boolean existsByCategoryId(Long categoryId);
 
+    boolean existsById(Long id);
+
+
     // no usages 가 뜨는 게 정상(ide 단계에서)
     @EntityGraph(attributePaths = {"category", "member"})
     Page<Post> findAll(Pageable pageable);

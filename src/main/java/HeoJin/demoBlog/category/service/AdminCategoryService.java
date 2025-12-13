@@ -27,22 +27,20 @@ public class AdminCategoryService {
     private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
 
-    // 카테고리 단일 삭제
+    // 카테고리 삭제
     @Transactional
     public List<CategoryResponse> deleteCategoryAndGetAll(DeleteCategoryRequest deleteCategoryRequest) {
 
         Long categoryId = deleteCategoryRequest.getCategoryId();
 
-
+        // 유효성 검사
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException("일치하는 카테고리가 존재하지 않습니다."));
+
         if(postRepository.existsByCategoryId(categoryId)){
             throw new BusinessException(BusinessErrorCode.DUPLICATE_RESOURCE,
                     "해당 카테고리에 post가 존재합니다.");
         }
-        
-        // DataIntegrityViolationException -> 무결성 제약 위반시, Spring entity 단에서 발생
-        // 체크 예외 X
 
         categoryRepository.delete(category);
 
@@ -51,14 +49,17 @@ public class AdminCategoryService {
                 .toList();
     }
 
+    // 카테고리 추가 + 전체 category 리스트 반환
     @Transactional
     public List<CategoryResponse> addCategoryAndGetAll(AddCategoryRequest addCategoryRequest) {
+
+        // 유효성 검사
         if(categoryRepository.findByCategoryName(addCategoryRequest.getCategoryName()).isPresent()){
             throw new BusinessException(BusinessErrorCode.DUPLICATE_RESOURCE,
                     "이미 해당 이름의 카테고리가 존재합니다.");
         }
 
-        // 정상 로직은 들여쓰기 없이 깔끔하게
+        // 카테고리 추가
         categoryRepository.save(Category.builder()
                 .categoryName(addCategoryRequest.getCategoryName())
                 .priority(addCategoryRequest.getPriority())
@@ -69,9 +70,11 @@ public class AdminCategoryService {
                 .collect(Collectors.toList());
     }
 
-    // 카테고리 이름 수정
+    // 카테고리 이름 변경
     @Transactional
     public List<CategoryResponse> updateCategoryAndGetAll(ModifyCategoryNameRequest modifyCategoryNameRequest) {
+
+        // 유효성 검사
         Category category = categoryRepository.findById(modifyCategoryNameRequest.getCategoryId())
                 .orElseThrow(() -> new NotFoundException("해당 카테고리가 존재하지 않습니다."));
 

@@ -17,14 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CommentWriteService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
 
-
+    @Transactional
     public void commentWrite(CommentWriteRequest commentWriteRequest) {
         Post post = postRepository.findPublishedWithPostId(commentWriteRequest.getPostId())
                 .orElseThrow(() -> new NotFoundException("해당 post 가 존재하지 않습니다."));
@@ -39,6 +38,7 @@ public class CommentWriteService {
                 post, parenComment));
     }
 
+    @Transactional
     public void commentDelete(CommentDeleteRequest request) {
         Comment comment = validateCommentAccess(request.getPostId(),
                 request.getCommentId(),
@@ -48,6 +48,7 @@ public class CommentWriteService {
         comment.delete();
     }
 
+    @Transactional
     public void commentModify(CommentModifyRequest request) {
         Comment comment = validateCommentAccess(request.getPostId(),
                 request.getCommentId(),
@@ -57,6 +58,8 @@ public class CommentWriteService {
         comment.updateComment(request.getContent());
     }
 
+    // 관리자용
+    @Transactional
     public void commentAdminDelete(CommentAdminDeleteRequest request) {
         postRepository.findById(request.getPostId())
                 .orElseThrow(() -> new NotFoundException("포스트"));
