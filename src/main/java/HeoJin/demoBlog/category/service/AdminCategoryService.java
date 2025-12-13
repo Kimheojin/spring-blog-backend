@@ -44,9 +44,7 @@ public class AdminCategoryService {
 
         categoryRepository.delete(category);
 
-        return categoryRepository.findAllByOrderByPriorityAsc()
-                .stream().map(CategoryMapper::toCategoryResponse)
-                .toList();
+        return getAllCategories();
     }
 
     // 카테고리 추가 + 전체 category 리스트 반환
@@ -65,9 +63,7 @@ public class AdminCategoryService {
                 .priority(addCategoryRequest.getPriority())
                 .build());
 
-        return categoryRepository.findAllByOrderByPriorityAsc().stream()
-                .map(CategoryMapper::toCategoryResponse)
-                .collect(Collectors.toList());
+        return getAllCategories();
     }
 
     // 카테고리 이름 변경
@@ -91,6 +87,10 @@ public class AdminCategoryService {
         category.updateCategoryName(modifyCategoryNameRequest.getCategoryName());
         category.updatePriority(modifyCategoryNameRequest.getPriority());
 
+        return getAllCategories();
+    }
+
+    private List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAllByOrderByPriorityAsc().stream()
                 .map(CategoryMapper::toCategoryResponse)
                 .collect(Collectors.toList());
