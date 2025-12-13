@@ -74,11 +74,11 @@ include::api-doc-template.adoc[]
 include::api-doc-template.adoc[]
 
 === 통합 포스트 조회 (관리자)
-:operation: get-/api/admin/posts Integration Api
+:operation: get-/api/admin/posts-Integration-Api
 include::api-doc-template.adoc[]
 
 === 카테고리별 포스트 조회 (관리자)
-:operation: get-/api/admin/posts and categoryName para
+:operation: get-/api/admin/posts-and-categoryName-para
 include::api-doc-template.adoc[]
 
 === 단일 포스트 조회 (관리자)
@@ -86,7 +86,7 @@ include::api-doc-template.adoc[]
 include::api-doc-template.adoc[]
 
 === 상태별 포스트 조회 (관리자)
-:operation: get-/api/admin/posts  and postStatus para
+:operation: get-/api/admin/posts-and-postStatus-para
 include::api-doc-template.adoc[]
 
 === 포스트 작성 (관리자)
