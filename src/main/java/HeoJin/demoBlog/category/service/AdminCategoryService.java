@@ -38,7 +38,7 @@ public class AdminCategoryService {
                 .orElseThrow(() -> new NotFoundException("일치하는 카테고리가 존재하지 않습니다."));
 
         if(postRepository.existsByCategoryId(categoryId)){
-            throw new BusinessException(BusinessErrorCode.DUPLICATE_RESOURCE,
+            throw new BusinessException(BusinessErrorCode.INVALID_REQUEST,
                     "해당 카테고리에 post가 존재합니다.");
         }
 
@@ -77,6 +77,15 @@ public class AdminCategoryService {
         // 유효성 검사
         Category category = categoryRepository.findById(modifyCategoryNameRequest.getCategoryId())
                 .orElseThrow(() -> new NotFoundException("해당 카테고리가 존재하지 않습니다."));
+
+        // 중복 이름 검사
+        categoryRepository.findByCategoryName(modifyCategoryNameRequest.getCategoryName())
+                .ifPresent(existingCategory -> {
+                    if (!existingCategory.getId().equals(category.getId())) {
+                        throw new BusinessException(BusinessErrorCode.DUPLICATE_RESOURCE,
+                                "이미 해당 이름의 카테고리가 존재합니다.");
+                    }
+                });
 
         // 변경 감지
         category.updateCategoryName(modifyCategoryNameRequest.getCategoryName());
