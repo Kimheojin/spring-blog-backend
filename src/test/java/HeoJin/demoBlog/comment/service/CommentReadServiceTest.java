@@ -5,6 +5,7 @@ import HeoJin.demoBlog.comment.entity.Comment;
 import HeoJin.demoBlog.comment.entity.CommentStatus;
 import HeoJin.demoBlog.comment.repository.CommentRepository;
 import HeoJin.demoBlog.post.entity.Post;
+import HeoJin.demoBlog.post.repository.PostRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,8 @@ public class CommentReadServiceTest {
 
     @Mock
     private CommentRepository commentRepository;
+    @Mock
+    private PostRepository postRepository;
     @InjectMocks
     private CommentReadService commentReadService;
 
@@ -33,6 +36,7 @@ public class CommentReadServiceTest {
         Post post = createTestPost();
         List<Comment> mockComment = createTestComments(post);
 
+        Mockito.when(postRepository.existsById(post.getId())).thenReturn(true);
         Mockito.when(commentRepository.customFindCommentsByPostId(post.getId()))
                 .thenReturn(mockComment);
 
@@ -53,6 +57,7 @@ public class CommentReadServiceTest {
     @DisplayName("getCommentByPostId -> Repository에서 빈 리스트 반환 시")
     void test2() {
         // given
+        Mockito.when(postRepository.existsById(-999L)).thenReturn(true);
         Mockito.when(commentRepository.customFindCommentsByPostId(-999L))
                 .thenReturn(Collections.emptyList());
 
@@ -72,6 +77,7 @@ public class CommentReadServiceTest {
         Post post = createTestPost();
         List<Comment> mockComment = createTestComments(post);
 
+        Mockito.when(postRepository.existsById(post.getId())).thenReturn(true);
         Mockito.when(commentRepository.customFindAllCommentByPostIdForAdmin(post.getId()))
                 .thenReturn(mockComment);
 
@@ -92,6 +98,7 @@ public class CommentReadServiceTest {
     @DisplayName("getAdminCommentByPostId -> Repository에서 빈 리스트 반환 시")
     void test4() {
         // given
+        Mockito.when(postRepository.existsById(-999L)).thenReturn(true);
         Mockito.when(commentRepository.customFindAllCommentByPostIdForAdmin(-999L))
                 .thenReturn(Collections.emptyList());
 

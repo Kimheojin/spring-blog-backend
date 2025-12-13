@@ -67,9 +67,29 @@ class AdminReadTestApiDocTest extends ApiDocTestBase {
                 preprocessResponse(prettyPrint()),
                 queryParameters(
                         parameterWithName("page").description("페이지 번호 (0부터 시작)"),
-                        parameterWithName("size").description("한 페이지당 크기")
+                        parameterWithName("size").description("한 페이지당 크기"),
+                        parameterWithName("categoryName").description("카테고리 이름"),
+                        parameterWithName("postStatus").description("포스트 상태 (PUBLISHED, DRAFT)")
                 ),
-;
+                responseFields(
+                        fieldWithPath("content").description("포스트"),
+                        fieldWithPath("content[].postId").description("포스트 Id"),
+                        fieldWithPath("content[].title").description("제목"),
+                        fieldWithPath("content[].memberName").description("작성자 이름"),
+                        fieldWithPath("content[].content").description("내용"),
+                        fieldWithPath("content[].categoryName").description("카테고리 이름"),
+                        fieldWithPath("content[].tagList").description("해당 포스트 태그 리스트"),
+                        fieldWithPath("content[].tagList[].tagName").description("해당 태그 이름"),
+                        fieldWithPath("content[].tagList[].tagId").description("해당 태그 ID"),
+                        fieldWithPath("content[].status").description("enum + 상태 "),
+                        fieldWithPath("content[].regDate").description("저장 날짜"),
+                        fieldWithPath("pageNumber").description("페이지 넘버"),
+                        fieldWithPath("pageSize").description("페이지 사이즈"),
+                        fieldWithPath("totalElements").description("총 elements 갯수"),
+                        fieldWithPath("totalPages").description("총 페이지"),
+                        fieldWithPath("first").description("처음인지 아닌지"),
+                        fieldWithPath("last").description("마지막인지 아닌지")
+                )));
     }
 
     // get + /api/admin/posts -> 상태 상관 없이 전체 조회
@@ -117,11 +137,14 @@ class AdminReadTestApiDocTest extends ApiDocTestBase {
     @DisplayName("get /api/admin/posts -> 카테고리 별 포스트수 반환(상태 상관 X)")
     void test2() throws Exception {
         // given
+        String testCategoryName = categoryRepository.findAll().get(0).getCategoryName();
 
         // when + then
         ResultActions testMock = mockMvc.perform(get("/api/admin/posts")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .queryParam("categoryName", "Java1"))
+                        .queryParam("categoryName", testCategoryName)
+                        .queryParam("page", String.valueOf(0))
+                        .queryParam("size", String.valueOf(2)))
                 .andExpect(status().isOk())
                 .andDo(print());
 
@@ -134,6 +157,25 @@ class AdminReadTestApiDocTest extends ApiDocTestBase {
                         parameterWithName("size").description("한 페이지당 크기"),
                         parameterWithName("categoryName").description("카테고리 이름")
                 ),
+                responseFields(
+                        fieldWithPath("content").description("포스트"),
+                        fieldWithPath("content[].postId").description("포스트 Id"),
+                        fieldWithPath("content[].title").description("제목"),
+                        fieldWithPath("content[].memberName").description("작성자 이름"),
+                        fieldWithPath("content[].content").description("내용"),
+                        fieldWithPath("content[].categoryName").description("카테고리 이름"),
+                        fieldWithPath("content[].tagList").description("해당 포스트 태그 리스트"),
+                        fieldWithPath("content[].tagList[].tagName").description("해당 태그 이름"),
+                        fieldWithPath("content[].tagList[].tagId").description("해당 태그 ID"),
+                        fieldWithPath("content[].status").description("enum + 상태 "),
+                        fieldWithPath("content[].regDate").description("저장 날짜"),
+                        fieldWithPath("pageNumber").description("페이지 넘버"),
+                        fieldWithPath("pageSize").description("페이지 사이즈"),
+                        fieldWithPath("totalElements").description("총 elements 갯수"),
+                        fieldWithPath("totalPages").description("총 페이지"),
+                        fieldWithPath("first").description("처음인지 아닌지"),
+                        fieldWithPath("last").description("마지막인지 아닌지")
+                )));
     }
 
     // get + /api/admin/posts/single -> 단일 포스트 조회
@@ -186,7 +228,9 @@ class AdminReadTestApiDocTest extends ApiDocTestBase {
         // when + then
         ResultActions testMock = mockMvc.perform(get("/api/admin/posts")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .queryParam("postStatus", "PUBLISHED"))
+                        .queryParam("postStatus", "PUBLISHED")
+                        .queryParam("page", String.valueOf(0))
+                        .queryParam("size", String.valueOf(2)))
                 .andExpect(status().isOk())
                 .andDo(print());
 
@@ -199,5 +243,24 @@ class AdminReadTestApiDocTest extends ApiDocTestBase {
                         parameterWithName("size").description("한 페이지당 크기"),
                         parameterWithName("postStatus").description("포스트 상태 (PUBLISHED, DRAFT)")
                 ),
+                responseFields(
+                        fieldWithPath("content").description("포스트"),
+                        fieldWithPath("content[].postId").description("포스트 Id"),
+                        fieldWithPath("content[].title").description("제목"),
+                        fieldWithPath("content[].memberName").description("작성자 이름"),
+                        fieldWithPath("content[].content").description("내용"),
+                        fieldWithPath("content[].categoryName").description("카테고리 이름"),
+                        fieldWithPath("content[].tagList").description("해당 포스트 태그 리스트"),
+                        fieldWithPath("content[].tagList[].tagName").description("해당 태그 이름"),
+                        fieldWithPath("content[].tagList[].tagId").description("해당 태그 ID"),
+                        fieldWithPath("content[].status").description("enum + 상태 "),
+                        fieldWithPath("content[].regDate").description("저장 날짜"),
+                        fieldWithPath("pageNumber").description("페이지 넘버"),
+                        fieldWithPath("pageSize").description("페이지 사이즈"),
+                        fieldWithPath("totalElements").description("총 elements 갯수"),
+                        fieldWithPath("totalPages").description("총 페이지"),
+                        fieldWithPath("first").description("처음인지 아닌지"),
+                        fieldWithPath("last").description("마지막인지 아닌지")
+                )));
     }
 }

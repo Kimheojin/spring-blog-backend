@@ -74,7 +74,9 @@ public class CommentWriteServiceTest {
                 .id(1L).build();
 
         Comment parentComment = Comment.builder()
-                .id(2L).build();
+                .id(2L)
+                .post(mockPost) // Post 설정 추가
+                .build();
 
         CommentWriteRequest commentWriteRequest = CommentWriteRequest.builder()
                 .content("대댓글 내용")
@@ -113,7 +115,7 @@ public class CommentWriteServiceTest {
         NotFoundException exception = Assertions.assertThrows(NotFoundException.class,
                 () -> commentWriteService.commentWrite(commentWriteRequest));
         
-        Assertions.assertTrue(exception.getMessage().contains("포스트"));
+        Assertions.assertTrue(exception.getMessage().contains("post"));
 
         Mockito.verify(commentRepository, Mockito.never()).save(Mockito.any());
     }

@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -75,18 +76,21 @@ public class TagControllerDoc extends ApiDocTestBase {
         // when
         ResultActions testMock = mockMvc.perform(get("/api/tag/postlist")
                 .param("tagId", String.valueOf(testTagId))
-                .param("tagName", testTagName))
+                .param("tagName", testTagName)
+                .param("page", "0")
+                .param("pageSize", "10"))
                 .andExpect(status().isOk())
                 .andDo(print());
 
         // docs
         testMock.andDo(document("get-/api/tag/postlist",
+                preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 queryParameters(
                         parameterWithName("tagId").description("태그 ID"),
                         parameterWithName("tagName").description("태그 이름"),
-                        parameterWithName("page").description("페이지 번호 (0부터 시작)").optional(),
-                        parameterWithName("pageSize").description("페이지 크기").optional()
+                        parameterWithName("page").description("페이지 번호 (0부터 시작)"),
+                        parameterWithName("pageSize").description("페이지 크기")
                 ),
                 responseFields(
                         fieldWithPath("content").description("태그가 포함된 게시글 목록"),
