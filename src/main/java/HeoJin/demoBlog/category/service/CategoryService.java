@@ -19,7 +19,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     
-    // 모든 카테고리 목록 반환
+    // 전체 카테고리 목록 반환
     @Transactional(readOnly = true)
     public List<CategoryResponse> getAllCategoryNames() {
 
@@ -30,6 +30,7 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
+    // post 수가 포함된 목록 반환
     @Transactional(readOnly = true)
     public List<CategoryWithCountResponse> getCategoriesWithPublishedStats() {
         List<CategoryWithCountDto> results = categoryRepository.findAllCategoriesWithCount();

@@ -1,6 +1,6 @@
 package HeoJin.demoBlog.seo.service;
 
-import HeoJin.demoBlog.global.exception.CustomNotFound;
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 
 import org.commonmark.ext.autolink.AutolinkExtension;
 import org.commonmark.node.Node;
@@ -46,7 +46,7 @@ public class SyncManager {
             byte[] hash = digest.digest(content.getBytes());
             return HexFormat.of().formatHex(hash);
         } catch (NoSuchAlgorithmException e) {
-            throw new CustomNotFound("256 알고리즘 사용 불가");
+            throw new NotFoundException("256 알고리즘 사용 불가");
         }
 
 

@@ -1,7 +1,6 @@
 package HeoJin.demoBlog.seo.service;
 
 
-import HeoJin.demoBlog.global.exception.CustomNotFound;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import HeoJin.demoBlog.seo.dto.data.PostForMongoDto;
 import HeoJin.demoBlog.seo.dto.response.MongoStatusResponseDto;
@@ -34,8 +33,13 @@ public class SyncService {
                 = postRepository.findPostsForMongo();
         Map<Long, List<String>> allTagListWithPostPublishedId
                 = postTagRepository.findAllTagListWithPostPublishedId();
+        
         if (allPost.isEmpty()) {
-            throw new CustomNotFound("post 가 존재하지 않습니다.");
+            return TriggerResponseDto.builder()
+                    .insertCount(0)
+                    .updateCount(0)
+                    .deleteCount(0)
+                    .build();
         }
 
         Map<Long, PostMongo> postMysqlMap = new HashMap<>();

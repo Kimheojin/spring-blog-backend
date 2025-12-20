@@ -1,6 +1,7 @@
 package HeoJin.demoBlog.member.service;
 
 
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 import HeoJin.demoBlog.global.jwt.JwtTokenProvider;
 import HeoJin.demoBlog.member.dto.request.LoginDto;
 import HeoJin.demoBlog.member.entity.Member;
@@ -49,7 +50,7 @@ public class AuthService {
         // UserDetails에서 Member 정보 추출
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Member member = memberRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("회원을 찾을 수 없습니다."));
 
         // JWT 토큰 생성
         String accessToken = jwtTokenProvider.generateToken(
