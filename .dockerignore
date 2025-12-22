@@ -1,0 +1,46 @@
+# VCS metadata
+.git
+.gitignore
+.gitattributes
+
+# IDE & tooling artifacts
+.idea
+.vscode
+*.iml
+*.ipr
+*.iws
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+nbproject
+nbbuild
+dist
+nbdist
+.nb-gradle
+
+# Build tooling and caches
+.gradle
+.gradle-home
+build
+out
+bin
+
+# Generated sources
+src/main/generated
+
+# Local configs and scratch files
+*.http
+HELP.md
+agent.md
+application-local.yml
+
+# Logs
+*.log
+spy.log
+
+# Docker/Compose helpers
+docker-compose.yml
