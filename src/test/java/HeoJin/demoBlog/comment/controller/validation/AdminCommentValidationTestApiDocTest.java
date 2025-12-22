@@ -2,6 +2,7 @@ package HeoJin.demoBlog.comment.controller.validation;
 
 import HeoJin.demoBlog.comment.dto.request.CommentAdminDeleteRequest;
 import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ public class AdminCommentValidationTestApiDocTest extends ApiDocTestBase {
 
     @Test
     @DisplayName("/api/admin/comments delete -> validation 한번에 테스트")
+    @WithMockCustomUser
     void test1() throws Exception {
         // given
         CommentAdminDeleteRequest request = CommentAdminDeleteRequest.builder()
