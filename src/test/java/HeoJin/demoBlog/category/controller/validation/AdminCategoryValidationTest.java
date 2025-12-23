@@ -32,7 +32,6 @@ public class AdminCategoryValidationTest extends ApiDocTestBase {
 
 
         // when + then
-
         mockMvc.perform(delete("/api/admin/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -70,13 +69,14 @@ public class AdminCategoryValidationTest extends ApiDocTestBase {
 
     @Test
     @WithMockCustomUser
-    @DisplayName("/api/admin/categories post -> 카테고리 명은 15자를 넘을 수 없습니다.  -> 테스트")
+    @DisplayName("/api/admin/categories post -> 유효하지 않은 카테고리 id  -> 테스트")
     public void test3() throws Exception {
 
         // given
         ModifyCategoryNameRequest request = ModifyCategoryNameRequest.builder()
                 .categoryId(-888L)
                 .categoryName("").build();
+
         // when + then
         mockMvc.perform(put("/api/admin/categories")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -86,9 +86,8 @@ public class AdminCategoryValidationTest extends ApiDocTestBase {
                 .andExpect(jsonPath("$.statusCode").value(400))
                 .andExpect(jsonPath("$.validation").exists())
                 .andExpect(jsonPath("$.validation.categoryId").value("유효하지 않은 카테고리 ID 입니다."))
-                .andExpect(jsonPath("$.validation.categoryName").value("삭제하고자 하는 카테고리 이름이 유효하지 않습니다."))
+                .andExpect(jsonPath("$.validation.categoryName").value("수정하고자 하는 카테고리 이름이 유효하지 않습니다."))
                 .andDo(print());
-
 
     }
 
