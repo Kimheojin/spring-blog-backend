@@ -1,11 +1,10 @@
-
 services:
-  blog:
+  blog-loadtest:
     build: .
-    image: blog:latest
-    container_name: blog
+    image: blog-loadtest:latest
+    container_name: blog-loadtest
     ports:
-      - "9000:9000"
+      - "9003:9003"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}

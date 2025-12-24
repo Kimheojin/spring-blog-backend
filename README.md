@@ -9,11 +9,12 @@
 ```
  load-test-net
 ```
-- container 명, compsoe project 명 변경
+- container 명, compose project 명 변경
+
+- 서버 포트 변경하기
 ```
 9003 변경 완
 ```
-- 서버 포트 변경하기
 
 - nginx 엔드포인트 새로파기
 
