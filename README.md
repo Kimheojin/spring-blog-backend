@@ -5,9 +5,15 @@
 
 ### 할꺼 정리
 
-- Docker 네트워크 새로 파기
-
+- Docker 네트워크 새로 파기 (완)
+```
+ load-test-net
+```
 - container 명, compsoe project 명 변경
+```
+9003 변경 완
+```
+- 서버 포트 변경하기
 
 - nginx 엔드포인트 새로파기
 
