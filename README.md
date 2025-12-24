@@ -1,52 +1,39 @@
-# 블로그 백엔드 API
-Spring Boot 백엔드 REST API 서버 코드
-## 링크
-- **API 문서**: [Blog API 문서](https://heojin1109.github.io/2025.07.04.htm)
-## 배포 환경
-- **배포 방식**: 온프레미스 서버 + GitHub Actions CD + Docker Compose
-- **서버 환경**: UbuntuServer 22.04 + Docker Container
-- **인프라**: 자체 구축 및 관리
-## 프로젝트 도식도
+# 부하 테스트
 
-![블로그 도식도](https://res.cloudinary.com/dtrxriyea/image/upload/v1751883877/markdonw/sqi0fzzq6e5ln3eako52.png)
-
-## 주요 기능
-- Exception Handler를 통한 통합 공통 에러 처리
-- Spring Rest Docs 기반 API 문서 자동 생성
-- 쿠키 + 세션 기반 인증/인가
-
-## 스택
-
-### Backend
-- **Java 17**, **Spring Boot 3.4.4**
-- **Spring Data JPA** , **Spring Security** , **QueryDSL**
-
-### Database
-- **MySQL**
-
-### API 문서화
-- **Spring REST Docs** , **AsciiDoctor**
-
-### 기타
-- **Spring AOP**, **Cloudinary SDK**
-### 동기화 관련 해시 사용하고 싶은데
+- 좀 걸릴듯
 
 
-1. 변경사항 -> mongo 저장 형식에 markdown 형식 제거한(plain text 관련 필드를 추가) -> 이 필드는 atlas search inde
-2. x 사용하는 필드 2. sync 관련 -> hash 사용해서 같으면, 그대로 두고, 다르면 업데이트 하는 식으로 구현 -> 고정크기 사용하기 ->
-3. manager 형태로 반들어서 component 등록해서 사용하는 게 좋아보임
-4. 이거 말고 방법 있나
-5. hash 값 redis 저장??
+### 할꺼 정리
+
+- Docker 네트워크 새로 파기
+
+- container 명, compsoe project 명 변경
+
+- nginx 엔드포인트 새로파기
+
+- 프로메테우스 , 그라파나 띄우기
+  - 공유기 포트포워딩 확인하기
+
+ - mysql 부하 테스트 user 로 변경
+   - db 도 변경
+   - docker compsoe 에서 매핑한듯
+
+- docker compseo 매핑한 시크릿 값들 application.yml 새로 파서 매핑하기
+
+- mysql 라이브 DB 랑 스키마 일치하는 지 확인하기
+
+- JFR 켜기
+  - docker file 작성 단계 에서 확인하기
+
+- container 띄우기 전에 apring actuator 랑 프로메테우스 관련 설정 확인하기
+
+- mysql 슬로우 쿼리 켜져있는 지 확인
+  - persist 가능 변수면 박기
+
 
 
 ### 단독 테스트
 ./gradlew test --tests "*SyncControllerDocTest" --info > test-log.txt
  -> 이런식으로 하기
-
-mongo atlas Search 기능만 넣으면 될듯
-
-## 인덱스 명
-
-title_plainContent_kr
 
 
