@@ -38,9 +38,8 @@ out/
 
 ### custom list ###
 application-local.yml
-
+application-performance.yml
 src/main/generated/
-
 agent.md
 ## 쿼리 dsl 생성 그건
 #src/main/generated/
