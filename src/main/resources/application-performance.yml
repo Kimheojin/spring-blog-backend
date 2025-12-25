@@ -1,0 +1,52 @@
+## mysql은 docker 명령어 타고 바로 들어감
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+
+## git hub Secrets 활용
+cloudinary:
+  cloud-name: dtrxriyea
+  api-key: 312783684914681
+  api-secret: jR6NR-rIDsWYa25PR7fk1zJHkXg
+
+---
+jwt:
+  secret: uIelvly6xsJOhBUF4frgepCBDBYKnRBYOLRSuxjGi+/8nGN2KTP+gILlTLrBFSSqyhIHlMA0XPeggiAyb5pDLg==
+  accesstoken:
+    expiration: 1800000  # 30분 (30 * 60 * 1000ms)
+  refreshtoken:
+    expiration: 604800000  # 7일 (7 * 24 * 60 * 60 * 1000ms)
+---
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql-container:3306/spring_test_database?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: Bash
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    show-sql: true
+  data:
+    mongodb:
+      uri: mongodb+srv://hurjin1109:hurjin1109@cluster0.5oejt.mongodb.net/
+      database: new_raw_data
+      auto-index-creation: true
+
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.springframework.data.mongodb: WARN
+    org.mongodb.driver: WARN
+
+mongo:
+  collectionName: about-performance-cmp
+
+
