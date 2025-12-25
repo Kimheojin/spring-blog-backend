@@ -27,10 +27,13 @@ services:
     networks:
       - blog-network
       - my-network
+      - load-test-net
     restart: unless-stopped
 
 networks:
   blog-network:
     external: true
   my-network:
+    external: true
+  load-test-net:
     external: true

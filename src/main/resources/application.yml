@@ -1,7 +1,7 @@
 spring:
   profiles:
-#    active: local
-    active: deploy
+    active: local
+#    active: deploy
 ---
 # aop 관련 설정
 spring:
@@ -32,9 +32,10 @@ server:
 management:
   endpoints:
     web:
-      exposure:
-        include: health
+      # 이거 나중에 수정해야 할듯
       base-path: /api
+      exposure:
+        include: health, prometheus
   endpoint:
     health:
       show-details: never

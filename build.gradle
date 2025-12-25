@@ -90,6 +90,8 @@ dependencies {
 
 	// actuator 관련 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	// 프로메테우스 관련
+	runtimeOnly "io.micrometer:micrometer-registry-prometheus"
 }
 
 // QueryDSL QClass 생성 설정
