@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Profile({"!test", "!performance"}) // 부하 테스트 시
+@Profile("!test & !performance") // 부하 테스트 시
 public class MongoScheduler {
 
     private final SyncService syncService;

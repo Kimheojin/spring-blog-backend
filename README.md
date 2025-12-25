@@ -56,4 +56,14 @@
 ./gradlew test --tests "*SyncControllerDocTest" --info > test-log.txt
  -> 이런식으로 하기
 
+```aiexclude
+rsync -avzP -e "ssh -p 1225" spring-blog-backend/ jin@heojineee.ddnsking.com:~/blog-test-server/
+```
+
+```aiexclude
+rsync -avzP -e "ssh -i ~/.ssh/id_ed25519_server -p 1225" \
+spring-blog-backend \
+jin@heojineee.ddnsking.com:~/blog-test-server/
+```
+
 

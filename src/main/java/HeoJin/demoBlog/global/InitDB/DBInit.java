@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Component
 @Slf4j
-@Profile({"!test", "!performance"})
+@Profile("!test & !performance")
 public class DBInit implements CommandLineRunner {
 
     private final MemberRepository memberRepository;
