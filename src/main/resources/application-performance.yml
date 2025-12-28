@@ -23,7 +23,7 @@ jwt:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql-container:3306/spring_test_database?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://mysql-container:3306/spring_test_database?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     username: Bash
     password: 1234
   jpa:
