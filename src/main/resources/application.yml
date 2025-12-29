@@ -27,6 +27,10 @@ logging:
 
 server:
   port: 9003
+  tomcat:
+    mbeanregistry:
+      enabled: true
+       # tomcat 관련 지표 활성화
 ---
 # 명시적으로 추가
 # 둘다 디폴트값
