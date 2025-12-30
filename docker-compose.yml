@@ -3,6 +3,11 @@ services:
     build: .
     image: blog-loadtest:latest
     container_name: blog-loadtest
+    deploy:
+      resources:
+        limits:
+          cpus: '1.25'
+          memory: 2G
     ports:
       - "9003:9003"
     environment:
