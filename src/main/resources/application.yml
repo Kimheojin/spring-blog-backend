@@ -1,48 +1,54 @@
 spring:
   profiles:
     active: performance
-#    active: local
-#    active: deploy
+
 ---
-# aop 관련 설정
+# 성능 테스트용 설정 (performance 프로파일)
 spring:
-  aop:
-    auto: true
-    proxy-target-class: true
+  config:
+    activate:
+      on-profile: performance
+
+  # JPA/Hibernate 성능 최적화
   jpa:
-    show-sql: true
+    show-sql: false # SQL 출력 중단 (I/O 부하 방지)
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false # 포맷팅 중단
     open-in-view: false
 
+  # DB 커넥션 풀 최적화 (1.25 Core 환경)
+  datasource:
+    hikari:
+      maximum-pool-size: 20 # 스레드 경합 고려하여 20으로 상향
+      minimum-idle: 10
+      connection-timeout: 5000 # 5초 내 연결 실패 시 에러
+      pool-name: HikariCP-Performance
 
-
-## 로깅 관련
+# 로깅 레벨 상향 (DEBUG/TRACE는 성능 저하의 주원인)
 logging:
   level:
-    HeoJin.demoBlog: DEBUG
+    HeoJin.demoBlog: INFO # DEBUG -> INFO로 변경
     root: INFO
-    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.bind: INFO # TRACE 제거
 
 server:
   port: 9003
   tomcat:
     mbeanregistry:
       enabled: true
-       # tomcat 관련 지표 활성화
----
-# 명시적으로 추가
-# 둘다 디폴트값
+    # Tomcat 스레드 제어 (1.25 Core 최적화)
+    threads:
+      max: 60 # 200에서 60으로 하향 조정
+      min-spare: 10
+    accept-count: 100 # 스레드 고갈 시 대기 큐 크기
+
 management:
   endpoints:
     web:
-      # 이거 나중에 수정해야 할듯
       base-path: /api
       exposure:
         include: health, prometheus, metrics
   endpoint:
     health:
-      show-details: never
-
-
+      show-details: always # 에러 발생 시 원인 확인을 위해 활성화
