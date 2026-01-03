@@ -29,6 +29,7 @@ public class SyncService {
 
     public TriggerResponseDto triggerSync() {
         // 기존 post 리스트
+        // 데이터가 많을 경우 개선점 생각하기
         List<PostForMongoDto> allPost
                 = postRepository.findPostsForMongo();
         Map<Long, List<String>> allTagListWithPostPublishedId
