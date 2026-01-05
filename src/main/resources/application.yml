@@ -17,7 +17,7 @@ spring:
         format_sql: false # 포맷팅 중단
     open-in-view: false
 
-  # DB 커넥션 풀 최적화 (1.25 Core 환경)
+#  # DB 커넥션 풀 최적화 (1.25 Core 환경)
   datasource:
     hikari:
       maximum-pool-size: 20 # 스레드 경합 고려하여 20으로 상향
@@ -37,7 +37,7 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
-    # Tomcat 스레드 제어 (1.25 Core 최적화)
+     # Tomcat 스레드 제어 (1.25 Core 최적화)
     threads:
       max: 60 # 200에서 60으로 하향 조정
       min-spare: 10

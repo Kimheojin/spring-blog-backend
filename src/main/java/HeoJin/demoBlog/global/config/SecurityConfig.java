@@ -57,7 +57,8 @@ public class SecurityConfig {
                                 "/api/categories", "/api/categories/stats",
                                 "/api/posts/*/comments", "/api/posts/comments", "/api/comments",
                                 "/api/posts", "/api/posts/single", "/api/posts/category",
-                                "/api/tag/list", "/api/tag/postlist", "/api/health", "/api/seo/unified-search"
+                                "/api/tag/list", "/api/tag/postlist", "/api/health", "/api/seo/unified-search",
+                                "/api/categories/stats/optimized"
                                 ,"/api/prometheus", "/api/metrics")
                         .permitAll()
                         .anyRequest().authenticated())
