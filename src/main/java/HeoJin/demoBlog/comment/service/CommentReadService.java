@@ -3,13 +3,18 @@ package HeoJin.demoBlog.comment.service;
 import HeoJin.demoBlog.comment.dto.Response.CommentDto;
 import HeoJin.demoBlog.comment.entity.Comment;
 import HeoJin.demoBlog.comment.repository.CommentRepository;
+import HeoJin.demoBlog.global.exception.refactor.BusinessErrorCode;
+import HeoJin.demoBlog.global.exception.refactor.BusinessException;
 import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
+import HeoJin.demoBlog.post.entity.Post;
+import HeoJin.demoBlog.post.entity.PostStatus;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -38,7 +43,7 @@ public class CommentReadService {
     // 관리자용
     @Transactional(readOnly = true)
     public List<CommentDto> getAdminCommentByPostId(Long postId) {
-        validatePostExists(postId);
+        validatePostExistAdmin(postId);
 
         List<Comment> comments = commentRepository.customFindAllCommentByPostIdForAdmin(postId);
 
@@ -87,10 +92,21 @@ public class CommentReadService {
         return commentDto;
     }
 
-    private void validatePostExists(Long postId) {
+    private void validatePostExistAdmin(Long postId) {
         if (!postRepository.existsById(postId)) {
             throw new NotFoundException("해당 post가 존재하지 않습니다.");
         }
+    }
+
+    private void validatePostExists(Long postId) {
+        Optional<Post> byId = postRepository.findById(postId);
+        if (byId.isEmpty()) {
+            throw new NotFoundException("해당 post가 존재하지 않습니다.");
+        }
+        if(!byId.get().getStatus().equals(PostStatus.PUBLISHED)){
+            throw new BusinessException(BusinessErrorCode.INVALID_REQUEST, "공개되지 않은 게시글입니다.");
+        }
+
     }
 
 
