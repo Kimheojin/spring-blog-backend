@@ -38,7 +38,7 @@ out/
 
 ### custom list ###
 application-local.yml
-
+application-performance.yml
 src/main/generated/
 
 agent.md
@@ -48,3 +48,4 @@ agent.md
 # Gradle caches
 .gradle/
 .gradle-home/
+
