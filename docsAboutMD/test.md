@@ -1,4 +1,4 @@
-[원본으로 이동](../README.md)
+# 온프레미스 서버 스펙 정리
 
 ## 하드웨어 사양
 - **CPU**: Intel(R) N100 (4 Cores / 4 Threads)
@@ -20,4 +20,8 @@
 - **Port Forwarding**
   - 80(HTTP), 443(HTTPS) 등 공유기 포트포워딩을을 통한 외부 개방
 
-[원본으로 이동](../README.md)
+---
+## 기타 관련 링크
+
+[리드미로 이동](../README.md)
+[부하테스트 관련 링크](../docsAboutMD/test2.md)
