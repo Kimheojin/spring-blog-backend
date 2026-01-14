@@ -27,3 +27,20 @@
 ## Prometheus, Grafana 부하테스트 모니터링 환경
 
 
+## 더미 데이터 관련
+
+### 더미 데이터 주입 시 사용한 Spring batch 코드
+
+https://github.com/Kimheojin/spring-batch-preprocessing.git
+
+### 더미데이터 주요 테이블 row 갯수 
+
+| post_cnt | post_tag_cnt | tag_cnt | category_cnt |
+| :--- | :--- | :--- | :--- |
+| 3376000 | 5064604 | 50 | 100 |
+
+![더미데이터쿼리결과](image/dummyCount.png)
+
+
+
+
