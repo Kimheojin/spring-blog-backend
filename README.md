@@ -37,7 +37,7 @@
 - **배포 자동화 (CI/CD)**: GitHub Actions와 Self-hosted Runner를 연동하여 환경 변수 검증 및 자동 빌드·배포 파이프라인 구축
 - **테스트 및 문서화 (Test & Docs)**: 통합 테스트 환경 구축 및 테스트 통과 시 API 문서가 자동 갱신되는 Spring REST Docs 적용
 
-### 보안 및 인증 (Authentication & Security)
+### 1. 보안 및 인증 (Authentication & Security)
 - **쿠키 기반 JWT 인증 체계:**
     - **보안 쿠키 적용:** Access Token을 `HttpOnly`, `Secure`, `SameSite=None` 설정이 적용된 쿠키에 저장하여 XSS 및 CSRF 공격 위험을 최소화
     - 무상태(Stateless) 인증
@@ -46,14 +46,14 @@
     - **인증 필터 내 자동 갱신:** Access Token이 만료되었을 때, `JwtAuthenticationFilter`에서 유효한 Refresh Token을 확인하여 자동으로 새로운 Access Token을 발급하고 쿠키를 업데이트
 - **Spring Security:** 역할 기반(ADMIN, USER) 접근 제어 및 보안 예외 처리 커스터마이징
 
-### Content 관리 (Content Management)
+### 2. Content 관리 (Content Management)
 - **포스트 관리:** 게시글 작성, 수정, 삭제 및 조회 (Markdown 지원 - CommonMark)
 - **카테고리:** 게시글 분류를 위한 카테고리 생성 및 관리
 - **태그 시스템:** 게시글 검색 및 분류를 위한 태그 기능
 - **댓글:** 게시글에 대한 댓글 작성 및 관리자 삭제 기능
 - **이미지 최적화 저장:** 게시글 내 포함되는 이미지를 효율적으로 관리하고 저장합니다
 
-### 검색 및 SEO (Search & SEO)
+### 3. 검색 및 SEO (Search & SEO)
 - **하이브리드 DB 구조:**
     - MySQL: 주요 데이터(회원, 게시글 등)의 트랜잭션 관리
     - MongoDB: 검색 성능 최적화 및 SEO 데이터를 위한 보조 저장소
@@ -62,17 +62,17 @@
     - **수동 동기화**: 관리자가 API를 통해 즉시 MySQL 데이터를 MongoDB로 동기화 가능
     - **자동 스케줄링**: 데이터 최신화 및 일관성 유지를 위해 **매일 새벽 4시**에 전체 데이터 자동 동기화 수행
     
-### 이미지 파일 관리 (Media Management)
+### 4. 이미지 파일 관리 (Media Management)
 - **Cloudinary 연동:** 이미지 업로드 및 관리를 위해 외부 스토리지 서비스인 Cloudinary를 연동
 - **AVIF 포맷 자동 변환:** 업로드되는 모든 이미지는 높은 압축률과 품질을 보장하는 **AVIF 포맷**으로 자동 변환되어 저장
 - **이미지 최적화:** `quality: auto` 설정을 통해 시각적 품질을 유지하면서 파일 크기를 자동으로 최적화
 - **이미지 관리 API:** 관리자가 업로드된 이미지 리스트를 조회하고, 특정 이미지를 삭제할 수 있는 관리 기능을 제공
 
-### 공통 예외 처리 (Global Exception Handling)
+### 5. 공통 예외 처리 (Global Exception Handling)
 
 애플리케이션 전역에서 발생하는 예외를 일관된 형식으로 처리하여 클라이언트에게 명확한 에러 정보를 제공
 
-#### 1. 일관된 에러 응답 형식 (`ErrorResponse`)
+#### 일관된 에러 응답 형식 (`ErrorResponse`)
 
 모든 에러 응답은 아래와 같은 정형화된 JSON 구조를 가진다
 - `message`: 사용자 친화적인 에러 메시지
@@ -89,7 +89,7 @@
 - **파라미터 누락 처리:** 필수 요청 파라미터가 없을 경우 명확한 안내와 함께 400 에러를 반환
 - **데이터 무결성 처리:** DB 제약 조건 위반(중복 데이터 등) 시 409 Conflict 에러를 반환
 
-### Docker & 배포 환경 (Docker & Deployment)
+### 6.Docker & 배포 환경 (Docker & Deployment)
 
 프로젝트는 컨테이너 기반의 유연한 배포를 위해 Docker 환경을 지원
 
@@ -106,7 +106,7 @@
 - **Timezone:** `Asia/Seoul`로 타임존을 설정하여 로그 및 데이터 시간을 동기화했습니다
 - **Networks:** 외부 네트워크(`blog-network`, `my-network`)를 사용하여 다른 컨테이너(예: MySQL, Nginx 등)와의 연결을 지원합니다
 
-### CI/CD 파이프라인 (GitHub Actions)
+### 7. CI/CD 파이프라인 (GitHub Actions)
 
 이 프로젝트는 GitHub Actions를 활용하여 `Deploy` 브랜치에 변경 사항이 생길 시 자동으로 빌드 및 배포를 수행합니다
 
@@ -121,7 +121,7 @@
 3. **Container Management:** 기존 실행 중인 컨테이너를 제거하고 네트워크 환경을 점검합니다
 4. **Build & Deploy:** `docker compose up -d --build` 명령을 통해 애플리케이션을 자동으로 빌드하고 배포합니다
 
-### 테스트 환경 및 전략 (Testing Strategy)
+### 8. 테스트 환경 및 전략 (Testing Strategy)
 
 안정적인 서비스 운영을 위해 Spring Boot Test와 RestDocs를 활용한 통합 테스트 환경을 구축
 
