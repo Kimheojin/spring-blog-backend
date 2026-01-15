@@ -50,16 +50,7 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    // 새로운 SQL 로직을 적용한 카테고리 목록 반환
-    @Transactional(readOnly = true)
-    public List<CategoryWithCountResponse> getCategoriesWithPublishedStatsNew() {
-        List<CategoryWithCountDto> results = categoryRepository.findAllCategoriesWithCountNew();
 
-        return results.stream()
-                .map(CategoryMapper::toCategoryWithCountResponse)
-                .collect(Collectors.toList());
-    }
-    
     
 
 }

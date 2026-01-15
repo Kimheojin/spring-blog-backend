@@ -39,12 +39,6 @@ public class PublicCategoryController {
         return ResponseEntity.ok(new CategoryAndStatsListResponse(categoryResponses));
     }
 
-    // 새로운 로직 적용 버전
-    @GetMapping("/categories/stats/new")
-    public ResponseEntity<CategoryAndStatsListResponse> getPostCategoryAndStatsNew(){
-        List<CategoryWithCountResponse> categoryResponses = categoryService.getCategoriesWithPublishedStatsNew();
-        return ResponseEntity.ok(new CategoryAndStatsListResponse(categoryResponses));
-    }
 
 
 }

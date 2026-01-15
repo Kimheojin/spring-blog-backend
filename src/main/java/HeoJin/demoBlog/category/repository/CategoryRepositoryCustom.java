@@ -12,6 +12,5 @@ public interface CategoryRepositoryCustom {
 
     List<CategoryWithCountDto> findAllCategoriesWithCountOptimized();
 
-    List<CategoryWithCountDto> findAllCategoriesWithCountNew();
 
 }
