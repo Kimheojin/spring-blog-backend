@@ -98,7 +98,7 @@
 
 #### 전역 예외 처리기 (`GlobalExceptionHandler`)
 
-- **비즈니스 예외 처리:** `CustomException` 발생 시 해당 예외에 정의된 상태 코드와 메시지를 응답합니다
+- **비즈니스 예외 처리:** `CustomException` 발생 시 해당 예외에 정의된 상태 코드와 메시지를 응답
 - **데이터 검증 에러 처리:** `@Valid` 검증 실패(`MethodArgumentNotValidException`) 시, 어떤 필드에서 어떤 문제가 발생했는지 `validation` 맵에 담아 400 에러를 반환
 - **파라미터 누락 처리:** 필수 요청 파라미터가 없을 경우 명확한 안내와 함께 400 에러를 반환
 - **데이터 무결성 처리:** DB 제약 조건 위반(중복 데이터 등) 시 409 Conflict 에러를 반환
