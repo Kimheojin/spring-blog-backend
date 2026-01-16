@@ -5,7 +5,9 @@
 
 ---
 ### 기타 관련 링크
-[온프레미스 서버 스펙 정리](docsAboutMD/server-spec.md)
+
+- [부하테스트 최적화 정리](docsAboutMD/loadtest-performance.md)
+- [온 프레미스 서버 스펙 정리](docsAboutMD/server-spec.md)
 
 ---
 
@@ -35,14 +37,23 @@
 
 ## 주요 기능
 
-- **보안 및 인증**: JWT와 보안 쿠키를 결합한 무상태 인증 및 자동 토큰 갱신(Refresh Token) 구현
-- **Content 관리**: 마크다운 기반의 게시글 작성과 카테고리, 태그, 댓글 시스템 등 블로그 기능 제공
-- **검색 및 SEO (Search & SEO)**: MySQL과 MongoDB(검색 최적화)를 병용하여 통합 검색 및 SEO 데이터 동기화 구현
-- **Image 파일 관리**: Cloudinary 연동을 통한 이미지를 AVIF 포맷으로 변환, 저장 및 관리
-- **공통 예외 처리 (Exception Handling)**: `GlobalExceptionHandler`를 통해 규격화된 에러 응답(`ErrorResponse`) 및 비즈니스 예외 계층 구조
-- **컨테이너 배포 (Docker)**: Multi-stage 빌드 전략의 Dockerfile과 Docker Compose를 활용한 경량화 및 배포 지원
-- **배포 자동화 (CI/CD) 및 무중단 배포 전략 적용**: GitHub Actions와 Self-hosted Runner를 연동하여 환경 변수 검증 및 자동 빌드·배포 파이프라인 구축 + 블루-그린 배포 전략 적용
-- **테스트 및 문서화 (Test & Docs)**: 통합 테스트 환경 구축 및 테스트 통과 시 API 문서가 자동 갱신되는 Spring REST Docs 적용
+- 보안/인증
+  - JWT, 보안 쿠키(HttpOnly), Refresh Token 자동 갱신
+- 콘텐츠 관리
+  - Markdown(Commonmark), 카테고리/태그 시스템, 댓글
+- 검색/SEO
+  - MySQL-MongoDB 하이브리드 구조, Atlas Search 전문 검색
+- 미디어 관리
+  - Cloudinary 연동, AVIF 포맷 변환 및 이미지 최적화
+- 예외 처리
+  - 전역 예외 처리기(GlobalExceptionHandler), 규격화된 에러 응답
+- 인프라
+  - Docker Multi-stage 빌드, Docker Compose 관리
+- 배포
+  - GitHub Actions, Self-hosted Runner, 블루-그린 무중단 배포
+- 테스트/문서화
+  - JUnit5 통합 테스트, Spring REST Docs 자동화
+
 
 ### 1. 보안 및 인증 
 
@@ -179,3 +190,10 @@ Blue-Green 배포 전략을 기반으로 무중단 배포 환경을 구축
   - 모든 API 문서는 성공적인 테스트 통과를 전제로 생성
 - **Snippet 자동 생성:** 요청/응답 필드, 쿠키, 경로 변수 등에 대한 문서 조각(Snippet)을 자동으로 생성
 - **문서화 흐름:** `Test 실행` -> `Snippet 생성` -> `Asciidoctor 변환` -> `HTML 문서 생성` 
+
+
+---
+## 관련 링크
+
+- [부하테스트 최적화 정리](docsAboutMD/loadtest-performance.md)
+- [온 프레미스 서버 스펙 정리](docsAboutMD/server-spec.md)

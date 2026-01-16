@@ -51,5 +51,5 @@
 ---
 ## 기타 링크
 
-- [리드미로 이동](../README.md) 
-- [부하테스트 관련 링크](loadtest-performance.md)
+- [온프레미스 서버 스펙 정리](server-spec.md)
+- [README 이동](../README.md) 

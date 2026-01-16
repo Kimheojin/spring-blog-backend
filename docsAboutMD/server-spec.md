@@ -23,5 +23,5 @@
 ---
 ## 기타 링크
 
-- [리드미로 이동](../README.md)
-- [부하테스트 관련 링크](loadtest-performance.md)
+- [부하테스트 최적화 정리](loadtest-performance.md)
+- [README 이동](../README.md)
