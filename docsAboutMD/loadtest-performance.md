@@ -28,7 +28,7 @@
 
 ### 더미 데이터 주입 시 사용한 Spring batch 코드
 
-[Spring Batch git hub 코드 링크](https://github.com/Kimheojin/spring-batch-preprocessing.git)
+[Spring Batch git hub 코드 링크](https://github.com/Kimheojin/spring-batch-preprocessing?tab=readme-ov-file#2-dummydatajob-%EB%B6%80%ED%95%98-%ED%85%8C%EC%8A%A4%ED%8A%B8-%EB%8C%80%EB%B9%84-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%A0%81%EC%9E%AC)
 
 ### 더미데이터 주요 테이블 row 갯수 
 
