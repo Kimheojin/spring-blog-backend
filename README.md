@@ -5,7 +5,7 @@
 
 ---
 ### 기타 관련 링크
-[온프레미스 서버 스펙 정리](docsAboutMD/test.md)
+[온프레미스 서버 스펙 정리](docsAboutMD/server-spec.md)
 
 ---
 

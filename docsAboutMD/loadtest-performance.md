@@ -6,8 +6,7 @@
 
 ## 부하 테스트 환경 설정 관련
 
-- 자원 제약 환경에서의 안정성 검증 위해
-    - 커널 수준에서의 리소스 제한 기능 활용
+커널 수준 리소스 제한 활용 (docker cgroup)
   
 ### cgroup 설정 관련
 
@@ -24,14 +23,12 @@
 
 ![Docker Stats](image/aboutDockerStats.png)
 
-## Prometheus, Grafana 부하테스트 모니터링 환경
-
 
 ## 더미 데이터 관련
 
 ### 더미 데이터 주입 시 사용한 Spring batch 코드
 
-https://github.com/Kimheojin/spring-batch-preprocessing.git
+[Spring Batch git hub 코드 링크](https://github.com/Kimheojin/spring-batch-preprocessing.git)
 
 ### 더미데이터 주요 테이블 row 갯수 
 
@@ -41,6 +38,18 @@ https://github.com/Kimheojin/spring-batch-preprocessing.git
 
 ![더미데이터쿼리결과](image/dummyCount.png)
 
+## 부하 테스트 및 주요 수정 사항
+
+- nginx keep alive (nginx <-> Srping)을 통한 서버 부하 감소
+- 서버 spec 대비 과도한 데이터 부하 환경 시 역 정규화를 통한 최적화
+- connection 갯수 조정
+
+### 
 
 
 
+---
+## 기타 링크
+
+- [리드미로 이동](../README.md) 
+- [부하테스트 관련 링크](loadtest-performance.md)
