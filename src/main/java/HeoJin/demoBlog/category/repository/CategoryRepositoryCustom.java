@@ -10,7 +10,4 @@ public interface CategoryRepositoryCustom {
 
     List<CategoryWithCountDto> findAllCategoriesWithCount();
 
-    List<CategoryWithCountDto> findAllCategoriesWithCountOptimized();
-
-
 }

@@ -23,4 +23,13 @@ public class CategoryMapper {
                 .build();
     }
 
+    public static CategoryWithCountResponse toCategoryWithCountResponse(Category category) {
+        return CategoryWithCountResponse.builder()
+                .categoryId(category.getId())
+                .categoryName(category.getCategoryName())
+                .postCount(category.getPostCount())
+                .priority(category.getPriority())
+                .build();
+    }
+
 }

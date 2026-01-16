@@ -59,7 +59,7 @@ public class SecurityConfig {
                                 "/api/posts", "/api/posts/single", "/api/posts/category",
                                 "/api/tag/list", "/api/tag/postlist", "/api/health", "/api/seo/unified-search",
                                 "/api/categories/stats/optimized"
-                                ,"/api/prometheus", "/api/metrics")
+                                ,"/api/prometheus", "/api/metrics", "/api/categories/stats/denormalized")
                         .permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

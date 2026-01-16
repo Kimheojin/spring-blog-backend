@@ -32,13 +32,13 @@ public class PublicCategoryController {
         return ResponseEntity.ok(new CategoryAndStatsListResponse(categoryResponses));
     }
 
-    // (최적화 버전) 포스트 수가 포함된 카테고리 목록
-    @GetMapping("/categories/stats/optimized")
-    public ResponseEntity<CategoryAndStatsListResponse> getPostCategoryAndStatsOptimized(){
-        List<CategoryWithCountResponse> categoryResponses = categoryService.getCategoriesWithPublishedStatsOptimized();
+
+    // (반정규화 버전) post_count 컬럼을 직접 사용하는 API
+    @GetMapping("/categories/stats/denormalized")
+    public ResponseEntity<CategoryAndStatsListResponse> getPostCategoryAndStatsDenormalized(){
+        List<CategoryWithCountResponse> categoryResponses = categoryService.getCategoriesWithStatsDenormalized();
         return ResponseEntity.ok(new CategoryAndStatsListResponse(categoryResponses));
     }
-
 
 
 }

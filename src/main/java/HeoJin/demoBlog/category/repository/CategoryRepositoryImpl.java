@@ -40,25 +40,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom{
                 .fetch();
     }
 
-    @Override
-    public List<CategoryWithCountDto> findAllCategoriesWithCountOptimized() {
-        QCategory category = QCategory.category;
-        QPost post = QPost.post;
 
-        return jpaQueryFactory
-                .select(Projections.constructor(CategoryWithCountDto.class,
-                        category.id,
-                        category.categoryName,
-                        JPAExpressions
-                                .select(post.count())
-                                .from(post)
-                                 .where(post.category.eq(category)
-                                        .and(post.status.eq(PostStatus.PUBLISHED))),
-                        category.priority))
-                .from(category)
-                .orderBy(category.priority.asc(), category.categoryName.asc())
-                .fetch();
-    }
 
 
 }

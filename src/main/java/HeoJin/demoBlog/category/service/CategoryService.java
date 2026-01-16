@@ -40,17 +40,14 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    // Subquery를 사용한 카테고리 목록 반환
-    @Transactional(readOnly = true)
-    public List<CategoryWithCountResponse> getCategoriesWithPublishedStatsOptimized() {
-        List<CategoryWithCountDto> results = categoryRepository.findAllCategoriesWithCountOptimized();
 
-        return results.stream()
+
+    // (반정규화 버전) post_count 컬럼을 직접 사용하여 목록 반환
+    @Transactional(readOnly = true)
+    public List<CategoryWithCountResponse> getCategoriesWithStatsDenormalized() {
+        return categoryRepository.findAllByOrderByPriorityAsc().stream()
                 .map(CategoryMapper::toCategoryWithCountResponse)
                 .collect(Collectors.toList());
     }
-
-
-    
 
 }
