@@ -37,11 +37,11 @@
 
 ## 주요 기능
 
-- 보안/인증
+- 보안 및 인증
   - JWT, 보안 쿠키(HttpOnly), Refresh Token 자동 갱신
 - 콘텐츠 관리
   - Markdown(Commonmark), 카테고리/태그 시스템, 댓글
-- 검색/SEO
+- 검색 및 SEO
   - MySQL-MongoDB 하이브리드 구조, Atlas Search 전문 검색
 - 미디어 관리
   - Cloudinary 연동, AVIF 포맷 변환 및 이미지 최적화
@@ -60,9 +60,11 @@
 - **쿠키 기반 JWT 인증 체계:**
   - **보안 쿠키 적용:** Access Token 및 Refresh Token 을 `HttpOnly`, `Secure` 설정이 적용된 쿠키에 저장하여 XSS 및 CSRF 공격 위험을 최소화
     - 무상태(Stateless) 인증 구현
+    
 - **자동 토큰 갱신 시스템 (Refresh Token):**
   - **Persistence 기반 관리:** Refresh Token을 데이터베이스(MySQL)에 저장하여 관리
   - **인증 필터 내 자동 갱신:** Access Token이 만료되었을 때, `JwtAuthenticationFilter`에서 유효한 Refresh Token을 확인하여 자동으로 새로운 Access Token을 발급하고 쿠키를 업데이트
+  
 - **Spring Security:** 역할 기반(ADMIN, USER) 접근 제어 및 보안 예외 처리 커스터마이징
 
 ### 2. Content 관리 (Content Management)
@@ -78,6 +80,7 @@
 - **하이브리드 DB 구조:**
   - MySQL: 주요 데이터(회원, 게시글 등) 관리
   - MongoDB: 검색 성능 최적화 및 SEO 데이터를 위한 보조 저장소
+
 - 통합 검색: MongoDB Atlas Search를 활용한 통합 검색 기능 제공
   - **데이터 동기화 전략**:
     - **수동 동기화**: 관리자가 API 엔드포인트를 통해 즉시 MySQL 데이터를 MongoDB로 동기화 가능
