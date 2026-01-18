@@ -162,12 +162,22 @@ ORDER BY priority ASC, category_name ASC;
 
 
 
-#### rotjs gn
+#### 개선 후
 
-![img.png](image/img.png)
+![개선 후 docker stats](image/img.png)
 
 
 ![img_1.png](image/img_1.png)
+
+---
+
+### connection 수 개선
+
+#### 문제 상황
+
+
+
+
 
 
 
