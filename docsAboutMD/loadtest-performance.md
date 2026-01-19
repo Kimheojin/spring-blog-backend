@@ -169,18 +169,6 @@ ORDER BY priority ASC, category_name ASC;
 
 ![img_1.png](image/img_1.png)
 
----
-
-### connection 수 개선
-
-#### 문제 상황
-
-![img.png](img.png)
-
-500 ops 부하시 복표 기준량 못채움, pending 지표가 튀는 것을 확인
-
-
-
 
 ## k6 부하 테스트 지표 비교 (stats_denormalized_500.js)
 
@@ -194,10 +182,23 @@ ORDER BY priority ASC, category_name ASC;
 | **Max 사용 VU** | 300 (제한 도달) | 164 | 리소스 사용 효율 증가 |
 | **Thresholds 결과** | ✗ 실패 | ✓ 성공 | 모든 기준 충족 |
 
+
+
+---
+
+### connection 수 개선
+
+#### 문제 상황
+
+![img.png](img.png)
+
+500 ops 부하시 복표 기준량 못채움, pending 지표가 튀는 것을 확인
+
+
+
 ### 분석 결과
 * **병목 현상 해소**: 이전 테스트에서 발생한 VU 부족 경고(Insufficient VUs)가 사라졌으며, 서버가 요청을 밀리지 않고 제때 처리하고 있음.
 * **응답 안정성**: p(95) 지표가 100ms 미만으로 내려오며 사용자 경험 측면에서 매우 안정적인 수치를 기록함.
-* **잔여 과제**: 여전히 존재하는 2.13s의 최대 지연 시간과 146건의 드랍된 요청은 시스템이 500 TPS를 완벽히 소화하기 위한 마지막 임계점임을 시사함.
 
 ### tomcat thread 수치 조정 관련
 
@@ -206,6 +207,14 @@ spring jvm 단에서 과도한 timed-waiting 으로 인한 병목 현상발견
 - 적절한 수준의 tomcat 쓰레드 갯수 할당
 
 ![img_1.png](img_1.png)
+
+
+
+
+
+- 개선 후 사진
+![img_2.png](img_2.png)
+
 
 
 
