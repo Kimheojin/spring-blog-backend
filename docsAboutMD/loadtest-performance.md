@@ -159,9 +159,9 @@ SELECT category_id, category_name, post_count, priority
 FROM category 
 ORDER BY priority ASC, category_name ASC;
 ```
+![img_5.png](img_5.png)
 
-
-
+![img_4.png](img_4.png)
 ---
 
 ### connection 수 개선
@@ -171,25 +171,6 @@ ORDER BY priority ASC, category_name ASC;
 ![img.png](img.png)
 
 500 ops 부하시 복표 기준량 못채움, pending 지표가 튀는 것을 확인
-
-
-
-### 분석 결과
-* **병목 현상 해소**: 이전 테스트에서 발생한 VU 부족 경고(Insufficient VUs)가 사라졌으며, 서버가 요청을 밀리지 않고 제때 처리하고 있음.
-* **응답 안정성**: p(95) 지표가 100ms 미만으로 내려오며 사용자 경험 측면에서 매우 안정적인 수치를 기록함.
-
-
-![img_1.png](img_1.png)
-
-
-
-
-#### 개선 후
-
-![개선 후 docker stats](image/img.png)
-
-
-![img_1.png](image/img_1.png)
 
 
 ## k6 부하 테스트 지표 비교 (stats_denormalized_500.js)
