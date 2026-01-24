@@ -13,7 +13,7 @@
 
 ## 배포 아키텍처
 
-![Blog Architecture](docsAboutMD/image/blogarchi.png)
+![프로젝트 도식도](https://res.cloudinary.com/dtrxriyea/image/upload/v1769249605/git-hub-readme/oxcib8l5gvzrkrmcewl2.avif)
 
 ## 기술 스택
 
