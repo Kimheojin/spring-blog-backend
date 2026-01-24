@@ -48,3 +48,4 @@ agent.md
 # Gradle caches
 .gradle/
 .gradle-home/
+/src/main/resources/application-performance.yml
