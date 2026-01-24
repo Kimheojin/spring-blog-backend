@@ -45,3 +45,4 @@ spy.log
 # Docker/Compose helpers
 docker-compose.yml
 Dockerfile
+/.http/
