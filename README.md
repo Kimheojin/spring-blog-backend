@@ -4,6 +4,12 @@
 - 온프레미스 서버를 통한 배포 환경 구성
 
 ---
+### 참고 링크
+
+- [온프레미스 서버 스펙 정리](https://github.com/Kimheojin/archive/blob/main/projectReference/blog/spring-blog-backend/server-specifications.md)
+
+- [부하 테스트 결과 및 정리](https://github.com/Kimheojin/archive/blob/main/projectReference/blog/spring-blog-backend/load-test.md)
+
 
 ## 배포 아키텍처
 
