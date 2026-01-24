@@ -1,7 +1,7 @@
 package HeoJin.demoBlog.post.service;
 
 
-import HeoJin.demoBlog.global.exception.CustomNotFound;
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 import HeoJin.demoBlog.post.dto.response.PagePostResponse;
 import HeoJin.demoBlog.post.dto.response.PostResponse;
 import HeoJin.demoBlog.post.dto.response.TagResponse;
@@ -32,7 +32,7 @@ public class AdminPostReadService {
     public PostResponse getAdminSinglePost(Long postId) {
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomNotFound("포스트"));
+                .orElseThrow(() -> new NotFoundException("해당 포스트를 찾을 수 없습니다."));
 
         List<TagResponse> tagListWithPostId = postTagRepository.getTagListWithPostId(post.getId());
 

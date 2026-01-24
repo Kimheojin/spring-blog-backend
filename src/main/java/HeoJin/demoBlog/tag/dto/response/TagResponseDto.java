@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class TagResponseDto {
     private String tagName;

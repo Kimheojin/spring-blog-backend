@@ -8,7 +8,7 @@ import HeoJin.demoBlog.comment.dto.request.CommentWriteRequest;
 import HeoJin.demoBlog.comment.entity.Comment;
 import HeoJin.demoBlog.comment.entity.CommentStatus;
 import HeoJin.demoBlog.comment.repository.CommentRepository;
-import HeoJin.demoBlog.global.exception.CustomNotFound;
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.repository.PostRepository;
 import org.junit.jupiter.api.Assertions;
@@ -74,7 +74,9 @@ public class CommentWriteServiceTest {
                 .id(1L).build();
 
         Comment parentComment = Comment.builder()
-                .id(2L).build();
+                .id(2L)
+                .post(mockPost) // Post 설정 추가
+                .build();
 
         CommentWriteRequest commentWriteRequest = CommentWriteRequest.builder()
                 .content("대댓글 내용")
@@ -110,10 +112,10 @@ public class CommentWriteServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        CustomNotFound exception = Assertions.assertThrows(CustomNotFound.class,
+        NotFoundException exception = Assertions.assertThrows(NotFoundException.class,
                 () -> commentWriteService.commentWrite(commentWriteRequest));
         
-        Assertions.assertTrue(exception.getMessage().contains("포스트"));
+        Assertions.assertTrue(exception.getMessage().contains("post"));
 
         Mockito.verify(commentRepository, Mockito.never()).save(Mockito.any());
     }

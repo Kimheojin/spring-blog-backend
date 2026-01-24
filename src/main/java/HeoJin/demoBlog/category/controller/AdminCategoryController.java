@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
-public class AdminCategoryController {
+public class  AdminCategoryController {
 
     private final AdminCategoryService adminCategoryService;
 

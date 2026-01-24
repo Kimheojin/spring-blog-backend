@@ -4,7 +4,7 @@ import HeoJin.demoBlog.category.entity.Category;
 import HeoJin.demoBlog.comment.entity.Comment;
 import HeoJin.demoBlog.comment.entity.CommentStatus;
 import HeoJin.demoBlog.configuration.InitRepository.TestInitRepository;
-import HeoJin.demoBlog.global.exception.CustomNotFound;
+import HeoJin.demoBlog.global.exception.refactor.NotFoundException;
 import HeoJin.demoBlog.member.entity.Member;
 import HeoJin.demoBlog.member.entity.Role;
 import HeoJin.demoBlog.post.entity.Post;
@@ -114,7 +114,7 @@ public class DataInitComponent {
 
         for (int i = 0; i < posts.length; i++) {
             Category category = testInitRepository.findByCategoryName(categories[i % categories.length])
-                    .orElseThrow(() -> new CustomNotFound("카테고리를 찾을 수 없습니다"));
+                    .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다"));
 
             // 4개 상태를 순환하며 균등하게 분배
             PostStatus status = statusArray[i % statusArray.length];
