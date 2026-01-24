@@ -4,12 +4,6 @@
 - 온프레미스 서버를 통한 배포 환경 구성
 
 ---
-### 기타 관련 링크
-
-- [부하테스트 최적화 정리](docsAboutMD/loadtest-performance.md)
-- [온 프레미스 서버 스펙 정리](docsAboutMD/server-spec.md)
-
----
 
 ## 배포 아키텍처
 
@@ -81,7 +75,7 @@
   - MySQL: 주요 데이터(회원, 게시글 등) 관리
   - MongoDB: 검색 성능 최적화 및 SEO 데이터를 위한 보조 저장소
 
-- 통합 검색: MongoDB Atlas Search를 활용한 통합 검색 기능 제공
+- **통합 검색**: MongoDB Atlas Search를 활용한 통합 검색 기능 제공
   - **데이터 동기화 전략**:
     - **수동 동기화**: 관리자가 API 엔드포인트를 통해 즉시 MySQL 데이터를 MongoDB로 동기화 가능
     - **자동 스케줄링**: 데이터 최신화 및 일관성 유지를 위해 정해진 시각에 전체 데이터 자동 동기화 수행
@@ -194,9 +188,3 @@ Blue-Green 배포 전략을 기반으로 무중단 배포 환경을 구축
 - **Snippet 자동 생성:** 요청/응답 필드, 쿠키, 경로 변수 등에 대한 문서 조각(Snippet)을 자동으로 생성
 - **문서화 흐름:** `Test 실행` -> `Snippet 생성` -> `Asciidoctor 변환` -> `HTML 문서 생성` 
 
-
----
-## 관련 링크
-
-- [부하테스트 최적화 정리](docsAboutMD/loadtest-performance.md)
-- [온 프레미스 서버 스펙 정리](docsAboutMD/server-spec.md)
