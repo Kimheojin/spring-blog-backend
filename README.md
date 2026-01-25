@@ -3,14 +3,26 @@
 - Spring Boot, Java를 기반으로 구축한 블로그 백엔드 프로젝트
 - 온프레미스 서버를 통한 배포 환경 구성
 
+## 목차
+
+- [배포 아키텍처](#배포-아키텍처)
+- [기술 스택](#기술-스택)
+- [주요 기능](#주요-기능)
+- [1. 보안 및 인증](#1-보안-및-인증)
+- [2. Content 관리](#2-content-관리-content-management)
+- [3. 검색 및 SEO](#3-검색-및-seo-search--seo)
+- [4. Image 파일 관리](#4-image-파일-관리-media-management)
+- [5. 공통 예외 처리](#5-공통-예외-처리-global-exception-handling)
+- [6. 컨테이너 배포](#6-컨테이너-배포-docker)
+- [7. 배포 자동화 및 무중단 배포](#7-배포-자동화-cicd-및-무중단-배포-전략-적용)
+- [8. 테스트 및 문서화](#8-테스트-및-문서화-test--docs)
+
 ---
+
 ### 참고 링크
 
 - [온프레미스 서버 스펙 정리](https://github.com/Kimheojin/archive/blob/main/projectReference/blog/spring-blog-backend/server-specifications.md)
-
 - [부하 테스트 결과 및 정리](https://github.com/Kimheojin/archive/blob/main/projectReference/blog/spring-blog-backend/load-test.md)
-
-
 ## 배포 아키텍처
 
 ![프로젝트 도식도](https://res.cloudinary.com/dtrxriyea/image/upload/v1769249605/git-hub-readme/oxcib8l5gvzrkrmcewl2.avif)
