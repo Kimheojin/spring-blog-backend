@@ -17,10 +17,10 @@
   - [7. 배포 자동화 및 무중단 배포](#7-배포-자동화-cicd-및-무중단-배포-전략-적용)
   - [8. 테스트 및 문서화](#8-테스트-및-문서화-test--docs)
 
-### 참고 링크
+### 관련 링크
 
-- [온프레미스 서버 스펙 정리](https://github.com/Kimheojin/archive/blob/main/projectReference/blog/spring-blog-backend/server-specifications.md)
 - [부하 테스트 결과 및 정리](https://github.com/Kimheojin/archive/blob/main/projectReference/blog/spring-blog-backend/load-test.md)
+- [온프레미스 서버 스펙 정리](https://github.com/Kimheojin/archive/blob/main/projectReference/blog/spring-blog-backend/server-specifications.md)
 
 ---
 
@@ -63,7 +63,7 @@
 - 인프라
   - Docker Multi-stage 빌드, Docker Compose 관리
 - 배포
-  - GitHub Actions, Self-hosted Runner, 블루-그린 무중단 배포
+  - GitHub Actions, Self-hosted Runner, Blue-Green 무중단 배포
 - 테스트/문서화
   - JUnit5 통합 테스트, Spring REST Docs 자동화
 
@@ -71,7 +71,7 @@
 ### 1. 보안 및 인증 
 
 - **쿠키 기반 JWT 인증 체계:**
-  - **보안 쿠키 적용:** Access Token 및 Refresh Token 을 `HttpOnly`, `Secure` 설정이 적용된 쿠키에 저장하여 XSS 및 CSRF 공격 위험을 최소화
+  - **보안 쿠키 적용:** Access Token 및 Refresh Token 을 `HttpOnly`, `Secure` 설정이 적용된 쿠키에 저장하여 XSS 및 CSRF 공격 위험 최소화
     - 무상태(Stateless) 인증 구현
     
 - **자동 토큰 갱신 시스템 (Refresh Token):**
@@ -90,7 +90,7 @@
 
 ### 3. 검색 및 SEO (Search & SEO)
 
-- **하이브리드 DB 구조:**
+- **기능 및 역할에 따른 DB 분리:**
   - MySQL: 주요 데이터(회원, 게시글 등) 관리
   - MongoDB: 검색 성능 최적화 및 SEO 데이터를 위한 보조 저장소
 
@@ -102,7 +102,7 @@
 ### 4. Image 파일 관리 (Media Management)
 
 - **Cloudinary 연동:** 이미지 업로드 및 관리를 위해 외부 스토리지 서비스인 Cloudinary를 연동
-- **AVIF 포맷 자동 변환:** 업로드되는 모든 이미지는 높은 압축률과 품질을 보장하는 **AVIF 포맷**으로 자동 변환되어 저장
+- **AVIF 포맷 자동 변환:** 업로드되는 모든 이미지는 높은 압축률과 품질을 보장하는 **AVIF 포맷**으로 변환되어 저장
 - **이미지 최적화:** Cloudinary 설정을 통해 시각적 품질을 유지하면서 파일 크기 최적화
 - **이미지 관리 API:** 관리자가 업로드된 이미지 리스트를 조회하고, 특정 이미지를 삭제할 수 있는 관리 기능을 제공
 
@@ -116,7 +116,7 @@
 
 - `message`: 사용자 친화적인 에러 메시지
 - `statusCode`: HTTP 상태 코드
-- `validation`: 입력값 검증 실패 시, 필드별 에러 상세 정보 (Map 형식)
+- `validation`: 입력값 검증 실패 시, 필드별 에러 상세 정보 가능 구조 (Map 형식)
 
 #### 계층적 예외 구조
 
