@@ -1,21 +1,26 @@
-FROM eclipse-temurin:17-jdk
+# 1. 빌드 스테이지
+FROM eclipse-temurin:17-jdk AS build
 WORKDIR /app
 
-# gradle 및 설정 복사
+# Gradle 설정 및 wrapper 복사 (settings.gradle 추가)
 COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
+COPY settings.gradle .
 RUN chmod +x ./gradlew
 
-# 의존성 다운로드 (BuildKit 캐시 활용)
+# 의존성 다운로드 및 캐시
 RUN --mount=type=cache,target=/root/.gradle ./gradlew dependencies
 
 # 소스 코드 복사 및 빌드
 COPY src src
 RUN --mount=type=cache,target=/root/.gradle ./gradlew build -x test -x asciidoctor
 
-# 빌드된 jar 파일을 고정된 이름으로 복사
-RUN cp build/libs/*.jar app.jar
+# 2. 실행 스테이지
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
 
-# 실행 환경 설정
+# 빌드 스테이지에서 생성된 실행 가능한 jar만 복사
+COPY --from=build /app/build/libs/*[!plain].jar app.jar
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
