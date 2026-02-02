@@ -16,6 +16,7 @@
   - [6. 컨테이너 배포](#6-컨테이너-배포-docker)
   - [7. 배포 자동화 및 무중단 배포](#7-배포-자동화-cicd-및-무중단-배포-전략-적용)
   - [8. 테스트 및 문서화](#8-테스트-및-문서화-test--docs)
+- [디렉터리 구조](#디렉터리-구조)
 
 ### 관련 링크
 
@@ -206,4 +207,29 @@ Blue-Green 배포 전략을 기반으로 무중단 배포 환경을 구축
   - 모든 API 문서는 성공적인 테스트 통과를 전제로 생성
 - **Snippet 자동 생성:** 요청/응답 필드, 쿠키, 경로 변수 등에 대한 문서 조각(Snippet)을 자동으로 생성
 - **문서화 흐름:** `Test 실행` -> `Snippet 생성` -> `Asciidoctor 변환` -> `HTML 문서 생성` 
+
+---
+
+## 디렉터리 구조
+
+```text
+src/main/java/HeoJin/demoBlog/
+├── category/   # 카테고리 관리
+├── comment/    # 댓글 시스템
+├── global/     # 전역 공통 설정
+├── image/      # 이미지 업로드 및 Cloudinary 연동 처리
+├── member/     # 회원 관리 및 인증 
+├── post/       # 게시글 관리 
+├── seo/        # SEO 최적화 및 MongoDB 데이터 동기화
+└── tag/        # 태그 시스템 
+
+src/main/resources/
+├── application.yml             # 기본 설정 및 Profile 통합 관리
+├── application-performance.yml 
+└── application-deploy.yml      # 배포 환경 설정
+
+.http/                          # API 테스트용 HTTP Request 파일 (IntelliJ 기반)
+├── deploy/                     # 운영 서버 테스트용
+└── local/                      # 로컬 개발 테스트용
+```
 
