@@ -24,11 +24,25 @@ public class Category {
     @Builder.Default
     private Long priority = 0L;
 
+    @Column(name = "post_count", nullable = false)
+    @Builder.Default
+    private Long postCount = 0L;
+
     public void updatePriority(Long priority){
         this.priority = priority;
     }
 
     public void updateCategoryName(String categoryName){
         this.categoryName = categoryName;
+    }
+
+    // postCount 관련 메서드
+    public void increasePostCount() {
+        this.postCount++;
+    }
+    public void decreasePostCount() {
+        if(this.postCount > 0){
+            this.postCount--;
+        }
     }
 }
