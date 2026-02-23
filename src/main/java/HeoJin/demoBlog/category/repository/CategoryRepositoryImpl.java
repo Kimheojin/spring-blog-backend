@@ -7,6 +7,7 @@ import HeoJin.demoBlog.post.entity.PostStatus;
 import HeoJin.demoBlog.post.entity.QPost;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,24 +18,22 @@ import java.util.List;
 public class CategoryRepositoryImpl implements CategoryRepositoryCustom{
 
     private final JPAQueryFactory jpaQueryFactory;
+    private final EntityManager em;
 
 
-    // 상관 서브쿼리 - > join
+    // 역정규화
     @Override
     public List<CategoryWithCountDto> findAllCategoriesWithCount() {
         QCategory category = QCategory.category;
-        QPost post = QPost.post;
 
         return jpaQueryFactory
                 .select(Projections.constructor(CategoryWithCountDto.class,
                         category.id,
                         category.categoryName,
-                        post.count(),
-                        category.priority))
+                        category.postCount,
+                        category.priority
+                        ))
                 .from(category)
-                .leftJoin(post).on(post.category.eq(category)
-                        .and(post.status.eq(PostStatus.PUBLISHED)))
-                .groupBy(category.id, category.categoryName, category.priority)
                 .orderBy(category.priority.asc(), category.categoryName.asc())
                 .fetch();
     }
@@ -58,5 +57,29 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom{
                 .set(category.postCount, category.postCount.subtract(count))
                 .where(category.id.eq(categoryId))
                 .execute();
+    }
+
+    @Override
+    public void syncPostCounts(Long categoryId) {
+        // postcount 최신 정보
+        em.flush();
+
+        QCategory category = QCategory.category;
+        QPost post = QPost.post;
+
+        Long publishedPostCount = jpaQueryFactory
+                .select(post.count())
+                .from(post)
+                .where(post.category.id.eq(categoryId),
+                        post.status.eq(PostStatus.PUBLISHED))
+                .fetchOne();
+
+        // 쿼리가 바로 낙마
+        jpaQueryFactory.update(category)
+                .set(category.postCount, publishedPostCount)
+                .where(category.id.eq(categoryId))
+                .execute();
+        em.clear();
+        // clear??
     }
 }
