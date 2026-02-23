@@ -56,11 +56,15 @@ public class PostWriteService {
                 .category(category)
                 .build();
 
+
         postRepository.save(newpost);
 
+        // postCount 증가 관련
+        if(newpost.getStatus().equals(PostStatus.PUBLISHED)){
+            categoryRepository.increasePostCount(category.getId(), 1L);
+        }
 
         // 태그 관련
-
         postRequest.getTagList()
                 .forEach(tagRequest -> tagManager.addTagPost(tagRequest.getTagName(), newpost.getId()));
 
@@ -72,16 +76,33 @@ public class PostWriteService {
     // 게시글 수정
     @Transactional
     public PostContractionResponse updatePost(PostModifyRequest postModifyRequest) {
-        // 변경감지로
+        // 기존 게시물
         Post post = postRepository.findById(postModifyRequest.getPostId())
                 .orElseThrow(() -> new NotFoundException("해당 Post가 존재하지 않습니다."));
 
-        post.updatePost(postModifyRequest.getTitle(),
+        // PostCount 변경 대비
+        Long oldCategoryId = post.getCategory().getId();
+
+        // 새 카테고리 조회 (기존이랑 같을 수도)
+        Category newCategory = categoryRepository.findByCategoryName(postModifyRequest.getCategoryName())
+                .orElseThrow(() -> new NotFoundException("해당 카테고리를 찾을 수 없습니다."));
+
+        // 게시글 정보 업데이트
+        post.updatePost(
+                postModifyRequest.getTitle(),
                 postModifyRequest.getContent(),
-                postModifyRequest.getPostStatus());
+                postModifyRequest.getPostStatus()
+        );
+        post.changeCategory(newCategory);
+
+        categoryRepository.syncPostCounts(oldCategoryId);
+        if (!oldCategoryId.equals(newCategory.getId())) {
+            categoryRepository.syncPostCounts(newCategory.getId());
+        }
+
+        // 태그 및 기타
         List<TagRequest> tagList = postModifyRequest.getTagList();
         tagManager.modifyTagList(tagList, post.getId());
-
 
         return PostMapper.toPostContractionResponse(post);
     }
@@ -91,10 +112,14 @@ public class PostWriteService {
     public void deletePost(PostDeleteRequest postDeleteRequest) {
         Post post = postRepository.findById(postDeleteRequest.getPostId())
                 .orElseThrow(() -> new NotFoundException("해당 Post가 존재하지 않습니다."));
+
+        Long categoryId = post.getCategory().getId(); // 삭제 전 카테고리 ID
+
         tagManager.deleteTagByPostId(post.getId());
         postRepository.delete(post);
 
-
+        // 삭제 후 동기화
+        categoryRepository.syncPostCounts(categoryId);
     }
     @Transactional
     public PostContractionResponse schedulePost(Long memberId, ScheduledPostRequest scheduledPostRequest){
