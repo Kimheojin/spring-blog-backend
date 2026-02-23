@@ -40,4 +40,23 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom{
     }
 
     // outer join 사용해야 할듯, inner join 사용 시 0개인 경우 반환 X
+    @Override
+    public void increasePostCount(Long categoryId, Long count){
+        QCategory category = QCategory.category;
+
+        jpaQueryFactory.update(category)
+                .set(category.postCount, category.postCount.add(count))
+                .where(category.id.eq(categoryId))
+                .execute();
+    }
+
+    @Override
+    public void decreasePostCount(Long categoryId, Long count) {
+        QCategory category = QCategory.category;
+
+        jpaQueryFactory.update(category)
+                .set(category.postCount, category.postCount.subtract(count))
+                .where(category.id.eq(categoryId))
+                .execute();
+    }
 }

@@ -10,4 +10,7 @@ public interface CategoryRepositoryCustom {
 
     List<CategoryWithCountDto> findAllCategoriesWithCount();
 
+    void increasePostCount(Long categoryId, Long count);
+    void decreasePostCount(Long categoryId, Long count);
+
 }

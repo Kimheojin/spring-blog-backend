@@ -36,13 +36,5 @@ public class Category {
         this.categoryName = categoryName;
     }
 
-    // postCount 관련 메서드
-    public void increasePostCount() {
-        this.postCount++;
-    }
-    public void decreasePostCount() {
-        if(this.postCount > 0){
-            this.postCount--;
-        }
-    }
+
 }
