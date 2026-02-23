@@ -63,5 +63,8 @@ public class Post {
         this.regDate = time;
     }
 
+    public void changeCategory(Category category){
+        this.category = category;
+    }
 
 }
