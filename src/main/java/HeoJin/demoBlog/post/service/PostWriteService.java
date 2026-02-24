@@ -93,6 +93,8 @@ public class PostWriteService {
                 postModifyRequest.getContent(),
                 postModifyRequest.getPostStatus()
         );
+
+        // 새로 카테고리 만들면서 동작하진 X
         post.changeCategory(newCategory);
 
         categoryRepository.syncPostCounts(oldCategoryId);

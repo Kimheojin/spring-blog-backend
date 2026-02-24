@@ -81,32 +81,56 @@ class PostWriteServiceTest {
     void test3() {
         // given
         Long postId = 1L;
+        Long oldCategoryId = 10L;
+        Long newCategoryId = 20L;
         String newTitle = "Updated Title";
+        String newContent = "Updated Content";
+        String newCategoryName = "Updated Category";
+
         PostModifyRequest request = PostModifyRequest.builder()
                 .postId(postId)
                 .title(newTitle)
-                .content("Updated Content")
-                .categoryName("Updated Category")
+                .content(newContent)
+                .categoryName(newCategoryName)
                 .postStatus(PostStatus.PUBLISHED)
                 .tagList(Collections.emptyList())
-                        .build();
+                .build();
+
+        Category oldCategory = Category.builder()
+                .id(oldCategoryId)
+                .categoryName("Old Category")
+                .build();
+
+        Category newCategory = Category.builder()
+                .id(newCategoryId)
+                .categoryName(newCategoryName)
+                .build();
 
         Post post = Post.builder()
                 .id(postId)
                 .title("Old Title")
                 .content("Old Content")
+                .category(oldCategory)
                 .status(PostStatus.PUBLISHED)
                 .build();
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(categoryRepository.findByCategoryName(newCategoryName)).willReturn(Optional.of(newCategory));
 
         // when
         PostContractionResponse response = postWriteService.updatePost(request);
 
         // then
         assertThat(response.getTitle()).isEqualTo(newTitle);
-        verify(tagManager).modifyTagList(any(), eq(postId));
         assertThat(post.getTitle()).isEqualTo(newTitle);
+        assertThat(post.getContent()).isEqualTo(newContent);
+        assertThat(post.getCategory().getId()).isEqualTo(newCategoryId);
+
+        verify(postRepository).findById(postId);
+        verify(categoryRepository).findByCategoryName(newCategoryName);
+        verify(categoryRepository).syncPostCounts(oldCategoryId);
+        verify(categoryRepository).syncPostCounts(newCategoryId);
+        verify(tagManager).modifyTagList(any(), eq(postId));
     }
 
     @Test
@@ -114,9 +138,16 @@ class PostWriteServiceTest {
     void test2() {
         // given
         Long postId = 1L;
+        Long categoryId = 10L;
         PostDeleteRequest request = new PostDeleteRequest(postId);
+
+        Category category = Category.builder()
+                .id(categoryId)
+                .build();
+
         Post post = Post.builder()
                 .id(postId)
+                .category(category)
                 .build();
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
@@ -125,8 +156,10 @@ class PostWriteServiceTest {
         postWriteService.deletePost(request);
 
         // then
+        verify(postRepository).findById(postId);
         verify(tagManager).deleteTagByPostId(postId);
         verify(postRepository).delete(post);
+        verify(categoryRepository).syncPostCounts(categoryId);
     }
     
     @Test
