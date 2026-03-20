@@ -27,7 +27,7 @@
 
 ##### 배포 자동화 구성
 
-**환경 변수 사전 검증 (Fail-Fast)**
+환경 변수 사전 검증 (Fail-Fast)
 
 ```yaml
 - name: Validate secrets
@@ -37,7 +37,8 @@
       exit 1
     fi
 ```
-**동적 네트워크 관리 및 연결**
+동적 네트워크 관리 및 연결
+
 ```yaml
 - name: Setup network
   run: |
@@ -45,7 +46,8 @@
     docker network connect blog-network mysql-container || true
 ```
 
-**프로젝트 기반 격리 배포 (Blue/Green 배포 관련)**
+프로젝트 기반 격리 배포 (Blue/Green 배포 관련)
+
 ```yaml
 - name: Deploy with Docker Compose
   run: |
