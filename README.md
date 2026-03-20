@@ -23,7 +23,20 @@
 
 ![Github 이미지](https://res.cloudinary.com/dtrxriyea/image/upload/v1773994931/etc/nekd5kjpuwsgcxfjbga4.avif)
 
-![GitHub Actions 러너 상태](https://res.cloudinary.com/dtrxriyea/image/upload/v1773996575/etc/prwxu1udfsbabdcnaiiz.avif)
+- Actions 로그 연결 확인
+
+```text
+Current runner version: '2.331.0'
+Runner name: 'jin'
+Runner group name: 'Default'
+Machine name: 'jin'
+GITHUB_TOKEN Permissions
+  Contents: read
+  Metadata: read
+  Packages: read
+Secret source: Actions
+```
+
 
 ##### 배포 자동화 구성
 
@@ -53,10 +66,6 @@
   run: |
     docker compose --project-name blog-blue up -d --build
 ``` 
-
-#### 
-
-##### 
 
 ### Docker + Docker compose 구성 
 
