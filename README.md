@@ -117,33 +117,130 @@ services:
 
 ### 구현 결과
 
-- docker 관련 
-- 
+- Docker 배포 시간 72% 단축 (125s -> 35s)
+- Docker 이미지 크기 20% 개선 (420MB -> 333MB)
+
 ## 로그인 기능
 
-### 로그인 구현 도식도
+- `Spring Security`, `jjwt 0.13.0` 라이브러리 사용
+- `jjwt` 사용 이유
+  - Oauth2 사용 안하는 구조에서 제일 가볍고, 의존성이 적어 기능 확장시 이점
+
+### 로그인 구현 요약 도식도 
+
+![로그인 구현 도식도](https://res.cloudinary.com/dtrxriyea/image/upload/v1774080418/etc/am3idkgiipu0kyoxpuxr.avif)
 
 ### 구현 목표
 
-### 구현 내용
+- 역할 기반 관리
+- 보안성 강화
+- 쿠키 + jwt 구조 확립
 
+### 주요 구현 내용
 
-## 게시글 
+- 쿠키 정책 적용
+
+```java
+return ResponseCookie.from("accessToken", accessToken)
+    .httpOnly(true)    // 자바스크립트를 통한 쿠키 접근 차단 (XSS 방지)
+    .secure(true)      // HTTPS 통신 환경에서만 쿠키 전송
+    .sameSite("None")  // CSR 구조라 강제
+    .maxAge(60 * 60 * 24).build();
+```
+
+- Stateless 기반의 무상태 인증 구조
+
+```java
+httpSecurity
+    .csrf(AbstractHttpConfigurer::disable) // 무상태 구조이므로 CSRF 보호 비활성화
+    .sessionManagement(session -> session
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 미사용 명시
+    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+```
+
+- 역할 기반 권한 분리 및 접근 제어
+
+```java
+@EnableMethodSecurity(prePostEnabled = true) // 메서드 단위 보안 어노테이션 활성화
+public class SecurityConfig {
+    .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/api/auth/login", "/api/categories").permitAll() // 비인증 허용
+        .anyRequest().authenticated()) // 그 외 모든 요청은 인증 필수
+}
+```
+
+- 프로젝트 공통 예외 로직 추가
+
+```java
+.exceptionHandling(ex -> ex
+    .authenticationEntryPoint((request, response, authException) ->
+        handleSecurityException(response, objectMapper, "인증이 필요합니다.",
+            HttpServletResponse.SC_UNAUTHORIZED, "AUTHENTICATION_REQUIRED"))
+    .accessDeniedHandler(...)); // 권한 부족 시 커스텀 403 응답 핸들링
+```
+
+## 이미지 관련
 
 ### 구현 목표
-### 구현 내용
 
+- 온프레미스 서버 자원 사용을 최소화 하기 위해 외부 미디어 서버 (Cloudinary) 활용
+- `AVIF`이미지 타입 도입, 동일 화질 대비 압축률이 가장 높음
+  - 변환로직의 경우 로컬에서 하는 것을 고려했으나, c 관련 종속성 추가로 인한 Cloudinary API 사용
+
+### 구현 내용 
+
+- Cloudinary SDK 활용
+
+```java
+Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
+        ObjectUtils.asMap("folder", "blog/posts"));
+String imageUrl = (String) uploadResult.get("secure_url");
+```
+- AVIF 포맷 변환 및 최적화
+
+```java
+String optimizedUrl = cloudinary.url()
+    .transformation(new Transformation().fetchFormat("avif").quality("auto"))
+    .generate(publicId);
+```
+
+### 구현 결과 
+
+- PNG 이미지 대비 용량 85.4% 절감 (142 KB -> 20.7 KB)
+- 로딩 속도 5배 개선 (132ms -> 26ms)
 ## SEO 구현
 
 ### 구현 목표
 
--
+- MySQL FullText 사용 시 한글 전용 분석기 부재 + MySQL 서버 부하 예쌍
+  - Mongo Atlas Search 를 통한 SEO 도입
+- 그에 따른 MongoDB <-> MySQL 간 동기화 로직 필요
 
-### 구현 목표
+### 구현 내용
 
-- 
+- Apache Nori 한글 전용 분석기를 통한 인덱스 구축 (토큰 화) 
+```yaml
+  "analyzer": "lucene.nori",
+  "searchAnalyzer": "lucene.nori"
+```
 
+- `SHA-256` 기반 Mongo <-> MySQL DB 간 동기화 로직 구축
+```java
+    try {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(content.getBytes());
+        return HexFormat.of().formatHex(hash);
+    }
+```
 
+- 스케쥴러를 통한 동기화 로직 구축
+
+```java
+    @Scheduled(cron = "0 0 4 * * ?")
+    public void runTaskAt4AM(){
+        syncService.triggerSync();
+    }
+```
 
 ## 테스트 코드 전략
 
@@ -157,8 +254,6 @@ services:
 - 
 
 ## asscidoc 관련 구현
-
-
 
 ### 구현 내용
 ### 구현 결과
