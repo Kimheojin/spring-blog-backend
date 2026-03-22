@@ -251,13 +251,89 @@ String optimizedUrl = cloudinary.url()
 
 ### 구현 내용
 
-- 
+- 계층 간 테스트 코드 분리 및 최적화
+- Controller: MockMvc와 RestDocs를 결합하여 API 검증과 문서화를 동시에 수행
+```java
+mockMvc.perform(get("/api/categories"))
+    .andExpect(status().isOk())
+    .andDo(document("get-categories",
+        responseFields(
+            fieldWithPath("categoryResponses[].categoryId").description("ID"),
+            fieldWithPath("categoryResponses[].categoryName").description("이름")
+        )));
+```
+- Service: Mockito를 활용해 외부 의존성을 배제한 순수 비즈니스 로직 검증
+  ```java
+  @ExtendWith(MockitoExtension.class)
+  class ServiceTest {
+      @Mock private CategoryRepository repository;
+      @InjectMocks private CategoryService service;
+
+      @Test
+      void test() {
+          when(repository.findAllByOrderByPriorityAsc()).thenReturn(mockList);
+          service.getAllCategoryNames();
+          verify(repository).findAllByOrderByPriorityAsc();
+      }
+  }
+  ```
+- Repository: @DataJpaTest를 사용하여 DB 연동 및 쿼리 정확성 확인
+```java
+@DataJpaTest
+class RepositoryTest {
+    @Autowired private TestEntityManager em;
+    @Autowired private CategoryRepository repository;
+
+    @Test
+    void test() {
+        em.persist(category);
+        repository.findByCategoryName("Java");
+    }
+}
+```
+- 테스트 작성 비용 최소화
+- ApiDocTestBase 공통 설정 클래스를 통해 중복 코드 제거 및 테스트 환경 표준화
+  ```java
+  @SpringBootTest
+  @AutoConfigureMockMvc
+  @AutoConfigureRestDocs
+  @Transactional
+  public abstract class ApiDocTestBase {
+      @Autowired protected MockMvc mockMvc;
+      @Autowired protected ObjectMapper objectMapper;
+  }
+  ```
+- DataInitComponent를 도입하여 복잡한 초기 데이터 생성 로직을 공통화 및 재사용
+```java
+@Component
+public class DataInitComponent {
+    public Member createTestMember() { /* ... */ }
+    public void saveAllCategories() { /* ... */ }
+    public void saveAllPosts(Member member) { /* ... */ }
+}
+```
 
 ## asscidoc 관련 구현
 
 ### 구현 내용
+
+- Spring Rest Docs + Asciidoctor 통합
+  - 테스트 코드 실행 시 snippetsDir(build/generated-snippets)에 API 명세 조각 자동 생성
+  - 생성된 스니펫을 기반으로 index.adoc을 변환하여 정적 HTML 문서 구축
+- 빌드 및 배포 자동화
+  - asciidoctor 태스크를 test 태스크에 의존하게 하여 최신화된 문서 보장
+  - 빌드 시 생성된 HTML을 bootJar의 static/docs 경로로 포함하여 API 서버에서 직접 문서 서빙
+
 ### 구현 결과
 
+- 코드 변경 시 API 문서가 자동으로 최신화되어 문서와 실제 API 간의 불일치 방지
+- 별도의 외부 툴 없이 /docs/index.html을 통해 실시간 API 명세 확인 가능
+
 ## 기타
+
+- AOP 기반 API 로깅: AspectJ를 활용하여 모든 Controller 메서드의 호출 시작, 완료, 에러 발생 시점을 자동으로 로깅하여 모니터링 효율성 증대
+- QueryDSL 도입: 타입 세이프한 동적 쿼리 생성을 위해 QueryDSL-JPA 연동 및 Gradle 기반 QClass 생성 자동화 구성
+- 임베디드 테스트 DB: 테스트 환경에서 H2와 Embedded Mongo를 사용하여 외부 인프라 의존성 없이 독립적이고 일관된 테스트 수행 가능
+- 마크다운 지원: Commonmark 라이브러리를 통해 블로그 게시글의 마크다운 형식을 파싱 및 렌더링 지원
 
 
