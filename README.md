@@ -1,7 +1,7 @@
 # 블로그 API SERVER
 
 - Spring + 온프레미스 서버를 통한 배포 환경 구성
-- 서비스 url : [heojin.vercel.app](https://heojin.vercel.app/)
+- 서비스  URL : [heojin.vercel.app](https://heojin.vercel.app/)
   - 현재 post 업데이트 중단
 
 ## 프로젝트 배포 구조 요약
@@ -15,7 +15,7 @@
 #### 구현 목표
 
 - 배포 시 반복되는 `rsync` 명령어를 통한 코드 이동, `docker` 관련 명령어 등 제거 (배포 자동화)
-- 브랜치 별 배포 전략 차별화 목적 
+- 브랜치 별 배포 전략 차별화를 통한 blue-green 배포전략 사용
 
 #### 주요 구현 내용
 
@@ -37,10 +37,9 @@ GITHUB_TOKEN Permissions
 Secret source: Actions
 ```
 
-
 ##### 배포 자동화 구성
 
-- 환경 변수 사전 검증
+- 환경 변수 검증
 
 ```yaml
 - name: Validate secrets
@@ -50,7 +49,8 @@ Secret source: Actions
       exit 1
     fi
 ```
-- 동적 네트워크 관리 및 연결
+
+- 동적 `Docker` 네트워크 관리 및 연결
 
 ```yaml
 - name: Setup network
@@ -76,7 +76,7 @@ on:
     docker compose --project-name blog-blue up -d --build
 ``` 
 
-### DockerFile + Docker compose 구성 
+### Dockerfile + Docker compose 구성 
 
 #### 구현 목표
 
@@ -85,7 +85,7 @@ on:
 
 #### 구현 내용
 
-- Multi-stage 빌드를 통한 이미지 크기 최적화
+- Multi-stage 빌드를 통한 Docker 이미지 크기 최적화
 
 ```dockerfile
 # 빌드 스테이지
@@ -124,7 +124,7 @@ services:
 
 - `Spring Security`, `jjwt 0.13.0` 라이브러리 사용
 - `jjwt` 사용 이유
-  - Oauth2 사용 안하는 구조에서 제일 가볍고, 의존성이 적어 기능 확장시 이점
+  - 타 라이브러리 대비 Oauth2 사용 안하는 구조에서 제일 가볍고, 의존성이 적어 기능 확장시 이점
 
 ### 로그인 구현 요약 도식도 
 
@@ -134,7 +134,7 @@ services:
 
 - 역할 기반 관리
 - 보안성 강화
-- 쿠키 + jwt 구조 확립
+- 쿠키 + `jwt` 구조 확립
 
 ### 주요 구현 내용
 
@@ -145,7 +145,8 @@ return ResponseCookie.from("accessToken", accessToken)
     .httpOnly(true)    // 자바스크립트를 통한 쿠키 접근 차단 (XSS 방지)
     .secure(true)      // HTTPS 통신 환경에서만 쿠키 전송
     .sameSite("None")  // CSR 구조라 강제
-    .maxAge(60 * 60 * 24).build();
+    .maxAge(60 * 60 * 24)
+    .build();
 ```
 
 - Stateless 기반의 무상태 인증 구조
@@ -185,7 +186,7 @@ public class SecurityConfig {
 
 - 온프레미스 서버 자원 사용을 최소화 하기 위해 외부 미디어 서버 (Cloudinary) 활용
 - `AVIF`이미지 타입 도입, 동일 화질 대비 압축률이 가장 높음
-  - 변환로직의 경우 로컬에서 하는 것을 고려했으나, c 관련 종속성 추가로 인한 Cloudinary API 사용
+  - 변환 로직의 경우 로컬에서 하는 것을 고려했으나, `c/c++` 등 네이티브 언어 종속성 추가로 인한 Cloudinary API 사용
 
 ### 구현 내용 
 
@@ -196,7 +197,7 @@ Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
         ObjectUtils.asMap("folder", "blog/posts"));
 String imageUrl = (String) uploadResult.get("secure_url");
 ```
-- AVIF 포맷 변환 및 최적화
+- AVIF 이미지 포맷 변환 및 최적화
 
 ```java
 String optimizedUrl = cloudinary.url()
@@ -208,23 +209,25 @@ String optimizedUrl = cloudinary.url()
 
 - PNG 이미지 대비 용량 85.4% 절감 (142 KB -> 20.7 KB)
 - 로딩 속도 5배 개선 (132ms -> 26ms)
-## SEO 구현
+
+## SEO 및 검색 엔진 고도화
 
 ### 구현 목표
 
-- MySQL FullText 사용 시 한글 전용 분석기 부재 + MySQL 서버 부하 예쌍
-  - Mongo Atlas Search 를 통한 SEO 도입
-- 그에 따른 MongoDB <-> MySQL 간 동기화 로직 필요
+- **한국어 검색 품질 개선**: MySQL FullText Search의 한계를 보완하기 위해 루신 기반 형태소 분석기(Nori)를 지원하는 MongoDB Atlas Search 도입
+- **시스템 부하 분리**: 원본 데이터(MySQL)와 검색 조회(MongoDB) 역할을 분리하여 DB 부하 분산 및 안정성 확보
 
-### 구현 내용
+### 주요 구현 내용
 
-- Apache Nori 한글 전용 분석기를 통한 인덱스 구축 (토큰 화) 
+- **Atlas Search 기반 인덱싱**: `lucene.nori` 분석기를 적용하여 한국어 조사 처리 및 토큰화 구현
+
 ```yaml
   "analyzer": "lucene.nori",
   "searchAnalyzer": "lucene.nori"
 ```
 
-- `SHA-256` 기반 Mongo <-> MySQL DB 간 동기화 로직 구축
+- **SHA-256 기반 데이터 동기화**: 변경된 데이터만 선별적으로 업데이트하기 위해 해시값 비교 로직 구축 (네트워크 부하 최적화)
+
 ```java
     try {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -233,7 +236,7 @@ String optimizedUrl = cloudinary.url()
     }
 ```
 
-- 스케쥴러를 통한 동기화 로직 구축
+- **배치 동기화 스케줄링**: 서비스 이용률이 낮은 새벽 시간대(오전 4시)에 자동 동기화 로직 구현
 
 ```java
     @Scheduled(cron = "0 0 4 * * ?")
@@ -252,7 +255,8 @@ String optimizedUrl = cloudinary.url()
 ### 구현 내용
 
 - 계층 간 테스트 코드 분리 및 최적화
-- Controller: MockMvc와 RestDocs를 결합하여 API 검증과 문서화를 동시에 수행
+- Controller: MockMvc, RestDocs를 결합, API 검증과 문서화를 동시에 수행
+
 ```java
 mockMvc.perform(get("/api/categories"))
     .andExpect(status().isOk())
@@ -262,22 +266,26 @@ mockMvc.perform(get("/api/categories"))
             fieldWithPath("categoryResponses[].categoryName").description("이름")
         )));
 ```
-- Service: Mockito를 활용해 외부 의존성을 배제한 순수 비즈니스 로직 검증
-  ```java
-  @ExtendWith(MockitoExtension.class)
-  class ServiceTest {
-      @Mock private CategoryRepository repository;
-      @InjectMocks private CategoryService service;
 
-      @Test
-      void test() {
-          when(repository.findAllByOrderByPriorityAsc()).thenReturn(mockList);
-          service.getAllCategoryNames();
-          verify(repository).findAllByOrderByPriorityAsc();
-      }
-  }
-  ```
+- Service: Mockito를 활용해 외부 의존성을 배제한 순수 비즈니스 로직 검증
+
+```java
+@ExtendWith(MockitoExtension.class)
+class ServiceTest {
+    @Mock private CategoryRepository repository;
+    @InjectMocks private CategoryService service;
+
+    @Test
+    void test() {
+        when(repository.findAllByOrderByPriorityAsc()).thenReturn(mockList);
+        service.getAllCategoryNames();
+        verify(repository).findAllByOrderByPriorityAsc();
+    }
+}
+```
+
 - Repository: @DataJpaTest를 사용하여 DB 연동 및 쿼리 정확성 확인
+
 ```java
 @DataJpaTest
 class RepositoryTest {
@@ -291,19 +299,22 @@ class RepositoryTest {
     }
 }
 ```
+
 - 테스트 작성 비용 최소화
-- ApiDocTestBase 공통 설정 클래스를 통해 중복 코드 제거 및 테스트 환경 표준화
-  ```java
-  @SpringBootTest
-  @AutoConfigureMockMvc
-  @AutoConfigureRestDocs
-  @Transactional
-  public abstract class ApiDocTestBase {
-      @Autowired protected MockMvc mockMvc;
-      @Autowired protected ObjectMapper objectMapper;
-  }
-  ```
-- DataInitComponent를 도입하여 복잡한 초기 데이터 생성 로직을 공통화 및 재사용
+  - ApiDocTestBase 공통 설정 클래스를 통해 중복 코드 제거 및 테스트 환경 표준화
+
+```java
+@SpringBootTest
+@AutoConfigureMockMvc
+@AutoConfigureRestDocs
+@Transactional
+public abstract class ApiDocTestBase {
+    @Autowired protected MockMvc mockMvc;
+    @Autowired protected ObjectMapper objectMapper;
+}
+```
+- 데이터 생성 공통로직을 통한 중복 로직 제거  
+
 ```java
 @Component
 public class DataInitComponent {
@@ -313,27 +324,87 @@ public class DataInitComponent {
 }
 ```
 
-## asscidoc 관련 구현
+## AsciiDoc 관련 구현
+
+### 구현 목표
+
+- 테스트 코드를 통한 API 문서 자동화
+- 비즈니스 코드 훼손이 적은 구조 목적
 
 ### 구현 내용
 
 - Spring Rest Docs + Asciidoctor 통합
   - 테스트 코드 실행 시 snippetsDir(build/generated-snippets)에 API 명세 조각 자동 생성
   - 생성된 스니펫을 기반으로 index.adoc을 변환하여 정적 HTML 문서 구축
+
 - 빌드 및 배포 자동화
   - asciidoctor 태스크를 test 태스크에 의존하게 하여 최신화된 문서 보장
   - 빌드 시 생성된 HTML을 bootJar의 static/docs 경로로 포함하여 API 서버에서 직접 문서 서빙
+
+```gradle
+// snippetsDir 설정 및 test 태스크 출력 지정
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+test {
+    outputs.dir snippetsDir
+}
+
+// asciidoctor가 test에 의존하도록 설정하여 최신 스니펫 보장
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
+}
+
+// 빌드 시 생성된 HTML 문서를 static/docs로 포함
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
+}
+```
 
 ### 구현 결과
 
 - 코드 변경 시 API 문서가 자동으로 최신화되어 문서와 실제 API 간의 불일치 방지
 - 별도의 외부 툴 없이 /docs/index.html을 통해 실시간 API 명세 확인 가능
 
+![restDoc 사이트 스크린샷](https://res.cloudinary.com/dtrxriyea/image/upload/v1774259193/etc/cphbwm5z1r09g0wja3sz.avif)
+
 ## 기타
 
-- AOP 기반 API 로깅: AspectJ를 활용하여 모든 Controller 메서드의 호출 시작, 완료, 에러 발생 시점을 자동으로 로깅하여 모니터링 효율성 증대
-- QueryDSL 도입: 타입 세이프한 동적 쿼리 생성을 위해 QueryDSL-JPA 연동 및 Gradle 기반 QClass 생성 자동화 구성
-- 임베디드 테스트 DB: 테스트 환경에서 H2와 Embedded Mongo를 사용하여 외부 인프라 의존성 없이 독립적이고 일관된 테스트 수행 가능
-- 마크다운 지원: Commonmark 라이브러리를 통해 블로그 게시글의 마크다운 형식을 파싱 및 렌더링 지원
+- AOP 기반 API 로깅: AspectJ를 활용한 Controller 메서드 호출 및 예외 발생 시점 자동 로깅으로 모니터링 
+- 임베디드 테스트 DB: H2와 Embedded Mongo를 활용, 외부 인프라 의존성 없는 독립적인 테스트 환경 구성
+- 검색 데이터 노이즈 제거: Commonmark 파서를 활용해 마크다운 특수문자를 제거한 순수 텍스트(Plain Text) 기반의 검색 인덱스 구축
+
+### 기술 스택
+
+- Framework: Spring Boot 3.4.4
+- Language: Java 17
+- Security: Spring Security, JJWT 0.13.0
+- Database: MySQL, MongoDB Atlas
+- ORM/Query: Spring Data JPA, QueryDSL 5.0.0
+- CI/CD: GitHub Actions (Self-hosted Runner), Docker, Docker Compose
+- Media: Cloudinary SDK
+- Test/Docs: JUnit 5, Mockito, Spring Rest Docs, Asciidoctor, H2, Embedded Mongo
+- Monitoring: Spring Boot Actuator, Spring AOP
+- Markdown: Commonmark
+
+### 파일 구조
+
+```text
+src/main/java/HeoJin/demoBlog/
+├── category/       # 카테고리 도메인 (관리자/공개 API 분리)
+├── comment/        # 댓글 도메인 (계층형 구조 및 비동기 처리)
+├── member/         # 회원 및 인증 도메인 (로그인 및 JWT 처리)
+├── post/           # 게시글 도메인 (마크다운 파싱 및 핵심 비즈니스 로직)
+├── seo/            # 검색 엔진 최적화 (MySQL-MongoDB 데이터 동기화)
+├── tag/            # 태그 도메인
+├── image/          # 이미지 업로드 및 최적화 (Cloudinary 연동)
+└── global/         # 전역 설정 (Security, AOP, Exception, JWT, Util)
+```
 
 
