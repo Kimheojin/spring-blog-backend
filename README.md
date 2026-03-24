@@ -19,7 +19,7 @@
 
 #### 주요 구현 내용
 
-##### Self-hosted Runner를 통한 온프레미스 서버 연결 + 배포
+##### Self-hosted Runner를 통한 온프레미스 서버 연결 및 배포
 
 ![Github 이미지](https://res.cloudinary.com/dtrxriyea/image/upload/v1773994931/etc/nekd5kjpuwsgcxfjbga4.avif)
 
@@ -96,6 +96,7 @@ FROM eclipse-temurin:17-jre
 ```
 
 - BuildKit 캐시 마운트를 활용한 이미지 빌드 속도 최적화
+  - 증분 빌드 적용으로 반복적인 의존성 다운로드 병복 제거
 
 ```dockerfile
 COPY src src
@@ -123,8 +124,9 @@ services:
 ## 로그인 기능
 
 - `Spring Security`, `jjwt 0.13.0` 라이브러리 사용
-- `jjwt` 사용 이유
-  - 타 라이브러리 대비 Oauth2 사용 안하는 구조에서 제일 가볍고, 의존성이 적어 기능 확장시 이점
+- `jjwt` 적용 이유
+  - 타 라이브러리 대비 Oauth2 사용 안하는 구조에서 가벼운 구조
+  - 직관적 Builder d패턴 API 제공
 
 ### 로그인 구현 요약 도식도 
 
@@ -144,7 +146,7 @@ services:
 return ResponseCookie.from("accessToken", accessToken)
     .httpOnly(true)    // 자바스크립트를 통한 쿠키 접근 차단 (XSS 방지)
     .secure(true)      // HTTPS 통신 환경에서만 쿠키 전송
-    .sameSite("None")  // CSR 구조라 강제
+    .sameSite("None")  // Cross-Origin 요청 간 쿠키 전송 허용
     .maxAge(60 * 60 * 24)
     .build();
 ```
@@ -197,7 +199,7 @@ Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
         ObjectUtils.asMap("folder", "blog/posts"));
 String imageUrl = (String) uploadResult.get("secure_url");
 ```
-- AVIF 이미지 포맷 변환 및 최적화
+- AVIF 이미지 타입 도입 및 최적화 
 
 ```java
 String optimizedUrl = cloudinary.url()
@@ -207,14 +209,14 @@ String optimizedUrl = cloudinary.url()
 
 ### 구현 결과 
 
-- PNG 이미지 대비 용량 85.4% 절감 (142 KB -> 20.7 KB)
+- PNG 이미지 대비 이미지 용량 85.4% 절감 (142 KB -> 20.7 KB)
 - 로딩 속도 5배 개선 (132ms -> 26ms)
 
 ## SEO 및 검색 엔진 고도화
 
 ### 구현 목표
 
-- **한국어 검색 품질 개선**: MySQL FullText Search의 한계를 보완하기 위해 루신 기반 형태소 분석기(Nori)를 지원하는 MongoDB Atlas Search 도입
+- **한국어 검색 품질 개선**: Lucene 기반 Nori 형태소 분석기를 지원하는 MongoDB Atlas Search를 도입하여, MySQL N-gram 파서의 단순 부분 일치 검색 한계를 극복 목표
 - **시스템 부하 분리**: 원본 데이터(MySQL)와 검색 조회(MongoDB) 역할을 분리하여 DB 부하 분산 및 안정성 확보
 
 ### 주요 구현 내용
