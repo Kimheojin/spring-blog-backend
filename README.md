@@ -66,14 +66,14 @@ Secret source: Actions
 on:
   push:
     branches:
-      - deploy/blue
+      - Deploy
   pull_request:
     branches:
-      - deploy/blue
-# Docker compose 프로젝트 기반 구분 
+      - Deploy
+# Docker compose 기반 배포 
 - name: Deploy with Docker Compose
   run: |
-    docker compose --project-name blog-blue up -d --build
+    docker compose up -d --build
 ``` 
 
 ### Dockerfile + Docker compose 구성 
@@ -167,7 +167,7 @@ httpSecurity
 @EnableMethodSecurity(prePostEnabled = true) // 메서드 단위 보안 어노테이션 활성화
 public class SecurityConfig {
     .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/api/auth/login", "/api/categories").permitAll() // 비인증 허용
+        .requestMatchers("/api/auth/login", "/api/categories", ...).permitAll() // 비인증 허용 (기타 공개 API 포함)
         .anyRequest().authenticated()) // 그 외 모든 요청은 인증 필수
 }
 ```
@@ -196,15 +196,12 @@ public class SecurityConfig {
 
 ```java
 Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
-        ObjectUtils.asMap("folder", "blog/posts"));
+        ObjectUtils.asMap(
+            "folder", folder,
+            "format", "avif", // AVIF로 직접 변환하여 저장
+            "quality", "auto" // 품질 자동 최적화
+        ));
 String imageUrl = (String) uploadResult.get("secure_url");
-```
-- AVIF 이미지 타입 도입 및 최적화 
-
-```java
-String optimizedUrl = cloudinary.url()
-    .transformation(new Transformation().fetchFormat("avif").quality("auto"))
-    .generate(publicId);
 ```
 
 ### 구현 결과 
@@ -221,11 +218,13 @@ String optimizedUrl = cloudinary.url()
 
 ### 주요 구현 내용
 
-- **Atlas Search 기반 인덱싱**: `lucene.nori` 분석기를 적용하여 한국어 조사 처리 및 토큰화 구현
+- **Atlas Search 기반 인덱싱**: `title_plainContent_kr` 인덱스를 통해 제목(가중치 부여) 및 본문 통합 검색 구현
 
-```yaml
-  "analyzer": "lucene.nori",
-  "searchAnalyzer": "lucene.nori"
+```json
+  "index": "title_plainContent_kr",
+  "compound": {
+    "should": [ ... ]
+  }
 ```
 
 - **SHA-256 기반 데이터 동기화**: 변경된 데이터만 선별적으로 업데이트하기 위해 해시값 비교 로직 구축 (네트워크 부하 최적화)
@@ -257,7 +256,7 @@ String optimizedUrl = cloudinary.url()
 ### 구현 내용
 
 - 계층 간 테스트 코드 분리 및 최적화
-- Controller: MockMvc, RestDocs를 결합, API 검증과 문서화를 동시에 수행
+- **Controller**: MockMvc, RestDocs를 결합, API 검증과 문서화를 동시에 수행
 
 ```java
 mockMvc.perform(get("/api/categories"))
@@ -269,7 +268,7 @@ mockMvc.perform(get("/api/categories"))
         )));
 ```
 
-- Service: Mockito를 활용해 외부 의존성을 배제한 순수 비즈니스 로직 검증
+- **Service**: Mockito를 활용해 외부 의존성을 배제한 순수 비즈니스 로직 검증
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -286,7 +285,7 @@ class ServiceTest {
 }
 ```
 
-- Repository: @DataJpaTest를 사용하여 DB 연동 및 쿼리 정확성 확인
+- **Repository**: @DataJpaTest를 사용하여 DB 연동 및 쿼리 정확성 확인
 
 ```java
 @DataJpaTest
@@ -400,7 +399,7 @@ bootJar {
 ```text
 src/main/java/HeoJin/demoBlog/
 ├── category/       # 카테고리 도메인 (관리자/공개 API 분리)
-├── comment/        # 댓글 도메인 (계층형 구조 및 비동기 처리)
+├── comment/        # 댓글 도메인 (계층형 구조)
 ├── member/         # 회원 및 인증 도메인 (로그인 및 JWT 처리)
 ├── post/           # 게시글 도메인 (마크다운 파싱 및 핵심 비즈니스 로직)
 ├── seo/            # 검색 엔진 최적화 (MySQL-MongoDB 데이터 동기화)
