@@ -11,6 +11,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,12 +56,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 if(newAccessToken != null) {
                     // 새로운 AccessToken을 쿠키에 설정
-                    Cookie newAccessTokenCookie = new Cookie("accessToken", newAccessToken);
-                    newAccessTokenCookie.setHttpOnly(true);
-                    newAccessTokenCookie.setSecure(false); // HTTPS 환경에서는 true로 설정
-                    newAccessTokenCookie.setPath("/");
-                    newAccessTokenCookie.setMaxAge(60 * 60 * 24); // 1일
-                    response.addCookie(newAccessTokenCookie);
+                    ResponseCookie newAccessTokenCookie = ResponseCookie.from("accessToken", newAccessToken)
+                            .httpOnly(true)
+                            .secure(true) // HTTPS 환경에서는 true로 설정
+                            .path("/")
+                            .maxAge(60 * 60 * 24) // 1일
+                            .sameSite("None")
+                            .build();
+
+                    response.addHeader(HttpHeaders.SET_COOKIE, newAccessTokenCookie.toString());
 
                     // 새 토큰으로 인증 처리
                     authenticateUser(newAccessToken, request);

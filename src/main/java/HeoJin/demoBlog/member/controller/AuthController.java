@@ -3,10 +3,12 @@ package HeoJin.demoBlog.member.controller;
 
 import HeoJin.demoBlog.member.dto.request.LoginDto;
 import HeoJin.demoBlog.member.service.AuthService;
+import HeoJin.demoBlog.member.dto.data.LoginResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -27,13 +29,14 @@ public class AuthController {
     @PostMapping("/auth/login")
     public ResponseEntity<Map<String, Object>> login(
             @RequestBody LoginDto loginDto,
-            HttpServletRequest request,
             HttpServletResponse response) {
 
         Map<String, Object> responseBody = new HashMap<>();
 
         try {
-            authService.login(loginDto, request, response);
+            LoginResult loginResult = authService.login(loginDto);
+            ResponseCookie accessTokenCookie = buildAccessTokenCookie(loginResult.accessToken());
+            response.addHeader("Set-Cookie", accessTokenCookie.toString());
 
             responseBody.put("message", "로그인 성공");
             responseBody.put("statusCode", HttpStatus.OK.value());
@@ -52,8 +55,17 @@ public class AuthController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        // JWT 기반 로그아웃 처리
-        authService.logout(request, response);
+        String accessToken = extractAccessToken(request);
+        authService.logout(accessToken);
+
+        ResponseCookie deleteCookie = ResponseCookie.from("accessToken", "")
+                .path("/")
+                .maxAge(0)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .build();
+        response.addHeader("Set-Cookie", deleteCookie.toString());
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("message", "로그아웃 되었습니다.");
@@ -94,5 +106,27 @@ public class AuthController {
             response.put("message", "인증되지 않음");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
+    }
+
+    private ResponseCookie buildAccessTokenCookie(String accessToken) {
+        return ResponseCookie.from("accessToken", accessToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(60 * 60 * 24)
+                .sameSite("None")
+                .build();
+    }
+
+    private String extractAccessToken(HttpServletRequest request) {
+        if (request.getCookies() == null) {
+            return null;
+        }
+        for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
+            if ("accessToken".equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+        return null;
     }
 }

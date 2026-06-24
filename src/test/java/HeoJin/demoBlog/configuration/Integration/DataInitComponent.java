@@ -92,6 +92,8 @@ public class DataInitComponent {
                 .orElseGet(() -> {
                     Category category = Category.builder()
                             .categoryName(categoryName)
+                            // 더미 값
+                            .postCount(0L)
                             .build();
 
                     em.persist(category);

@@ -1,50 +1,56 @@
 package HeoJin.demoBlog.seo.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SyncManagerTest {
 
     @Test
-    @DisplayName("순수 컨텍스트 대충 테스트")
-    void test1(){
+    @DisplayName("Markdown을 Plain Text로 변환 테스트")
+    void test1() {
         // given
-        String markdown = "## 안녕하세요";
+        String markdown = "# Header\n" +
+                "**Bold** text.\n" +
+                "[Link](http://example.com)\n" +
+                "![Image](http://example.com/img.png)\n" +
+                "`code`\n" +
+                "```java\nSystem.out.println();\n```";
+
         // when
         String plainText = SyncManager.toPlainText(markdown);
+
         // then
-        Assertions.assertThat(plainText).isEqualTo("안녕하세요");
+        
+        assertThat(plainText).contains("Header");
+        assertThat(plainText).contains("Bold");
+        assertThat(plainText).doesNotContain("http://example.com"); // Link url
+        assertThat(plainText).doesNotContain("System.out.println"); // Code block content
     }
 
     @Test
-    @DisplayName("해시 알고리즘 관련 테스트")
-    void test2(){
+    @DisplayName("Content 해시 생성 테스트")
+    void test2() {
         // given
-        String s1 = "가나다asb";
-        String s2 = "가나다asb";
-        String s3 = "가나다asbb";
+        String content = "Test Content";
+
         // when
-        String hash1 = SyncManager.makeHashCodeToContent(s1);
-        String hash2 = SyncManager.makeHashCodeToContent(s2);
-        String hash3 = SyncManager.makeHashCodeToContent(s3);
+        String hash1 = SyncManager.makeHashCodeToContent(content);
+        String hash2 = SyncManager.makeHashCodeToContent(content);
+        String hash3 = SyncManager.makeHashCodeToContent("Different Content");
 
         // then
-        Assertions.assertThat(hash1).isEqualTo(hash2);
-        Assertions.assertThat(hash1).isNotEqualTo(hash3);
+        assertThat(hash1).isNotNull();
+        assertThat(hash1).isEqualTo(hash2);
+        assertThat(hash1).isNotEqualTo(hash3);
     }
-
+    
     @Test
-    @DisplayName("순수 context 관련 테스트")
-    void test3(){
-        // given
-        String s1 = TestConstants.LONG_STRING;
-        // when
-        String toPlainTest = SyncManager.toPlainText(s1);
-        // then
-        Assertions.assertThat(toPlainTest).isNotEqualTo(s1);
-        Assertions.assertThat(toPlainTest).doesNotContain("![]", "```");
+    @DisplayName("Null 입력 처리")
+    void test3() {
+        // when + then
+        assertThat(SyncManager.toPlainText(null)).isNull();
+        assertThat(SyncManager.makeHashCodeToContent(null)).isNull();
     }
-
 }

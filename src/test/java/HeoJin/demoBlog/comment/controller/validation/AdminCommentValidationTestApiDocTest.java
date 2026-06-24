@@ -2,6 +2,7 @@ package HeoJin.demoBlog.comment.controller.validation;
 
 import HeoJin.demoBlog.comment.dto.request.CommentAdminDeleteRequest;
 import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
+import HeoJin.demoBlog.configuration.mockUser.WithMockCustomUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ public class AdminCommentValidationTestApiDocTest extends ApiDocTestBase {
 
     @Test
     @DisplayName("/api/admin/comments delete -> validation 한번에 테스트")
+    @WithMockCustomUser
     void test1() throws Exception {
         // given
         CommentAdminDeleteRequest request = CommentAdminDeleteRequest.builder()
@@ -42,9 +44,29 @@ public class AdminCommentValidationTestApiDocTest extends ApiDocTestBase {
                 .andExpect(jsonPath("$.validation.email").value("이메일을 입력해 주세요."))
                 .andExpect(jsonPath("$.validation.content").value("내용을 입력해 주세요"))
                 .andDo(print());
+    }
 
+    @Test
+    @DisplayName("/api/admin/comments delete -> 이메일 형식이 유효하지 않은 경우")
+    @WithMockCustomUser
+    void test2() throws Exception {
+        // given
+        CommentAdminDeleteRequest request = CommentAdminDeleteRequest.builder()
+                .postId(1L)
+                .commentId(1L)
+                .email("invalid-email-format") // 잘못된 이메일 형식
+                .content("content")
+                .build();
 
-
-
+        // when + then
+        mockMvc.perform(delete("/api/admin/comments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(DEFAULTVALIDATIONMESSAGE))
+                .andExpect(jsonPath("$.statusCode").value(400))
+                .andExpect(jsonPath("$.validation").exists())
+                .andExpect(jsonPath("$.validation.email").value("유효하지 않은 이메일 입니다."))
+                .andDo(print());
     }
 }

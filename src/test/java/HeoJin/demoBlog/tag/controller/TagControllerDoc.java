@@ -2,7 +2,9 @@ package HeoJin.demoBlog.tag.controller;
 
 import HeoJin.demoBlog.configuration.Integration.ApiDocTestBase;
 import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
+import HeoJin.demoBlog.configuration.InitRepository.TestInitRepository;
 import HeoJin.demoBlog.member.entity.Member;
+import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.tag.entity.Tag;
 import HeoJin.demoBlog.tag.repository.TagRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -30,6 +34,8 @@ public class TagControllerDoc extends ApiDocTestBase {
     private TagRepository tagRepository;
     @Autowired
     private DataInitComponent dataInitComponent;
+    @Autowired
+    private TestInitRepository testInitRepository;
 
     @BeforeEach
     void init(){
@@ -72,6 +78,11 @@ public class TagControllerDoc extends ApiDocTestBase {
         Tag testTag = tagRepository.findByTagName("tag1").orElseThrow();
         String testTagName = testTag.getTagName();
         Long testTagId = testTag.getId();
+
+        List<Post> posts = testInitRepository.findAllPost();
+        if (!posts.isEmpty()) {
+            testInitRepository.createPostTagLink(posts.get(0).getId(), testTagId);
+        }
         
         // when
         ResultActions testMock = mockMvc.perform(get("/api/tag/postlist")

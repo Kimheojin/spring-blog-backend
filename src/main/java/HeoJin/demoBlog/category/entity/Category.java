@@ -24,6 +24,10 @@ public class Category {
     @Builder.Default
     private Long priority = 0L;
 
+    @Column(name = "post_count", nullable = false)
+    @Builder.Default
+    private Long postCount = 0L;
+
     public void updatePriority(Long priority){
         this.priority = priority;
     }
@@ -31,4 +35,6 @@ public class Category {
     public void updateCategoryName(String categoryName){
         this.categoryName = categoryName;
     }
+
+
 }

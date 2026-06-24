@@ -8,7 +8,6 @@ import HeoJin.demoBlog.configuration.Integration.DataInitComponent;
 import HeoJin.demoBlog.configuration.dataJpaTest.SaveDataJpaTest;
 import HeoJin.demoBlog.global.config.QuerydslConfig;
 import HeoJin.demoBlog.member.entity.Member;
-import HeoJin.demoBlog.post.entity.Post;
 import HeoJin.demoBlog.post.entity.PostStatus;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +20,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,50 +46,31 @@ public class CategoryQuerydslRepositoryTest extends SaveDataJpaTest {
     void test1(){
         // given
         Member testMember = dataInitComponent.createTestMember();
-        dataInitComponent.saveAllCategories();
+        Category testCategory1 = Category.builder().categoryName("Cat1").priority(1L).postCount(0L).build();
+        Category testCategory2 = Category.builder().categoryName("Cat2").priority(2L).postCount(0L).build();
+        entityManager.persist(testCategory1);
+        entityManager.persist(testCategory2);
 
-        Category testCategory1 = categoryRepository.findAll().get(0);
-        Category testCategory2 = categoryRepository.findAll().get(1);
+        entityManager.persist(createPost(testMember, testCategory1, PostStatus.PUBLISHED, "p1"));
+        entityManager.persist(createPost(testMember, testCategory1, PostStatus.PUBLISHED, "p2"));
+        entityManager.persist(createPost(testMember, testCategory1, PostStatus.PUBLISHED, "p3"));
+        entityManager.persist(createPost(testMember, testCategory1, PostStatus.PRIVATE, "pr1"));
+        entityManager.persist(createPost(testMember, testCategory2, PostStatus.PUBLISHED, "p4"));
 
-        Post publishedPost1 = createPost(testMember, testCategory1, PostStatus.PUBLISHED, "published1");
-        Post publishedPost2 = createPost(testMember, testCategory1, PostStatus.PUBLISHED, "published2");
-        Post publishedPost3 = createPost(testMember, testCategory1, PostStatus.PUBLISHED, "published3");
-        Post privatePost1 = createPost(testMember, testCategory1, PostStatus.PRIVATE, "private1");
-        Post privatePost2 = createPost(testMember, testCategory1, PostStatus.PRIVATE, "private2");
-
-        // testCategory2에 PUBLISHED 포스트 1개 생성
-        Post publishedPost4 = createPost(testMember, testCategory2, PostStatus.PUBLISHED, "published4");
-
-        entityManager.persist(publishedPost1);
-        entityManager.persist(publishedPost2);
-        entityManager.persist(publishedPost3);
-        entityManager.persist(privatePost1);
-        entityManager.persist(privatePost2);
-        entityManager.persist(publishedPost4);
         entityManager.flush();
+        categoryRepository.syncPostCounts(testCategory1.getId());
+        categoryRepository.syncPostCounts(testCategory2.getId());
         entityManager.clear();
 
         // when
-        List<CategoryWithCountDto> allCategoriesWithCount = categoryRepository.findAllCategoriesWithCount();
-        List<Category> categories = categoryRepository.findAll();
+        List<CategoryWithCountDto> results = categoryRepository.findAllCategoriesWithCount();
 
         // then
-        assertThat(allCategoriesWithCount).isNotEmpty();
-        assertThat(categories).isNotEmpty();
-        assertThat(allCategoriesWithCount.size()).isEqualTo(categories.size());
+        CategoryWithCountDto res1 = results.stream().filter(c -> c.getCategoryName().equals("Cat1")).findFirst().orElseThrow();
+        CategoryWithCountDto res2 = results.stream().filter(c -> c.getCategoryName().equals("Cat2")).findFirst().orElseThrow();
 
-        CategoryWithCountDto category1Result = allCategoriesWithCount.stream()
-                .filter(cat -> cat.getCategoryName().equals(testCategory1.getCategoryName()))
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("testCategory1을 찾을 수 없습니다"));
-
-        CategoryWithCountDto category2Result = allCategoriesWithCount.stream()
-                .filter(cat -> cat.getCategoryName().equals(testCategory2.getCategoryName()))
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("testCategory2를 찾을 수 없습니다"));
-
-        assertThat(category1Result.getPostCount()).isEqualTo(3L);
-        assertThat(category2Result.getPostCount()).isEqualTo(1L);
+        assertThat(res1.getPostCount()).isEqualTo(3L);
+        assertThat(res2.getPostCount()).isEqualTo(1L);
     }
 
     @Test
@@ -99,28 +78,21 @@ public class CategoryQuerydslRepositoryTest extends SaveDataJpaTest {
     void test2(){
         // given
         Member testMember = dataInitComponent.createTestMember();
-        dataInitComponent.saveAllCategories();
-        Category testCategory = categoryRepository.findAll().get(0);
+        Category testCategory = Category.builder().categoryName("PrivateTest").priority(1L).postCount(0L).build();
+        entityManager.persist(testCategory);
 
-        // PRIVATE 상태의 포스트 생성
-        Post privatePost = createPost(testMember, testCategory, PostStatus.PRIVATE, "private");
-
-        entityManager.persist(privatePost);
+        entityManager.persist(createPost(testMember, testCategory, PostStatus.PRIVATE, "private"));
+        
         entityManager.flush();
+        categoryRepository.syncPostCounts(testCategory.getId());
         entityManager.clear();
 
         // when
-        List<CategoryWithCountDto> categoriesWithCount = categoryRepository.findAllCategoriesWithCount();
-
-        // PRIVATE 포스트가 있는 카테고리 찾기
-        Optional<CategoryWithCountDto> targetCategoryResult = categoriesWithCount.stream()
-                .filter(categoryDto -> categoryDto.getCategoryName().equals(testCategory.getCategoryName()))
-                .findFirst();
+        List<CategoryWithCountDto> results = categoryRepository.findAllCategoriesWithCount();
 
         // then
-        assertThat(targetCategoryResult).isPresent(); // 카테고리는 존재
-        assertThat(targetCategoryResult.get().getPostCount()).isEqualTo(0L); //포스트 카운트는 0
-
+        CategoryWithCountDto target = results.stream().filter(c -> c.getCategoryName().equals("PrivateTest")).findFirst().orElseThrow();
+        assertThat(target.getPostCount()).isEqualTo(0L);
     }
 
     @Test
@@ -128,26 +100,21 @@ public class CategoryQuerydslRepositoryTest extends SaveDataJpaTest {
     void test3(){
         // given
         Member testMember = dataInitComponent.createTestMember();
-        dataInitComponent.saveAllCategories();
-        Category testCategory = categoryRepository.findAll().get(0);
+        Category testCategory = Category.builder().categoryName("PublicTest").priority(1L).postCount(0L).build();
+        entityManager.persist(testCategory);
 
-        // PUBLISHED 상태의 포스트 생성
-        Post publicPost = createPost(testMember, testCategory, PostStatus.PUBLISHED, "public");
+        entityManager.persist(createPost(testMember, testCategory, PostStatus.PUBLISHED, "public"));
 
-        entityManager.persist(publicPost);
         entityManager.flush();
+        categoryRepository.syncPostCounts(testCategory.getId());
         entityManager.clear();
 
         // when
-        List<CategoryWithCountDto> categoriesWithCount = categoryRepository.findAllCategoriesWithCount();
-
-        Optional<CategoryWithCountDto> targetCategoryResult = categoriesWithCount.stream()
-                .filter(categoryDto -> categoryDto.getCategoryName().equals(testCategory.getCategoryName()))
-                .findFirst();
+        List<CategoryWithCountDto> results = categoryRepository.findAllCategoriesWithCount();
 
         // then
-        assertThat(targetCategoryResult).isPresent();
-        assertThat(targetCategoryResult.get().getPostCount()).isEqualTo(1L); // PUBLIC 포스트는 카운트됨
+        CategoryWithCountDto target = results.stream().filter(c -> c.getCategoryName().equals("PublicTest")).findFirst().orElseThrow();
+        assertThat(target.getPostCount()).isEqualTo(1L);
     }
 
     @Test
@@ -155,35 +122,25 @@ public class CategoryQuerydslRepositoryTest extends SaveDataJpaTest {
     void test4(){
         // given
         Member testMember = dataInitComponent.createTestMember();
-        dataInitComponent.saveAllCategories();
-        Category testCategory = categoryRepository.findAll().get(0);
+        Category testCategory = Category.builder().categoryName("MixedTest").priority(1L).postCount(0L).build();
+        entityManager.persist(testCategory);
 
-        // PRIVATE 포스트 2개 생성
-        Post privatePost1 = createPost(testMember, testCategory, PostStatus.PRIVATE, "private1");
-        Post privatePost2 = createPost(testMember, testCategory, PostStatus.PRIVATE, "private2");
+        entityManager.persist(createPost(testMember, testCategory, PostStatus.PRIVATE, "pr1"));
+        entityManager.persist(createPost(testMember, testCategory, PostStatus.PRIVATE, "pr2"));
+        entityManager.persist(createPost(testMember, testCategory, PostStatus.PUBLISHED, "pu1"));
+        entityManager.persist(createPost(testMember, testCategory, PostStatus.PUBLISHED, "pu2"));
+        entityManager.persist(createPost(testMember, testCategory, PostStatus.PUBLISHED, "pu3"));
 
-        Post publishedPost1 = createPost(testMember, testCategory, PostStatus.PUBLISHED, "published1");
-        Post publishedPost2 = createPost(testMember, testCategory, PostStatus.PUBLISHED, "published2");
-        Post publishedPost3 = createPost(testMember, testCategory, PostStatus.PUBLISHED, "published3");
-
-        entityManager.persist(privatePost1);
-        entityManager.persist(privatePost2);
-        entityManager.persist(publishedPost1);
-        entityManager.persist(publishedPost2);
-        entityManager.persist(publishedPost3);
         entityManager.flush();
+        categoryRepository.syncPostCounts(testCategory.getId());
         entityManager.clear();
 
         // when
-        List<CategoryWithCountDto> categoriesWithCount = categoryRepository.findAllCategoriesWithCount();
-
-        Optional<CategoryWithCountDto> targetCategoryResult = categoriesWithCount.stream()
-                .filter(categoryDto -> categoryDto.getCategoryName().equals(testCategory.getCategoryName()))
-                .findFirst();
+        List<CategoryWithCountDto> results = categoryRepository.findAllCategoriesWithCount();
 
         // then
-        assertThat(targetCategoryResult).isPresent();
-        assertThat(targetCategoryResult.get().getPostCount()).isEqualTo(3L); // PUBLIC 포스트만 카운트
+        CategoryWithCountDto target = results.stream().filter(c -> c.getCategoryName().equals("MixedTest")).findFirst().orElseThrow();
+        assertThat(target.getPostCount()).isEqualTo(3L);
     }
 
 }

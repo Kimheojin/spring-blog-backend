@@ -16,8 +16,7 @@ COPY src src
 RUN --mount=type=cache,target=/root/.gradle ./gradlew build -x test -x asciidoctor
 
 # 실행 스테이지
-# JFR 실행 위해
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
