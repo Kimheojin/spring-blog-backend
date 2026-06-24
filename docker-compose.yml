@@ -1,11 +1,16 @@
-
 services:
   blog:
     build: .
     image: blog-green:latest
     container_name: blog-green
+
+    # cgroup 리소스 제한
+    cpus: 1.0
+    mem_limit: 1g
+
     ports:
       - "9002:9002"
+
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
@@ -20,14 +25,17 @@ services:
       - MONGO_DATABASE=${MONGO_DATABASE}
       - MONGO_COLLECTION_NAME=${MONGO_COLLECTION_NAME}
       - TZ=Asia/Seoul
-      - JAVA_TOOL_OPTIONS=-Duser.timezone=Asia/Seoul
+      - JAVA_TOOL_OPTIONS=-Duser.timezone=Asia/Seoul -XX:MaxRAMPercentage=70 -XX:InitialRAMPercentage=40
       - SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_TIME_ZONE=Asia/Seoul
+
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+
     networks:
       - blog-network
       - my-network
+
     restart: unless-stopped
 
 networks:
