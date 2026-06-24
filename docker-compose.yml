@@ -1,9 +1,14 @@
-
 services:
   blog:
     build: .
     image: blog-blue:latest
     container_name: blog-blue
+
+    # cgroup 리소스 제한
+    cpus: "1.0"          # CPU 사용량 최대 1 코어
+    mem_limit: 1g        # 메모리 최대 1 GiB
+#    memswap_limit: 1g    # 스왑 미사용, RAM 한도 초과 시 OOM 가능
+
     ports:
       - "9001:9001"
     environment:
@@ -29,9 +34,3 @@ services:
       - blog-network
       - my-network
     restart: unless-stopped
-
-networks:
-  blog-network:
-    external: true
-  my-network:
-    external: true
