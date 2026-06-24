@@ -34,3 +34,9 @@ services:
       - blog-network
       - my-network
     restart: unless-stopped
+
+networks:
+  blog-network:
+    external: true
+  my-network:
+    external: true
