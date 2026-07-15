@@ -1,8 +1,7 @@
 # 블로그 API SERVER
 
 - Spring + 온프레미스 서버를 통한 배포 환경 구성
-- 서비스  URL : [heojin.vercel.app](https://heojin.vercel.app/)
-  - 현재 post 업데이트 중단
+
 
 ## 프로젝트 배포 구조 요약
 
