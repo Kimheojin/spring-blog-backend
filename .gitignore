@@ -46,4 +46,4 @@ src/main/generated/
 .gradle-home/
 
 # ai
-AGENTS.local.md
+AGENTS.md
