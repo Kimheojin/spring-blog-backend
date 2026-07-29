@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,5 +29,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
     Page<Post> findAll(Pageable pageable);
 
 
-    List<Post> findByStatus(PostStatus postStatus);
+    @EntityGraph(attributePaths = {"category"})
+    List<Post> findByStatusAndRegDateBefore(PostStatus postStatus, LocalDateTime regDate);
 }

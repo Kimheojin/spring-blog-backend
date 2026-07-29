@@ -11,12 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostCountScheduler {
 
+    private static final String SYNC_ALL_CATEGORY_POST_COUNTS_CRON = "0 0 6 * * ?";
+
     private final CategoryRepository categoryRepository;
 
     // postCount 정합성 스케쥴 메서드
-    @Scheduled(cron = "0 0 6 * * ?")
+    @Scheduled(cron = SYNC_ALL_CATEGORY_POST_COUNTS_CRON)
     @Transactional
-    public void runTask6AM() {
+    public void syncAllCategoryPostCounts() {
 
         // syncPostCounts -> published where 처리 되어 잇음
         categoryRepository.findAll().forEach(category -> {
