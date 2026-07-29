@@ -10,11 +10,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MongoScheduler {
 
+    private static final String SYNC_MONGO_SEARCH_INDEX_CRON = "0 0 4 * * ?";
+
     private final SyncService syncService;
+
     // KST 기준
-    // mongo + mysql 동기화 관련
-    @Scheduled(cron = "0 0 4 * * ?")// 매일 새벽 4시 동기화
-    public void runTaskAt4AM(){
+    @Scheduled(cron = SYNC_MONGO_SEARCH_INDEX_CRON)
+    public void syncMongoSearchIndex(){
         syncService.triggerSync();
     }
 }

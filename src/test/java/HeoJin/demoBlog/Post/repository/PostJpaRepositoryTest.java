@@ -25,6 +25,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
@@ -250,6 +252,48 @@ public class PostJpaRepositoryTest extends SaveDataJpaTest{
     }
 
 
+    @Test
+    @DisplayName("findByStatusAndRegDateBefore -> 발행 대상 예약글만 조회")
+    void test10() {
+        // given
+        Member testMember = dataInitComponent.createTestMember();
+        dataInitComponent.saveAllCategories();
+
+        Category testCategory = categoryRepository.findAll().get(0);
+        LocalDateTime now = LocalDateTime.of(2026, 7, 29, 5, 0);
+
+        Post publishTarget = createPostWithRegDate(testMember, testCategory, PostStatus.SCHEDULED, "발행대상", now.minusMinutes(1));
+        Post equalTime = createPostWithRegDate(testMember, testCategory, PostStatus.SCHEDULED, "같은시각", now);
+        Post futureScheduled = createPostWithRegDate(testMember, testCategory, PostStatus.SCHEDULED, "미래예약", now.plusMinutes(1));
+        Post alreadyPublished = createPostWithRegDate(testMember, testCategory, PostStatus.PUBLISHED, "발행완료", now.minusMinutes(1));
+        Post privatePost = createPostWithRegDate(testMember, testCategory, PostStatus.PRIVATE, "비공개", now.minusMinutes(1));
+
+        entityManager.persist(publishTarget);
+        entityManager.persist(equalTime);
+        entityManager.persist(futureScheduled);
+        entityManager.persist(alreadyPublished);
+        entityManager.persist(privatePost);
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<Post> results = postRepository.findByStatusAndRegDateBefore(PostStatus.SCHEDULED, now);
+
+        // then
+        Assertions.assertEquals(1, results.size());
+        Assertions.assertEquals("test 제목입니다 발행대상", results.get(0).getTitle());
+    }
+
+    private Post createPostWithRegDate(Member member, Category category, PostStatus status, String suffix, LocalDateTime regDate) {
+        return Post.builder()
+                .member(member)
+                .category(category)
+                .status(status)
+                .content("test 내용입니다 " + suffix)
+                .title("test 제목입니다 " + suffix)
+                .regDate(regDate)
+                .build();
+    }
 
 
 }
