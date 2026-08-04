@@ -5,7 +5,7 @@
 
 ## 프로젝트 배포 구조 요약
 
-![image](https://res.cloudinary.com/dtrxriyea/image/upload/v1773992077/etc/bbhsvdjwmvwlf5elre7x.avif)
+![image](doc/image/blog-archi.png)
 
 ## 배포 관련
 
@@ -406,5 +406,4 @@ src/main/java/HeoJin/demoBlog/
 ├── image/          # 이미지 업로드 및 최적화 (Cloudinary 연동)
 └── global/         # 전역 설정 (Security, AOP, Exception, JWT, Util)
 ```
-
 
