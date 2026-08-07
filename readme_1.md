@@ -1,23 +1,35 @@
-# 블로그 API SERVER
+# 블로그 프로젝트
 
-- Spring Boot 3.4.4와 Java 17 기반으로 개발한 블로그 API 서버
-- 게시글, 댓글, 카테고리, 태그, 회원 인증, 이미지 업로드, 검색 동기화 기능 제공
-- 단순 CRUD 구현을 넘어 인증 보안, 이미지 최적화, 검색 품질 개선, API 문서 자동화, 온프레미스 배포 자동화를 고려하여 개발
-
-
-
-### ✅ 사용 기술 및 개발 환경
-
-Java 17, Spring Boot 3.4.4, Spring Security, JJWT, Spring Data JPA, QueryDSL, MySQL, MongoDB Atlas Search, Cloudinary, Docker, Docker Compose, GitHub Actions, Spring Rest Docs,
-Asciidoctor, JUnit 5, Mockito, H2, Embedded Mongo
+- Spring Boot와 Java 기반으로 블로그 서비스를 위한 REST API 서버를 개발하는 프로젝트
+- 게시글, 댓글, 회원 인증을 비롯해 이미지 업로드, 검색 및 데이터 동기화 등 백엔드 전반의 기능을 설계하고 구현
+- 인증 보안, 성능 최적화, 검색 품질, 테스트 및 배포 자동화와 유지보수성을 고려하여 개발
 
 
+### ✅ 사용 기술
+
+**Backend**
+Java 17, Spring Boot 3.4.4, Spring Security, JJWT, Spring Data JPA, QueryDSL
+
+**Database / Search**
+MySQL, MongoDB Atlas Search
+
+**Infra / CI·CD**
+Docker, Docker Compose, GitHub Actions
+
+**External Service**
+Cloudinary
+
+**Test / Documentation**
+JUnit 5, Mockito, H2, Embedded Mongo, Spring Rest Docs, Asciidoctor
 
 ### ✅ Architecture
 
 ![Architecture](doc/image/blog-archi.png)
 
 
+### ✅ 배포 환경 (스펙)
+
+- 개인 서버 스펙
 
 ### ✅ 주요 기능
 
