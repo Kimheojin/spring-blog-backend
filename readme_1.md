@@ -1,35 +1,35 @@
-# 블로그 프로젝트
+# 온프레미스 서버 기반 블로그 프로젝트
 
-- Spring Boot와 Java 기반으로 블로그 서비스를 위한 REST API 서버를 개발하는 프로젝트
+- Spring Boot와 Java 기반의 백엔드부터 프론트엔드까지 구현한 블로그 웹 서비스 개인 프로젝트
 - 게시글, 댓글, 회원 인증을 비롯해 이미지 업로드, 검색 및 데이터 동기화 등 백엔드 전반의 기능을 설계하고 구현
-- 인증 보안, 성능 최적화, 검색 품질, 테스트 및 배포 자동화와 유지보수성을 고려하여 개발
-
+- 인증 보안, 성능 최적화, 검색 품질, 테스트 및 배포 자동화, 유지보수성을 고려하여 개발
 
 ### ✅ 사용 기술
 
 **Backend**
-Java 17, Spring Boot 3.4.4, Spring Security, JJWT, Spring Data JPA, QueryDSL
+- Java 17, Spring Boot 3.4.4, Spring Security, JJWT, Spring Data JPA, QueryDSL
 
 **Database / Search**
-MySQL, MongoDB Atlas Search
+- MySQL, MongoDB Atlas Search
 
 **Infra / CI·CD**
-Docker, Docker Compose, GitHub Actions
+- Docker, Docker Compose, GitHub Actions
 
 **External Service**
-Cloudinary
+- Cloudinary
 
 **Test / Documentation**
-JUnit 5, Mockito, H2, Embedded Mongo, Spring Rest Docs, Asciidoctor
+- JUnit 5, Mockito, H2, Embedded Mongo, Spring Rest Docs, Asciidoctor
 
 ### ✅ Architecture
 
 ![Architecture](doc/image/blog-archi.png)
 
 
-### ✅ 배포 환경 (스펙)
+### ✅ 배포 환경
 
 - 개인 서버 스펙
+  - git hub wiki
 
 ### ✅ 주요 기능
 
@@ -124,6 +124,7 @@ src/main/java/HeoJin/demoBlog/
 ├── tag/            # 태그 도메인
 ├── image/          # 이미지 업로드 및 Cloudinary 연동
 └── global/         # 전역 설정, 예외, 보안, AOP, 유틸
+```
 
 ### ✅ API 문서화 전략
 
