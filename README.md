@@ -21,7 +21,7 @@
 
 ### ✅ 배포 환경
 
-- [온프레미스 서버 스펙](https://github.com/heojinn/spring-blog-backend/wiki/2.-On%E2%80%90Premises-Server-Specifications)
+#### [온프레미스 서버 스펙](https://github.com/heojinn/spring-blog-backend/wiki/2.-On%E2%80%90Premises-Server-Specifications)
 
 ### ✅ 주요 기능
 
