@@ -48,3 +48,6 @@
 
 #### [6. Test Strategy](https://github.com/heojinn/spring-blog-backend/wiki/9.-Test-Strategy)
 
+### ✅ 부하테스트
+
+#### [부하 테스트 정리 문서](https://github.com/heojinn/archive/blob/main/projectReference/blog/spring-blog-backend/load-test_v2.md)
