@@ -51,3 +51,7 @@
 ### ✅ 부하테스트
 
 #### [부하 테스트 정리 문서](https://github.com/heojinn/archive/blob/main/projectReference/blog/spring-blog-backend/load-test_v2.md)
+
+### ✅ etc
+
+#### [프론트 repo](https://github.com/heojinn/vue-blog-frontend.git)
