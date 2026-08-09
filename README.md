@@ -6,20 +6,13 @@
 
 ### ✅ 기술 스택
 
-**Backend**
-- Java 17, Spring Boot 3.4.4, Spring Security, JJWT, Spring Data JPA, QueryDSL
+**Backend / DB**
 
-**Database / Search**
-- MySQL, MongoDB Atlas Search
+* Java 17, Spring Boot, Spring Security, JPA, QueryDSL, MySQL, MongoDB Atlas Search
 
-**Infra / CI·CD**
-- Docker, Docker Compose, GitHub Actions
+**Infra / DevOps**
 
-**External Service**
-- Cloudinary
-
-**Test / Documentation**
-- JUnit 5, Mockito, H2, Embedded Mongo, Spring Rest Docs, Asciidoctor
+* Docker, Docker Compose, GitHub Actions, Cloudinary
 
 ### ✅ Architecture
 
@@ -39,19 +32,19 @@
 3. 마크다운 본문 처리
 4. 검색 인덱싱을 위한 Plain Text 변환
 
-▶ [더보기](https://github.com/heojinn/spring-blog-backend/wiki/3.-Business-Rule)
+▶ [더 보기](https://github.com/heojinn/spring-blog-backend/wiki/3.-Business-Rule)
 
 ### ✅ 주요 기술 구현 정리
 
-#### [CI/CD Pipeline](https://github.com/heojinn/spring-blog-backend/wiki/4.-CI-CD-Pipeline)
+#### [1. CI/CD Pipeline](https://github.com/heojinn/spring-blog-backend/wiki/4.-CI-CD-Pipeline)
 
-#### [Docker & Docker Compose](https://github.com/heojinn/spring-blog-backend/wiki/5.-Docker-&-Docker-Compose-Configuration)
+#### [2. Docker & Docker Compose](https://github.com/heojinn/spring-blog-backend/wiki/5.-Docker-&-Docker-Compose-Configuration)
 
-#### [Authentication & Authorization](https://github.com/heojinn/spring-blog-backend/wiki/6.-Authentication-&-Authorization)
+#### [3. Authentication & Authorization](https://github.com/heojinn/spring-blog-backend/wiki/6.-Authentication-&-Authorization)
 
-#### [이미지 최적화](https://github.com/heojinn/spring-blog-backend/wiki/7.-Image-Optimization)
+#### [4. 이미지 최적화](https://github.com/heojinn/spring-blog-backend/wiki/7.-Image-Optimization)
 
-#### [Search Engine Optimization](https://github.com/heojinn/spring-blog-backend/wiki/8.-Search-Engine-Optimization)
+#### [5. Search Engine Optimization](https://github.com/heojinn/spring-blog-backend/wiki/8.-Search-Engine-Optimization)
 
-#### [Test Strategy](https://github.com/heojinn/spring-blog-backend/wiki/9.-Test-Strategy)
+#### [6. Test Strategy](https://github.com/heojinn/spring-blog-backend/wiki/9.-Test-Strategy)
 
